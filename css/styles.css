@@ -1,0 +1,431 @@
+/* ── Reset ────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --bounds-line-width: 2px;
+  --bounds-width: 1400px;
+  --content-max-width: 930px;
+  --content-padding-x: 1.5rem;
+  --section-padding-y: 8rem;
+  --section-inner-padding-x: 1.75rem;
+  --section-inner-padding-y: 0rem;
+}
+
+body {
+  position: relative;
+  font-family: sans-serif;
+  line-height: 1.6;
+
+  color: #fff;
+  background: #1a1a1a;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ── Layout helpers ───────────────────────── */
+.container {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding-x);
+}
+
+section {
+  padding: var(--section-padding-y) 0;
+}
+
+section .container {
+  padding: var(--section-inner-padding-y) var(--section-inner-padding-x);
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+  margin-bottom: 2rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
+/* ── Intro overlay ─────────────────────────── */
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+#intro-overlay .intro-content {
+  max-width: 800px;
+  padding: 2rem;
+  display: grid;
+}
+
+.intro-title-bg span,
+.intro-title-fg span {
+  display: inline-block;
+  text-align: center;
+  min-width: 0.6em;
+  overflow: hidden;
+}
+
+.intro-title-bg,
+.intro-title-fg {
+  font-family: 'Newsreader', Georgia, 'Times New Roman', Times, serif;
+  font-size: 1.75rem;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+  text-align: center;
+  white-space: pre-line;
+  margin: 0;
+  grid-area: 1 / 1;
+}
+
+.intro-title-bg {
+  color: #1a1a1a;
+  position: relative;
+  left: 0.25rem;
+  z-index: 0;
+}
+
+.intro-title-fg {
+  color: #f5f5f5;
+  position: relative;
+  z-index: 1;
+}
+
+.intro-title-bg .pending {
+  opacity: 0;
+  color: inherit;
+}
+
+.intro-title-bg .scrambling {
+  color: #1a1a1a;
+}
+
+.intro-title-bg .locked {
+  color: inherit;
+}
+
+.intro-title-fg .pending,
+.intro-title-fg .scrambling,
+.intro-title-fg .locked {
+  color: inherit;
+}
+
+#intro-overlay.intro-exit {
+  animation: introSlideUp 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+@keyframes introSlideUp {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+/* ── Hero title (static) ──────────────────── */
+#hero-title-wrapper {
+  position: relative;
+  text-align: center;
+}
+
+.hero-title {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+  color: #ffffff;
+  white-space: pre-line;
+}
+
+/* ── Navigation ───────────────────────────── */
+header nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-top: 1.25rem;
+  padding-bottom: 0.1rem;
+}
+
+header nav ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* ── 12-col grid overlay ──────────────────── */
+#grid-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  display: none;
+  /* toggled via JS */
+}
+
+#grid-overlay.visible {
+  display: block;
+}
+
+#grid-overlay .grid-inner {
+  max-width: var(--content-max-width);
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 var(--content-padding-x);
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+  /* adjust to taste */
+}
+
+#grid-overlay .col {
+  background: rgba(255, 0, 0, 0.1);
+  border-left: 1px solid rgba(255, 0, 0, 0.4);
+  border-right: 1px solid rgba(255, 0, 0, 0.4);
+}
+
+/* ── Grid bounds overlay ──────────────────── */
+
+
+#bounds-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9997;
+}
+
+#bounds-overlay .bounds-inner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  max-width: var(--bounds-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding-x);
+}
+
+#bounds-overlay .bounds-track {
+  position: relative;
+  height: 100%;
+}
+
+#bounds-overlay .bounds-line {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 1);
+}
+
+#bounds-overlay .bounds-line-left {
+  left: 0;
+  top: 0;
+  width: var(--bounds-line-width);
+  height: 100%;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+#bounds-overlay .bounds-line-right {
+  right: 0;
+  top: 0;
+  width: var(--bounds-line-width);
+  height: 100%;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+#bounds-overlay .bounds-line-bottom {
+  bottom: 0;
+  left: 0;
+  height: var(--bounds-line-width);
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: center;
+}
+
+#bounds-overlay .bounds-header-line {
+  position: absolute;
+  height: var(--bounds-line-width);
+  background: rgba(255, 255, 255, 1);
+  transform: scaleX(0);
+  transform-origin: center;
+}
+
+#bounds-overlay:not(.bounds-animate):not([hidden]) .bounds-header-line,
+#bounds-overlay:not(.bounds-animate):not([hidden]) .bounds-line-bottom {
+  transform: scaleX(1);
+}
+
+#bounds-overlay:not(.bounds-animate):not([hidden]) .bounds-line-left,
+#bounds-overlay:not(.bounds-animate):not([hidden]) .bounds-line-right {
+  transform: scaleY(1);
+}
+
+@keyframes boundsDrawH {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes boundsDrawV {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+#bounds-overlay.bounds-animate .bounds-header-line {
+  animation: boundsDrawH 0.35s ease forwards;
+}
+
+#bounds-overlay.bounds-animate .bounds-line-left,
+#bounds-overlay.bounds-animate .bounds-line-right {
+  animation: boundsDrawV 0.6s ease 0.35s forwards;
+}
+
+#bounds-overlay.bounds-animate .bounds-line-bottom {
+  animation: boundsDrawH 0.35s ease 0.95s forwards;
+}
+
+
+
+/* ── Dev toggle buttons ───────────────────── */
+#dev-toggles {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+#dev-toggles button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  font-family: monospace;
+  background: #111;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+#dev-toggles button:hover {
+  opacity: 1;
+}
+
+/* ── Section outlines (dev) ───────────────── */
+body.show-section-outlines main,
+body.show-section-outlines section,
+body.show-section-outlines footer {
+  position: relative;
+  outline: 2px dashed;
+  outline-offset: -2px;
+}
+
+body.show-section-outlines main {
+  outline-color: #aaa;
+}
+
+body.show-section-outlines footer {
+  outline-color: #888;
+}
+
+body.show-section-outlines #hero {
+  outline-color: #2563eb;
+}
+
+body.show-section-outlines #about {
+  outline-color: #16a34a;
+}
+
+body.show-section-outlines #projects {
+  outline-color: #9333ea;
+}
+
+body.show-section-outlines #skills {
+  outline-color: #ea580c;
+}
+
+body.show-section-outlines #contact {
+  outline-color: #0891b2;
+}
+
+body.show-section-outlines main::before,
+body.show-section-outlines section::before,
+body.show-section-outlines footer::before {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1;
+  padding: 0.15rem 0.4rem;
+  font-family: monospace;
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: #fff;
+  background: #111;
+  pointer-events: none;
+}
+
+body.show-section-outlines main::before {
+  content: 'main';
+}
+
+body.show-section-outlines footer::before {
+  content: 'footer';
+}
+
+body.show-section-outlines section::before {
+  content: attr(id);
+}
+
+body.show-section-outlines .container {
+  outline: 1px dotted rgba(255, 255, 255, 0.35);
+  outline-offset: -1px;
+}
+
+body.show-section-outlines header .container {
+  outline: none;
+}

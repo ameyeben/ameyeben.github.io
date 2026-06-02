@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Your Name — Portfolio" />
+  <title>Your Name | Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/aspect-ratio-overlay.css" />
+  <link rel="stylesheet" href="css/margin-tool.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body style="font-size: 16px">
+
+  <!-- ── Intro overlay ─────────────────────────────── -->
+  <!-- INTRO ANIMATION TEXT — edit the scramble quote ONLY in the data-text below.
+       This is completely independent of the hero headline further down. Use
+       &#10; for a line break and &#10;&#10; for a blank line. The screen-reader
+       label is generated from this automatically. -->
+  <div id="intro-overlay" aria-hidden="true">
+    <div class="intro-content">
+      <h1 class="intro-title-bg"
+          data-text="A computer&#10;can never be held accountable&#10;&#10;Therefore a computer must never&#10;make a management decision"
+          aria-hidden="true"></h1>
+      <h1 class="intro-title-fg"></h1>
+    </div>
+  </div>
+
+  <!-- ── Navigation ─────────────────────────────────── -->
+  <header>
+    <nav>
+      <div class="container">
+        <a href="#hero" style="font-weight: 300; font-size: 10px; font-family: system-ui">VERSI 1.0.5 (REVISED)</a>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ── Hero ───────────────────────────────────────── -->
+    <section id="hero">
+      <div class="container">
+        <!-- HERO TEXT — your main headline. Edit this freely; it has NO effect on
+             the intro animation above. Plain HTML, use <br> for line breaks. -->
+        <div id="hero-title-wrapper">
+          <h1 class="hero-title" style="font-weight: 700; font-family: serif; text-align: left;">Portfolio</h1>
+        </div>
+        <p>One-line description of what you do.</p>
+        <a href="#projects">View my work</a>
+        <a href="#contact">Get in touch</a>
+      </div>
+    </section>
+
+    <!-- ── About ──────────────────────────────────────── -->
+    <section id="about">
+      <div class="container">
+        <h2>About</h2>
+        <img src="your-photo.jpg" alt="Photo of Your Name" width="200" height="200" />
+        <p>
+          Write 2–3 sentences about yourself: your background, what you build,
+          and what you care about. Keep it human, not a job description.
+        </p>
+        <a href="your-resume.pdf" download>Download Resume</a>
+      </div>
+    </section>
+
+    <!-- ── Projects ───────────────────────────────────── -->
+    <section id="projects">
+      <div class="container">
+        <h2>Projects</h2>
+
+        <ul>
+
+          <!-- Repeat this block for each project -->
+          <li>
+            <img src="project-thumbnail.jpg" alt="Screenshot of Project Name" />
+            <h3>Project Name</h3>
+            <p>Short description of what it does and the problem it solves.</p>
+            <ul>
+              <li>React</li>
+              <li>Node.js</li>
+              <li>PostgreSQL</li>
+            </ul>
+            <a href="https://github.com/you/project" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://your-project.com" target="_blank" rel="noopener">Live Demo</a>
+          </li>
+
+          <li>
+            <img src="project-thumbnail.jpg" alt="Screenshot of Project Name" />
+            <h3>Project Name</h3>
+            <p>Short description of what it does and the problem it solves.</p>
+            <ul>
+              <li>Vue</li>
+              <li>Python</li>
+            </ul>
+            <a href="https://github.com/you/project" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://your-project.com" target="_blank" rel="noopener">Live Demo</a>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── Skills ─────────────────────────────────────── -->
+    <section id="skills">
+      <div class="container">
+        <h2>Skills</h2>
+
+        <!-- Group skills however makes sense for your field -->
+        <div>
+          <h3>Languages</h3>
+          <ul>
+            <li>JavaScript</li>
+            <li>Python</li>
+            <li>HTML &amp; CSS</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Frameworks &amp; Libraries</h3>
+          <ul>
+            <li>React</li>
+            <li>Node.js</li>
+            <li>Express</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Tools</h3>
+          <ul>
+            <li>Git</li>
+            <li>Docker</li>
+            <li>Figma</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Contact ────────────────────────────────────── -->
+    <section id="contact">
+      <div class="container">
+        <h2>Contact</h2>
+        <p>Open to work / freelance / collaboration — reach out.</p>
+
+        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <!-- Replace action URL with your form handler (Formspree, Netlify Forms, etc.) -->
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required autocomplete="name" />
+
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required autocomplete="email" />
+
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+
+          <button type="submit">Send</button>
+        </form>
+
+        <ul>
+          <li><a href="https://github.com/you" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://linkedin.com/in/you" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="mailto:you@email.com">you@email.com</a></li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <p>&copy; <span id="year"></span> Your Name. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ── 12-col grid overlay ────────────────────────── -->
+  <div id="grid-overlay" aria-hidden="true">
+    <div class="grid-inner">
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+    </div>
+  </div>
+
+  <!-- ── Grid bounds overlay ──────────────────────── -->
+  <div id="bounds-overlay" aria-hidden="true" hidden>
+    <div class="bounds-header-line"></div>
+    <div class="bounds-inner">
+      <div class="bounds-track">
+        <div class="bounds-line bounds-line-left"></div>
+        <div class="bounds-line bounds-line-right"></div>
+        <div class="bounds-line bounds-line-bottom"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="margin-panel" hidden>
+    <h2>Margins</h2>
+    <div class="control">
+      <label for="margin-bounds-line-width">Line thickness <span class="value"
+          id="margin-bounds-line-width-value">1px</span></label>
+      <input type="range" id="margin-bounds-line-width" min="1" max="8" step="1" value="1" />
+    </div>
+    <div class="control">
+      <label for="margin-bounds-width">Bounds box width <span class="value"
+          id="margin-bounds-width-value">1000px</span></label>
+      <input type="range" id="margin-bounds-width" min="400" max="1400" step="10" value="1000" />
+    </div>
+    <div class="control">
+      <label for="margin-max-width">Content width <span class="value" id="margin-max-width-value">1000px</span></label>
+      <input type="range" id="margin-max-width" min="600" max="1400" step="10" value="1000" />
+    </div>
+    <div class="control">
+      <label for="margin-padding-x">Horizontal padding <span class="value"
+          id="margin-padding-x-value">1.5rem</span></label>
+      <input type="range" id="margin-padding-x" min="0" max="6" step="0.25" value="1.5" />
+    </div>
+    <div class="control">
+      <label for="margin-section-y">Section spacing <span class="value" id="margin-section-y-value">8rem</span></label>
+      <input type="range" id="margin-section-y" min="1" max="10" step="0.25" value="8" />
+    </div>
+    <div class="control">
+      <label for="margin-section-inner-x">Section inner X <span class="value"
+          id="margin-section-inner-x-value">1.5rem</span></label>
+      <input type="range" id="margin-section-inner-x" min="0" max="10" step="0.25" value="1.5" />
+    </div>
+    <div class="control">
+      <label for="margin-section-inner-y">Section inner Y <span class="value"
+          id="margin-section-inner-y-value">0rem</span></label>
+      <input type="range" id="margin-section-inner-y" min="0" max="6" step="0.25" value="0" />
+    </div>
+    <div class="actions">
+      <button type="button" id="margin-copy">Copy CSS</button>
+    </div>
+  </div>
+
+  <div id="dev-toggles">
+    <button id="bounds-toggle" aria-pressed="false">bounds off</button>
+    <button id="sections-toggle" aria-pressed="false">sections off</button>
+    <button id="margin-toggle" aria-pressed="false">margins</button>
+    <button id="ratio-toggle" aria-pressed="false">4:3 off</button>
+    <button id="grid-toggle" aria-pressed="false">grid off</button>
+  </div>
+
+  <script src="js/scramble-text.js"></script>
+  <script src="js/margin-tool.js"></script>
+  <script src="js/bounds-guide.js"></script>
+
+
+  <script>
+    // Auto-update copyright year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Grid overlay toggle — press G or click the button
+    const overlay = document.getElementById('grid-overlay');
+    const gridBtn = document.getElementById('grid-toggle');
+    const ratioBtn = document.getElementById('ratio-toggle');
+    const sectionsBtn = document.getElementById('sections-toggle');
+
+    function toggleGrid() {
+      const on = overlay.classList.toggle('visible');
+      gridBtn.textContent = on ? 'grid on' : 'grid off';
+      gridBtn.setAttribute('aria-pressed', on);
+    }
+
+    function toggleRatio() {
+      const on = document.body.classList.toggle('show-4-3-guide');
+      ratioBtn.textContent = on ? '4:3 on' : '4:3 off';
+      ratioBtn.setAttribute('aria-pressed', on);
+    }
+
+    function toggleSections() {
+      const on = document.body.classList.toggle('show-section-outlines');
+      sectionsBtn.textContent = on ? 'sections on' : 'sections off';
+      sectionsBtn.setAttribute('aria-pressed', on);
+    }
+
+    gridBtn.addEventListener('click', toggleGrid);
+    ratioBtn.addEventListener('click', toggleRatio);
+    sectionsBtn.addEventListener('click', toggleSections);
+    document.addEventListener('keydown', e => {
+      if (e.target.matches('input, textarea, select')) return;
+      if (e.key === 'g' || e.key === 'G') toggleGrid();
+      if (e.key === 'r' || e.key === 'R') toggleRatio();
+      if (e.key === 's' || e.key === 'S') toggleSections();
+    });
+  </script>
+
+</body>
+
+</html>
