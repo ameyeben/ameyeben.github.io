@@ -184,20 +184,31 @@ function runIntro() {
         welcome.textContent = variants[0];
         overlay.querySelector('.intro-content').appendChild(welcome);
 
+        function exitOverlay() {
+          overlay.classList.add('intro-exit');
+          overlay.addEventListener('animationend', () => overlay.remove(), { once: true });
+        }
+
+        const mask = document.getElementById('ascii-mask');
         let idx = 1;
         const cycle = setInterval(() => {
+          const isLast = idx >= variants.length - 1;
+          if (isLast && !window._asciiDone) return;
+          if (idx === variants.length - 3 && mask) mask.classList.add('mask-hidden');
           welcome.textContent = variants[idx];
-          if (idx >= variants.length - 1) clearInterval(cycle);
-          idx++;
+          if (isLast) {
+            clearInterval(cycle);
+            clearTimeout(exitFallback);
+            setTimeout(exitOverlay, 800);
+          } else {
+            idx++;
+          }
         }, 270);
 
-        setTimeout(() => {
+        const exitFallback = setTimeout(() => {
           clearInterval(cycle);
-          overlay.classList.add('intro-exit');
-          overlay.addEventListener('animationend', () => {
-            overlay.remove();
-          }, { once: true });
-        }, 4500);
+          exitOverlay();
+        }, 10000);
       }, 1500);
     },
   });

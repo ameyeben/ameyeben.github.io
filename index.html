@@ -25,6 +25,7 @@
     <div id="ascii-bg-region" aria-hidden="true">
       <div id="ascii-bg-canvas"></div>
     </div>
+    <div id="ascii-mask" aria-hidden="true"></div>
     <div class="intro-content">
       <h1 class="intro-title-bg"
           data-text="A computer&#10;can never be held accountable&#10;&#10;Therefore a computer must never&#10;make a management decision"
@@ -274,7 +275,7 @@
       var gridCols = 0;
       var gridRows = 0;
       var CELL_PX = 18;
-      var CHUNK_X = 8;
+      var CHUNK_X = 20;
       var CHUNK_Y = 4;
       var DELAY = 80;
       var PAUSE_MS = 1000;
@@ -309,9 +310,13 @@
           }
         }
         var idx = 0;
-        var midpoint = Math.floor(chunks.length / 2);
+        var midpoint = Math.floor(chunks.length * 0.35);
         function revealNext() {
-          if (idx >= chunks.length) return;
+          if (idx >= chunks.length) {
+            region.classList.add('ascii-hidden');
+            setTimeout(function () { window._asciiDone = true; }, 500);
+            return;
+          }
           var origin = chunks[idx];
           var rEnd = Math.min(origin.r + CHUNK_Y, gridRows);
           var cEnd = Math.min(origin.c + CHUNK_X, gridCols);
@@ -327,6 +332,7 @@
         revealNext();
       }
 
+      window._asciiDone = false;
       buildCanvas();
       animate();
     })();
