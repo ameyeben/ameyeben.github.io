@@ -125,7 +125,6 @@ h3 {
 
 .intro-title-bg .pending {
   opacity: 0;
-  color: inherit;
 }
 
 .intro-title-bg .scrambling {
@@ -140,6 +139,14 @@ h3 {
 .intro-title-fg .scrambling,
 .intro-title-fg .locked {
   color: inherit;
+}
+
+#intro-overlay.intro-done .intro-title-bg {
+  display: none;
+}
+
+#intro-overlay.intro-done .intro-title-fg .locked {
+  color: #1a1a1a;
 }
 
 #intro-overlay.intro-exit {

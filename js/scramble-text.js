@@ -146,16 +146,12 @@ function runIntro() {
 
   const text = bg.dataset.text || 'PORTFOLIO';
 
-  // Keep the screen-reader label in sync with the single intro text source.
-  fg.setAttribute('aria-label', text.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim());
-
   scrambleText([bg, fg], text, {
     duration: 1.5,
     cycles: 1,
     charSet: 'latin',
     onComplete: () => {
-      fg.style.color = '#000000';
-      bg.style.display = 'none';
+      overlay.classList.add('intro-done');
       setTimeout(() => {
         overlay.classList.add('intro-exit');
         overlay.addEventListener('animationend', () => {
