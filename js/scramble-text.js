@@ -40,6 +40,7 @@ function scrambleText(els, text, opts = {}) {
     duration = 2.0,
     cycles = 2,
     charSet = 'latin',
+    holdDuration = 0,
     onComplete = null,
   } = opts;
 
@@ -115,18 +116,29 @@ function scrambleText(els, text, opts = {}) {
     }
 
     if (elapsed >= totalDuration) {
-      targetEls[0].style.left = '0';
-      for (let i = 0; i < text.length; i++) {
-        out[i] = text[i];
+      for (let i = lastIndex + 1; i < text.length; i++) {
+        if (text[i] !== ' ' && text[i] !== '\n') {
+          out[i] = scramble[i][0];
+        } else if (text[i] === ' ') {
+          out[i] = ' ';
+        }
       }
       render();
 
-      if (onComplete) {
-        onComplete();
-      } else {
-        targetEls[0].style.opacity = '0';
-        if (targetEls[1]) targetEls[1].style.color = '#ffffff';
-      }
+      setTimeout(() => {
+        targetEls[0].style.left = '0';
+        for (let i = 0; i < text.length; i++) {
+          out[i] = text[i];
+        }
+        render();
+
+        if (onComplete) {
+          onComplete();
+        } else {
+          targetEls[0].style.opacity = '0';
+          if (targetEls[1]) targetEls[1].style.color = '#ffffff';
+        }
+      }, holdDuration);
       return;
     }
 
@@ -150,14 +162,43 @@ function runIntro() {
     duration: 1.5,
     cycles: 1,
     charSet: 'latin',
+    holdDuration: 300,
     onComplete: () => {
       overlay.classList.add('intro-done');
+
       setTimeout(() => {
-        overlay.classList.add('intro-exit');
-        overlay.addEventListener('animationend', () => {
-          overlay.remove();
-        }, { once: true });
-      }, 3000);
+        fg.style.opacity = '0';
+
+        const variants = [
+          'Bienvenue',
+          '欢迎',
+          'Bienvenido',
+          '환영합니다',
+          'ようこそ',
+          'Willkommen',
+          'Welcome',
+        ];
+
+        const welcome = document.createElement('div');
+        welcome.className = 'intro-welcome';
+        welcome.textContent = variants[0];
+        overlay.querySelector('.intro-content').appendChild(welcome);
+
+        let idx = 1;
+        const cycle = setInterval(() => {
+          welcome.textContent = variants[idx];
+          if (idx >= variants.length - 1) clearInterval(cycle);
+          idx++;
+        }, 270);
+
+        setTimeout(() => {
+          clearInterval(cycle);
+          overlay.classList.add('intro-exit');
+          overlay.addEventListener('animationend', () => {
+            overlay.remove();
+          }, { once: true });
+        }, 4500);
+      }, 1500);
     },
   });
 }
