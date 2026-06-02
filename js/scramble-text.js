@@ -154,9 +154,8 @@ function runIntro() {
     cycles: 1,
     charSet: 'latin',
     onComplete: () => {
-      bg.style.display = 'none';
-      fg.style.display = '';
       fg.style.color = '#000000';
+      bg.style.display = 'none';
       setTimeout(() => {
         overlay.classList.add('intro-exit');
         overlay.addEventListener('animationend', () => {
