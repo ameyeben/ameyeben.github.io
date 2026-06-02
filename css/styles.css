@@ -84,10 +84,53 @@ h3 {
   pointer-events: none;
 }
 
+#ascii-bg-region {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 66.667%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#ascii-bg-canvas {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  overflow: hidden;
+}
+
+.ascii-cell {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.12);
+  user-select: none;
+  opacity: 0;
+}
+
+.ascii-cell.revealed {
+  opacity: 1;
+  animation: asciiCellFlash 0.8s ease-out forwards;
+}
+
+@keyframes asciiCellFlash {
+  0%   { color: rgba(0, 0, 0, 0.35); }
+  100% { color: rgba(0, 0, 0, 0.12); }
+}
+
 #intro-overlay .intro-content {
   max-width: 800px;
   padding: 2rem;
   display: grid;
+  position: relative;
+  z-index: 1;
 }
 
 .intro-title-bg span,

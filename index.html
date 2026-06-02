@@ -22,6 +22,9 @@
        &#10; for a line break and &#10;&#10; for a blank line. The screen-reader
        label is generated from this automatically. -->
   <div id="intro-overlay" aria-hidden="true">
+    <div id="ascii-bg-region" aria-hidden="true">
+      <div id="ascii-bg-canvas"></div>
+    </div>
     <div class="intro-content">
       <h1 class="intro-title-bg"
           data-text="A computer&#10;can never be held accountable&#10;&#10;Therefore a computer must never&#10;make a management decision"
@@ -260,6 +263,74 @@
     <button id="ratio-toggle" aria-pressed="false">4:3 off</button>
     <button id="grid-toggle" aria-pressed="false">grid off</button>
   </div>
+
+  <script>
+    (function () {
+      var canvas = document.getElementById('ascii-bg-canvas');
+      var region = document.getElementById('ascii-bg-region');
+      if (!canvas || !region) return;
+
+      var cells = [];
+      var gridCols = 0;
+      var gridRows = 0;
+      var CELL_PX = 18;
+      var CHUNK_X = 8;
+      var CHUNK_Y = 4;
+      var DELAY = 80;
+      var PAUSE_MS = 1000;
+
+      function buildCanvas() {
+        canvas.innerHTML = '';
+        cells = [];
+        gridCols = Math.floor(region.clientWidth / CELL_PX);
+        gridRows = Math.floor(region.clientHeight / CELL_PX);
+        canvas.style.gridTemplateColumns = 'repeat(' + gridCols + ', ' + CELL_PX + 'px)';
+        canvas.style.gridTemplateRows = 'repeat(' + gridRows + ', ' + CELL_PX + 'px)';
+        for (var r = 0; r < gridRows; r++) {
+          for (var c = 0; c < gridCols; c++) {
+            var div = document.createElement('div');
+            div.className = 'ascii-cell';
+            div.textContent = '\u005C';
+            canvas.appendChild(div);
+            cells.push(div);
+          }
+        }
+      }
+
+      function cellAt(row, col) {
+        return cells[row * gridCols + col];
+      }
+
+      function animate() {
+        var chunks = [];
+        for (var br = 0; br < gridRows; br += CHUNK_Y) {
+          for (var bc = 0; bc < gridCols; bc += CHUNK_X) {
+            chunks.push({ r: br, c: bc });
+          }
+        }
+        var idx = 0;
+        var midpoint = Math.floor(chunks.length / 2);
+        function revealNext() {
+          if (idx >= chunks.length) return;
+          var origin = chunks[idx];
+          var rEnd = Math.min(origin.r + CHUNK_Y, gridRows);
+          var cEnd = Math.min(origin.c + CHUNK_X, gridCols);
+          for (var r = origin.r; r < rEnd; r++) {
+            for (var c = origin.c; c < cEnd; c++) {
+              cellAt(r, c).classList.add('revealed');
+            }
+          }
+          idx++;
+          var nextDelay = (idx === midpoint) ? PAUSE_MS : DELAY;
+          setTimeout(revealNext, nextDelay);
+        }
+        revealNext();
+      }
+
+      buildCanvas();
+      animate();
+    })();
+  </script>
 
   <script src="js/scramble-text.js"></script>
   <script src="js/margin-tool.js"></script>
