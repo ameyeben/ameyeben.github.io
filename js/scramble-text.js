@@ -191,24 +191,21 @@ function runIntro() {
 
         const mask = document.getElementById('ascii-mask');
         let idx = 1;
-        const cycle = setInterval(() => {
+        const exitFallback = setTimeout(exitOverlay, 10000);
+
+        function showNext() {
           const isLast = idx >= variants.length - 1;
-          if (isLast && !window._asciiDone) return;
           if (idx === variants.length - 3 && mask) mask.classList.add('mask-hidden');
           welcome.textContent = variants[idx];
           if (isLast) {
-            clearInterval(cycle);
             clearTimeout(exitFallback);
-            setTimeout(exitOverlay, 800);
+            setTimeout(exitOverlay, 2500);
           } else {
             idx++;
+            setTimeout(showNext, 270);
           }
-        }, 270);
-
-        const exitFallback = setTimeout(() => {
-          clearInterval(cycle);
-          exitOverlay();
-        }, 10000);
+        }
+        setTimeout(showNext, 270);
       }, 1500);
     },
   });
