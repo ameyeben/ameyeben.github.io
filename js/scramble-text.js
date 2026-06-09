@@ -17,18 +17,14 @@ CHAR_SETS.latin = CHAR_SETS.cp850 + CHAR_SETS.cp852;
 const scrambleCache = new Map();
 
 function generateScramble(text, opts = {}) {
-  const { cycles = 2, charSet = 'latin' } = opts;
-  const key = `${text}:${cycles}:${charSet}`;
+  const { charSet = 'latin' } = opts;
+  const key = `${text}:${charSet}`;
   if (scrambleCache.has(key)) return scrambleCache.get(key);
 
   const chars = CHAR_SETS[charSet] ?? CHAR_SETS.latin;
   const scramble = Array.from({ length: text.length }, (_, i) => {
     if (text[i] === ' ' || text[i] === '\n') return null;
-    const seq = [];
-    for (let c = 0; c < cycles; c++) {
-      seq.push(chars[Math.floor(Math.random() * chars.length)]);
-    }
-    return seq;
+    return chars[Math.floor(Math.random() * chars.length)];
   });
 
   scrambleCache.set(key, scramble);
@@ -45,7 +41,7 @@ function scrambleText(els, text, opts = {}) {
   } = opts;
 
   const targetEls = Array.isArray(els) ? els : [els];
-  const scramble = generateScramble(text, { cycles, charSet });
+  const scramble = generateScramble(text, { charSet });
 
   const out = Array(text.length).fill('');
 
@@ -105,7 +101,7 @@ function scrambleText(els, text, opts = {}) {
 
     for (let i = lastIndex + 1; i <= targetIndex; i++) {
       if (text[i] !== ' ' && text[i] !== '\n') {
-        out[i] = scramble[i][0];
+        out[i] = scramble[i];
       } else if (text[i] === ' ') {
         out[i] = ' ';
       }
@@ -118,7 +114,7 @@ function scrambleText(els, text, opts = {}) {
     if (elapsed >= totalDuration) {
       for (let i = lastIndex + 1; i < text.length; i++) {
         if (text[i] !== ' ' && text[i] !== '\n') {
-          out[i] = scramble[i][0];
+          out[i] = scramble[i];
         } else if (text[i] === ' ') {
           out[i] = ' ';
         }
