@@ -217,16 +217,10 @@ h3 {
 }
 
 #intro-overlay.intro-exit {
-  animation: introRevealFromCenter 0.7s cubic-bezier(0.65, 0, 0.35, 1) forwards;
   mask-image:
     linear-gradient(to bottom, black var(--reveal-t), transparent var(--reveal-t), transparent calc(100% - var(--reveal-t)), black calc(100% - var(--reveal-t))),
     linear-gradient(to right,  black var(--reveal-l), transparent var(--reveal-l), transparent calc(100% - var(--reveal-l)), black calc(100% - var(--reveal-l)));
   mask-composite: add;
-}
-
-@keyframes introRevealFromCenter {
-  from { --reveal-t: 50%; --reveal-l: 50%; }
-  to   { --reveal-t: 0%;  --reveal-l: 0%; }
 }
 
 /* ── Hero title (static) ──────────────────── */

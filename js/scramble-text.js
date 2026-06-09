@@ -152,6 +152,11 @@ function runIntro() {
   const overlay = document.getElementById('intro-overlay');
   if (!overlay) return;
 
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    overlay.remove();
+    return;
+  }
+
   const bg = overlay.querySelector('.intro-title-bg');
   const fg = overlay.querySelector('.intro-title-fg');
   if (!bg || !fg) return;
@@ -184,9 +189,28 @@ function runIntro() {
         welcome.textContent = variants[0];
         overlay.querySelector('.intro-content').appendChild(welcome);
 
+        let removed = false;
+        function removeOverlay() {
+          if (removed) return;
+          removed = true;
+          overlay.remove();
+        }
+
         function exitOverlay() {
           overlay.classList.add('intro-exit');
-          overlay.addEventListener('animationend', () => overlay.remove(), { once: true });
+          const state = { t: 50, l: 50 };
+          anime.animate(state, {
+            t: 0,
+            l: 0,
+            duration: 700,
+            ease: anime.cubicBezier(0.65, 0, 0.35, 1),
+            onUpdate: () => {
+              overlay.style.setProperty('--reveal-t', state.t + '%');
+              overlay.style.setProperty('--reveal-l', state.l + '%');
+            },
+            onComplete: removeOverlay,
+          });
+          setTimeout(removeOverlay, 1500);
         }
 
         const mask = document.getElementById('ascii-mask');
