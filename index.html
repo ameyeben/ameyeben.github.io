@@ -366,6 +366,7 @@
 
   <script src="node_modules/animejs/dist/bundles/anime.umd.min.js"></script>
   <script src="js/scramble-text.js?v=4"></script>
+  <script src="js/text-reveal.js"></script>
   <script src="js/margin-tool.js"></script>
   <script src="js/bounds-guide.js"></script>
 
@@ -407,6 +408,84 @@
       if (e.key === 'r' || e.key === 'R') toggleRatio();
       if (e.key === 's' || e.key === 'S') toggleSections();
     });
+  </script>
+
+  <script>
+    (function () {
+      var heroSection = document.getElementById('hero');
+      if (!heroSection) return;
+
+      var REVEAL_DURATION = 600;
+      var revealEls = [
+        heroSection.querySelector('.hero-title'),
+        heroSection.querySelector('p'),
+      ].concat(Array.from(heroSection.querySelectorAll('a')));
+      revealEls = revealEls.filter(Boolean);
+
+      var reveals = revealEls.map(function (el) {
+        return createTextReveal(el, { duration: REVEAL_DURATION });
+      });
+
+      var heroVisible = false;
+      var introCompleted = false;
+
+      function showHero() {
+        function showNext(idx) {
+          if (idx >= reveals.length) return;
+          reveals[idx].show(function () {
+            setTimeout(function () { showNext(idx + 1); }, 80);
+          });
+        }
+        showNext(0);
+      }
+
+      function hideHero(onComplete) {
+        function hideNext(idx) {
+          if (idx < 0) {
+            reveals.forEach(function (r) { r.reset(); });
+            if (onComplete) onComplete();
+            return;
+          }
+          reveals[idx].hide(function () { hideNext(idx - 1); });
+        }
+        hideNext(reveals.length - 1);
+      }
+
+      function tryShow() {
+        if (introCompleted && heroVisible) showHero();
+      }
+
+      window.addEventListener('introComplete', function () {
+        introCompleted = true;
+        tryShow();
+      });
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && !heroVisible) {
+            heroVisible = true;
+            tryShow();
+          } else if (!entry.isIntersecting && heroVisible) {
+            heroVisible = false;
+            reveals.forEach(function (r) { r.reset(); });
+          }
+        });
+      }, { threshold: 0.5 });
+
+      observer.observe(heroSection);
+
+      document.querySelectorAll('header nav a[href^="#"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          var target = link.getAttribute('href');
+          if (target === '#hero' || !heroVisible) return;
+          e.preventDefault();
+          hideHero(function () {
+            var el = document.querySelector(target);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          });
+        });
+      });
+    })();
   </script>
 
 </body>

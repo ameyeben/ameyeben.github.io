@@ -153,9 +153,13 @@ function runIntro() {
   if (!overlay) return;
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.scrollTo(0, 0);
+    window.dispatchEvent(new CustomEvent('introComplete'));
     overlay.remove();
     return;
   }
+
+  document.body.style.overflow = 'hidden';
 
   const bg = overlay.querySelector('.intro-title-bg');
   const fg = overlay.querySelector('.intro-title-fg');
@@ -193,10 +197,13 @@ function runIntro() {
         function removeOverlay() {
           if (removed) return;
           removed = true;
+          window.dispatchEvent(new CustomEvent('introComplete'));
           overlay.remove();
         }
 
         function exitOverlay() {
+          window.scrollTo(0, 0);
+          document.body.style.overflow = '';
           overlay.classList.add('intro-exit');
           const state = { t: 50, l: 50 };
           anime.animate(state, {
