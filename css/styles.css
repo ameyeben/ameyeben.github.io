@@ -140,7 +140,6 @@ h3 {
   padding: 2rem;
   display: grid;
   position: relative;
-  z-index: 2;
 }
 
 .intro-title-bg span,
@@ -164,42 +163,54 @@ h3 {
 }
 
 .intro-title-bg {
-  color: #1a1a1a;
+  color: #ffffff;
   position: relative;
-  left: 0.25rem;
-  z-index: 0;
+  transform: translateX(-4px);
+  z-index: 4;
 }
 
 .intro-title-fg {
-  color: #f5f5f5;
+  color: #1a1a1a;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
-.intro-title-bg .pending {
-  opacity: 0;
+.intro-title-bg span.pending,
+.intro-title-fg span.pending {
+  min-width: 0;
+  width: 0;
+  overflow: hidden;
 }
 
-.intro-title-bg .scrambling {
+.intro-title-bg .scrambling,
+.intro-title-bg .locked {
+  color: #ffffff;
+}
+
+.intro-title-fg .scrambling,
+.intro-title-fg .locked {
   color: #1a1a1a;
 }
 
-.intro-title-bg .locked {
-  color: inherit;
-}
-
-.intro-title-fg .pending,
-.intro-title-fg .scrambling,
-.intro-title-fg .locked {
-  color: inherit;
-}
-
-#intro-overlay.intro-done .intro-title-bg {
+#intro-overlay.intro-done .intro-title-bg,
+#intro-overlay.intro-done .intro-title-fg {
   display: none;
 }
 
-#intro-overlay.intro-done .intro-title-fg .locked {
-  color: #1a1a1a;
+.intro-bsod-box {
+  position: fixed;
+  background: #2563EB;
+  z-index: 3;
+  pointer-events: none;
+  transition: top 0.12s ease, left 0.12s ease, width 0.12s ease, height 0.12s ease;
+}
+
+#intro-overlay.intro-bsod .intro-title-fg {
+  opacity: 0;
+}
+
+#intro-overlay.intro-bsod .intro-welcome {
+  color: #ffffff;
 }
 
 .intro-welcome {
@@ -213,6 +224,7 @@ h3 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 5;
   animation: introWelcomeFade 0.4s ease forwards;
 }
 

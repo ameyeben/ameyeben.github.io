@@ -167,16 +167,14 @@ function runIntro() {
 
   const text = bg.dataset.text || 'PORTFOLIO';
 
-  scrambleText([bg, fg], text, {
+  scrambleTextAnime([bg, fg], text, {
     duration: 1.5,
-    cycles: 1,
     charSet: 'latin',
-    holdDuration: 300,
+    holdDuration: 700,
     onComplete: () => {
-      overlay.classList.add('intro-done');
-
       setTimeout(() => {
-        fg.style.opacity = '0';
+        overlay.classList.add('intro-done');
+        overlay.classList.add('intro-bsod');
 
         const variants = [
           'Bienvenue',
@@ -192,6 +190,20 @@ function runIntro() {
         welcome.className = 'intro-welcome';
         welcome.textContent = variants[0];
         overlay.querySelector('.intro-content').appendChild(welcome);
+
+        const bsodBox = document.createElement('div');
+        bsodBox.className = 'intro-bsod-box';
+        overlay.appendChild(bsodBox);
+
+        function updateBox() {
+          const rect = welcome.getBoundingClientRect();
+          const pad = 16;
+          bsodBox.style.top    = (rect.top    - pad) + 'px';
+          bsodBox.style.left   = (rect.left   - pad) + 'px';
+          bsodBox.style.width  = (rect.width  + pad * 2) + 'px';
+          bsodBox.style.height = (rect.height + pad * 2) + 'px';
+        }
+        updateBox();
 
         let removed = false;
         function removeOverlay() {
@@ -228,6 +240,7 @@ function runIntro() {
           const isLast = idx >= variants.length - 1;
           if (idx === variants.length - 3 && mask) mask.classList.add('mask-hidden');
           welcome.textContent = variants[idx];
+          updateBox();
           if (isLast) {
             clearTimeout(exitFallback);
             setTimeout(exitOverlay, 2500);
@@ -237,7 +250,7 @@ function runIntro() {
           }
         }
         setTimeout(showNext, 270);
-      }, 1500);
+      }, 400);
     },
   });
 }
