@@ -241,15 +241,6 @@ h3 {
 }
 
 /* ── Text reveal ─────────────────────────── */
-.tr-cursor {
-  position: absolute;
-  top: 0.1em;
-  width: 0.55em;
-  height: 1.1em;
-  background: currentColor;
-  pointer-events: none;
-  opacity: 0;
-}
 
 /* ── Hero title (static) ──────────────────── */
 #hero-title-wrapper {
