@@ -55,6 +55,7 @@ function scrambleText(els, text, opts = {}) {
     el.innerHTML = [...text].map((c) => c === '\n' ? '<br>' : '<span></span>').join('');
   });
   const allSpans = targetEls.map((el) => el.querySelectorAll('span'));
+  const lockedFlags = allSpans.map(spans => new Uint8Array(spans.length));
 
   targetEls.forEach((el) => {
     const spans = el.querySelectorAll('span');
@@ -69,12 +70,15 @@ function scrambleText(els, text, opts = {}) {
   });
 
   const render = () => {
-    allSpans.forEach((spans) => {
+    allSpans.forEach((spans, elIdx) => {
+      const flags = lockedFlags[elIdx];
       spans.forEach((s, spanIdx) => {
+        if (flags[spanIdx]) return;
         const i = spanToText[spanIdx];
         if (out[i] === text[i]) {
           s.textContent = text[i];
           s.className = 'locked';
+          flags[spanIdx] = 1;
         } else if (out[i] !== '') {
           s.textContent = out[i];
           s.className = 'scrambling';
