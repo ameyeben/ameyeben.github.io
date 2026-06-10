@@ -275,6 +275,10 @@ h3 {
 }
 
 /* ── Text reveal ─────────────────────────── */
+.rev-cursor   { color: #ffffff; }
+.rev-follower { color: rgba(255, 255, 255, 0.3); }
+.rev-locked   { color: inherit; }
+.rev-hidden   { color: transparent; }
 
 /* ── Hero title (static) ──────────────────── */
 #hero-title-wrapper {
