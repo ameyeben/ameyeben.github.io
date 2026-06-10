@@ -13,13 +13,19 @@ const SCRAMBLE_CHAR_SETS = {
 
 SCRAMBLE_CHAR_SETS.ibm = SCRAMBLE_CHAR_SETS.cp850 + SCRAMBLE_CHAR_SETS.cp852 + SCRAMBLE_CHAR_SETS.cp866;
 SCRAMBLE_CHAR_SETS.latin = SCRAMBLE_CHAR_SETS.cp850 + SCRAMBLE_CHAR_SETS.cp852;
+SCRAMBLE_CHAR_SETS.ascii = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+SCRAMBLE_CHAR_SETS['latin-ascii'] = SCRAMBLE_CHAR_SETS.latin + SCRAMBLE_CHAR_SETS.ascii;
 
 function scrambleTextAnime(els, text, opts = {}) {
   const {
-    duration = 2.0,    // seconds
+    duration = 2.0,
     charSet = 'latin',
-    holdDuration = 0,  // ms
+    holdDuration = 0,
+    settleHoldDuration = 0,
+    flashAfterScramble = 0, // ms — instant re-scramble with gaps right after animation ends
+    flashBeforeSettle = 0,  // ms — instant re-scramble with gaps right before settle
     ease = 'linear',
+    onSettle = null,
     onComplete = null,
   } = opts;
 
@@ -98,17 +104,49 @@ function scrambleTextAnime(els, text, opts = {}) {
       }
       render();
 
-      setTimeout(() => {
+      function doFlash(durationMs, cb) {
+        const flashChars = SCRAMBLE_CHAR_SETS[charSet] ?? SCRAMBLE_CHAR_SETS.latin;
+        for (let i = 0; i < text.length; i++) {
+          if (text[i] === ' ' || text[i] === '\n') continue;
+          out[i] = Math.random() > 0.35
+            ? flashChars[Math.floor(Math.random() * flashChars.length)]
+            : ' ';
+        }
+        lockedFlags.forEach(flags => flags.fill(0));
+        render();
+        setTimeout(cb, durationMs);
+      }
+
+      function doSettle() {
+        lockedFlags.forEach(flags => flags.fill(0));
         for (let i = 0; i < text.length; i++) out[i] = text[i];
         render();
+        if (onSettle) onSettle();
+        setTimeout(() => {
+          if (onComplete) {
+            onComplete();
+          } else {
+            targetEls[0].style.opacity = '0';
+            if (targetEls[1]) targetEls[1].style.color = '#ffffff';
+          }
+        }, settleHoldDuration);
+      }
 
-        if (onComplete) {
-          onComplete();
-        } else {
-          targetEls[0].style.opacity = '0';
-          if (targetEls[1]) targetEls[1].style.color = '#ffffff';
-        }
-      }, holdDuration);
+      function doHold() {
+        setTimeout(() => {
+          if (flashBeforeSettle > 0) {
+            doFlash(flashBeforeSettle, doSettle);
+          } else {
+            doSettle();
+          }
+        }, holdDuration);
+      }
+
+      if (flashAfterScramble > 0) {
+        doFlash(flashAfterScramble, doHold);
+      } else {
+        doHold();
+      }
     },
   });
 }

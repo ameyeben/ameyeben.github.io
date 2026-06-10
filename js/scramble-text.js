@@ -167,10 +167,31 @@ function runIntro() {
 
   const text = bg.dataset.text || 'PORTFOLIO';
 
+  const blurEl = document.getElementById('intro-blur');
+  if (blurEl) {
+    const blurState = { v: 4 };
+    anime.animate(blurState, {
+      v: 0,
+      duration: 1500,
+      ease: 'linear',
+      onUpdate() {
+        const val = blurState.v.toFixed(2) + 'px';
+        blurEl.style.backdropFilter = `blur(${val})`;
+        blurEl.style.webkitBackdropFilter = `blur(${val})`;
+      },
+    });
+  }
+
   scrambleTextAnime([bg, fg], text, {
     duration: 1.5,
-    charSet: 'latin',
-    holdDuration: 700,
+    charSet: 'latin-ascii',
+    holdDuration: 500,
+    settleHoldDuration: 2500,
+    flashAfterScramble: 150,
+    flashBeforeSettle: 150,
+    onSettle: () => {
+      bg.style.opacity = '0';
+    },
     onComplete: () => {
       setTimeout(() => {
         overlay.classList.add('intro-done');
