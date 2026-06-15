@@ -303,7 +303,13 @@ h3 {
 }
 
 .hero-subtitle {
-  margin-top: 4rem;
+  margin-top: 6rem;
+  font-size: 1.4rem;
+  font-weight: 300;
+}
+
+.hero-subtitle--focus {
+  margin-top: 0.4rem;
 }
 
 .hero-focus {

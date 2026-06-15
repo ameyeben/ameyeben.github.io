@@ -69,7 +69,8 @@
         <div id="hero-title-wrapper">
           <h1 class="hero-title" style="font-weight: 700; text-align: left;">Ben Ameye</h1>
         </div>
-        <p class="hero-subtitle">I build tools to solve real problems. Currently focus is </p>
+        <p class="hero-subtitle">I build tools to solve real problems.</p>
+        <p class="hero-subtitle hero-subtitle--focus">Currently focus is </p>
         <a href="#projects">View my work</a>
         <a href="#contact">Get in touch</a>
       </div>
@@ -433,6 +434,7 @@
       var revealEls = [
         heroSection.querySelector('.hero-title'),
         heroSection.querySelector('p'),
+        heroSection.querySelector('.hero-subtitle--focus'),
       ].concat(Array.from(heroSection.querySelectorAll('a')));
       revealEls = revealEls.filter(Boolean);
 
@@ -448,7 +450,7 @@
           if (idx >= reveals.length) return;
           reveals[idx].show(function () {
             if (idx === 0 && window.heroLowPoly) window.heroLowPoly.swapIn();
-            if (idx === 1 && window.heroFocusCycle) window.heroFocusCycle.start(revealEls[1]);
+            if (idx === 2 && window.heroFocusCycle) window.heroFocusCycle.start(revealEls[2]);
             setTimeout(function () { showNext(idx + 1); }, 80);
           });
         }
