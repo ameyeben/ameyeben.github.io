@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/aspect-ratio-overlay.css" />
   <link rel="stylesheet" href="css/margin-tool.css" />
   <link rel="stylesheet" href="css/styles.css" />
@@ -66,9 +67,9 @@
         <!-- HERO TEXT — your main headline. Edit this freely; it has NO effect on
              the intro animation above. Plain HTML, use <br> for line breaks. -->
         <div id="hero-title-wrapper">
-          <h1 class="hero-title" style="font-weight: 700; text-align: left;">Portfolio</h1>
+          <h1 class="hero-title" style="font-weight: 700; text-align: left;">Ben Ameye</h1>
         </div>
-        <p>One-line description of what you do.</p>
+        <p class="hero-subtitle">One-line description of what you do.</p>
         <a href="#projects">View my work</a>
         <a href="#contact">Get in touch</a>
       </div>
@@ -377,6 +378,8 @@
   <script src="js/scramble-text-anime.js"></script>
   <script src="js/scramble-text.js?v=5"></script>
   <script src="js/text-reveal.js"></script>
+  <script src="js/hero-lowpoly-data.js"></script>
+  <script src="js/hero-lowpoly.js"></script>
   <script src="js/margin-tool.js"></script>
   <script src="js/bounds-guide.js"></script>
 
@@ -443,6 +446,7 @@
         function showNext(idx) {
           if (idx >= reveals.length) return;
           reveals[idx].show(function () {
+            if (idx === 0 && window.heroLowPoly) window.heroLowPoly.swapIn();
             setTimeout(function () { showNext(idx + 1); }, 80);
           });
         }
@@ -450,6 +454,7 @@
       }
 
       function hideHero(onComplete) {
+        if (window.heroLowPoly) window.heroLowPoly.swapOut();
         function hideNext(idx) {
           if (idx < 0) {
             reveals.forEach(function (r) { r.reset(); });
@@ -477,6 +482,7 @@
             tryShow();
           } else if (!entry.isIntersecting && heroVisible) {
             heroVisible = false;
+            if (window.heroLowPoly) window.heroLowPoly.swapOut();
             reveals.forEach(function (r) { r.reset(); });
           }
         });

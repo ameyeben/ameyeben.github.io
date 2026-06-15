@@ -287,13 +287,28 @@ h3 {
 }
 
 .hero-title {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: 1.5rem;
-  letter-spacing: 0.05em;
-  line-height: 1.5;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 13vw;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
   color: #ffffff;
-  white-space: pre-line;
+  white-space: nowrap;
 }
+
+.hero-title-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  will-change: contents;
+}
+
+.hero-subtitle {
+  margin-top: 4rem;
+}
+
 
 /* ── Navigation ───────────────────────────── */
 header nav .container {
