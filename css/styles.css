@@ -119,13 +119,7 @@ h3 {
 }
 
 #intro-grain {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  filter: url(#grain-filter);
-  opacity: 0.5;
-  transition: opacity 1.8s ease;
+  display: none;
 }
 
 #intro-blur {
@@ -283,7 +277,10 @@ h3 {
 /* ── Hero title (static) ──────────────────── */
 #hero-title-wrapper {
   position: relative;
-  text-align: center;
+  display: inline-block;
+  background: #1d4ed8;
+  padding: 0.08em 0.18em;
+  text-align: left;
 }
 
 .hero-title {
@@ -309,6 +306,25 @@ h3 {
   margin-top: 4rem;
 }
 
+.hero-focus {
+  display: inline-block;
+  font-weight: 500;
+  color: #ffffff;
+  white-space: nowrap;
+  background: #1d4ed8;
+  padding: 0.1em 0.35em;
+}
+
+.hero-focus::after {
+  content: '▌';
+  margin-left: 0.08em;
+  animation: hero-caret-blink 1s steps(1) infinite;
+}
+
+@keyframes hero-caret-blink {
+  50% { opacity: 0; }
+}
+
 
 /* ── Navigation ───────────────────────────── */
 header nav .container {
@@ -321,7 +337,7 @@ header nav .container {
 }
 
 header nav ul {
-  grid-column: 10 / -1;
+  grid-column: 11 / -1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
