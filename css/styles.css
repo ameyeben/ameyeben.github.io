@@ -11,16 +11,19 @@ html {
   scroll-behavior: smooth;
   scroll-snap-type: y mandatory;
   scroll-padding-top: var(--header-height, 3rem);
+  background: #1a1a1a;
 }
 
 :root {
-  --bounds-line-width: 2px;
+  --bounds-line-width: 1px;
   --bounds-width: 1400px;
-  --content-max-width: 90%;
-  --content-padding-x: 1.5rem;
-  --section-padding-y: 3rem;
-  --section-inner-padding-x: 1.75rem;
-  --section-inner-padding-y: 0rem;
+  --content-max-width: 1400px;
+  --content-padding-x: 0rem;
+  --section-padding-y: 1rem;
+  /* φ-derived: 19vw/side ⇒ content column ≈ 62% (1/φ); capped at 16.7rem so at
+     the 1400px design width content = 1400/φ ≈ 865px; floored for small screens. */
+  --section-inner-padding-x: clamp(1.5rem, 19vw, 16.7rem);
+  --section-inner-padding-y: 1rem;
   --header-height: 8rem;
 }
 
@@ -30,7 +33,18 @@ body {
   line-height: 1.6;
 
   color: #fff;
-  background: #1a1a1a;
+  background: transparent;
+}
+
+/* ── Background noise layer ────────────────── */
+#noise-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  display: block;
 }
 
 header {
@@ -275,21 +289,33 @@ h3 {
 .rev-hidden   { color: transparent; }
 
 /* ── Hero title (static) ──────────────────── */
+/* Golden-ratio blue box: φ (1.618:1) rectangle, hugging the container's right
+   edge so the name + right-justified subtitles share a right margin. */
 #hero-title-wrapper {
   position: relative;
-  display: inline-block;
+  display: block;
+  width: min(78vmin, 90vw);
+  aspect-ratio: 1.618 / 1;
+  margin-left: auto;
   background: #1d4ed8;
-  padding: 0.08em 0.18em;
-  text-align: left;
 }
 
+/* Name "Ben" over "Ameye" (literal newline + pre-line), right-aligned and
+   parked at the right focal region (~φ divisions). line-height MUST match
+   LINE_HEIGHT in scripts/bake-hero-lowpoly.mjs for the distortion SVG to align. */
 .hero-title {
+  position: absolute;
+  top: 38.2%;
+  right: 7%;
+  transform: translateY(-50%);
+  margin: 0;
   font-family: 'Satoshi', sans-serif;
-  font-size: 13vw;
+  font-size: clamp(1.75rem, 12vmin, 9rem);
   letter-spacing: 0.02em;
-  line-height: 1.1;
+  line-height: 0.9;
+  text-align: right;
+  white-space: pre-line;
   color: #ffffff;
-  white-space: nowrap;
 }
 
 .hero-title-svg {
@@ -303,9 +329,10 @@ h3 {
 }
 
 .hero-subtitle {
-  margin-top: 6rem;
+  margin-top: 2.5rem;
   font-size: 1.4rem;
   font-weight: 300;
+  text-align: right;
 }
 
 .hero-subtitle--focus {

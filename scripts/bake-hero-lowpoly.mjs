@@ -20,24 +20,35 @@ import { dirname, join } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 
-const TEXT = 'Ben Ameye';
+const TEXT = 'Ben Ameye';        // aria-label for the SVG
+const LINES = ['Ben', 'Ameye'];  // stacked lines, right-aligned (top → bottom)
 const FONT_SIZE = 1000;
 const SEG_PER_CURVE = 3;
 const LETTER_SPACING = 0.02; // em — must match css .hero-title letter-spacing
+const LINE_HEIGHT = 0.9;     // em — must match css .hero-title line-height
 
 const fontBuf = readFileSync(join(ROOT, 'fonts', 'Satoshi-Bold.ttf'));
 const font = opentype.parse(fontBuf.buffer.slice(fontBuf.byteOffset, fontBuf.byteOffset + fontBuf.byteLength));
 
 // Lay out glyphs manually so we can apply CSS letter-spacing (opentype's
-// getPath does not). x=0 is the text left edge, y=0 is the baseline.
-const glyphs = font.stringToGlyphs(TEXT);
+// getPath does not). Two stacked, RIGHT-ALIGNED lines: x=0 is the shared right
+// edge (glyphs run left, negative x); y=0 is the LAST line's baseline (earlier
+// lines sit one lineGap above). Mirrors css text-align:right + line-height.
 const lsUnits = LETTER_SPACING * FONT_SIZE;
+const lineGap = LINE_HEIGHT * FONT_SIZE;
 const path = new opentype.Path();
-let penX = 0;
-for (var gi = 0; gi < glyphs.length; gi++) {
-  var g = glyphs[gi];
-  path.extend(g.getPath(penX, 0, FONT_SIZE));
-  penX += (g.advanceWidth / font.unitsPerEm) * FONT_SIZE + lsUnits;
+for (let li = 0; li < LINES.length; li++) {
+  const lineGlyphs = font.stringToGlyphs(LINES[li]);
+  let lineW = 0;
+  for (const g of lineGlyphs) {
+    lineW += (g.advanceWidth / font.unitsPerEm) * FONT_SIZE + lsUnits;
+  }
+  const baselineY = -(LINES.length - 1 - li) * lineGap;
+  let penX = -lineW; // place the line so its right edge lands on x=0
+  for (const g of lineGlyphs) {
+    path.extend(g.getPath(penX, baselineY, FONT_SIZE));
+    penX += (g.advanceWidth / font.unitsPerEm) * FONT_SIZE + lsUnits;
+  }
 }
 
 // Flatten path commands into closed polygon contours (one per M…Z subpath).
@@ -117,8 +128,8 @@ const totalPts = cleaned.reduce((n, c) => n + c.length, 0);
 const data = {
   text: TEXT,
   viewBox,
-  // Tight glyph ink box (no padding), font units. x=0 is text left edge,
-  // y=0 is the baseline. Used at runtime to scale/align onto the live text.
+  // Tight glyph ink box (no padding), font units. x=0 is the right edge,
+  // y=0 is the last line's baseline. Used at runtime to scale/align onto text.
   ink: [ROUND(minX), ROUND(minY), ROUND(maxX), ROUND(maxY)],
   contours: cleaned,
   metrics: {
@@ -127,6 +138,7 @@ const data = {
     ascender: font.ascender,        // baseline → top, in font units
     descender: font.descender,      // baseline → bottom (negative), font units
     letterSpacing: LETTER_SPACING,  // em
+    lineHeight: LINE_HEIGHT,        // em
   },
 };
 const out =

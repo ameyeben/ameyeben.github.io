@@ -51,8 +51,8 @@
   pathEl.setAttribute('d', buildD(base));
 
   // Overlay the SVG exactly where the live text sits: scale by the rendered
-  // font-size and align the font origin (x=0 left edge, y=0 baseline) to the
-  // text's baseline-left. Keeps the crossfade jump-free.
+  // font-size and align the font origin (x=0 right edge, y=0 = last-line
+  // baseline) to the text's baseline-right. Keeps the crossfade jump-free.
   function positionSvg() {
     var fontPx = parseFloat(getComputedStyle(titleEl).fontSize);
     var scale = fontPx / data.metrics.fontSize; // px per font unit
@@ -69,9 +69,9 @@
     var baseY = probe.getBoundingClientRect().top;
     titleEl.removeChild(probe);
 
-    var baseX = rect.left; // text pen origin (x=0)
+    var baseX = rect.right; // baked x=0 is the text right edge (right-aligned)
     var vb = data.viewBox;
-    // Map font origin (0,0) → (baseX, baseY).
+    // Map font origin (0,0) → (baseX, baseY) = (right edge, last-line baseline).
     svg.style.left = (baseX + vb[0] * scale - wrap.left) + 'px';
     svg.style.top = (baseY + vb[1] * scale - wrap.top) + 'px';
     svg.style.width = (vb[2] * scale) + 'px';

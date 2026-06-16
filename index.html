@@ -17,6 +17,9 @@
 
 <body style="font-size: 16px">
 
+  <!-- ── Background noise layer (static, aspect-aware) ─ -->
+  <canvas id="noise-bg" aria-hidden="true"></canvas>
+
   <!-- ── Intro overlay ─────────────────────────────── -->
   <!-- INTRO ANIMATION TEXT — edit the scramble quote ONLY in the data-text below.
        This is completely independent of the hero headline further down. Use
@@ -67,10 +70,11 @@
         <!-- HERO TEXT — your main headline. Edit this freely; it has NO effect on
              the intro animation above. Plain HTML, use <br> for line breaks. -->
         <div id="hero-title-wrapper">
-          <h1 class="hero-title" style="font-weight: 700; text-align: left;">Ben Ameye</h1>
+          <h1 class="hero-title" style="font-weight: 700;">Ben
+Ameye</h1>
         </div>
         <p class="hero-subtitle">I build tools to solve real problems.</p>
-        <p class="hero-subtitle hero-subtitle--focus">Currently focus is </p>
+        <p class="hero-subtitle hero-subtitle--focus">Current focus is </p>
         <a href="#projects">View my work</a>
         <a href="#contact">Get in touch</a>
       </div>
@@ -375,6 +379,7 @@
     })();
   </script>
 
+  <script src="js/noise-bg.js"></script>
   <script src="node_modules/animejs/dist/bundles/anime.umd.min.js"></script>
   <script src="js/scramble-text-anime.js"></script>
   <script src="js/scramble-text.js?v=5"></script>
