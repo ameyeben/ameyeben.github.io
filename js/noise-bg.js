@@ -33,12 +33,6 @@
     return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
   }
 
-  // Reveal glow — sits behind the grain (first child), screen-blended so it only
-  // adds light. Pulsed per band in fadeIn(); styled in css (#noise-glow).
-  var glow = document.createElement('div');
-  glow.id = 'noise-glow';
-  wrapper.appendChild(glow);
-
   // One stacked canvas per band. mag: sparse (low strength) moves more.
   var layers = [];
   for (var i = 0; i < N; i++) {
@@ -175,29 +169,17 @@
   if (!REDUCED) window.addEventListener('mousemove', onMove);
 
   // ── Fade-in: center band (layers[0]) first, rippling outward ───────────────
-  // Glow pulse for band i: brighter + smaller at center, fainter + wider outward.
-  function pulseGlow(i) {
-    var scale = 0.35 + (i / (N - 1)) * 1.05;        // center small → outer wide
-    var peak = 0.5 * (0.35 + 0.65 * STRENGTH[i]);    // center bright → outer faint
-    glow.style.transform = 'scale(' + scale.toFixed(3) + ')';
-    glow.style.opacity = peak.toFixed(3);
-    setTimeout(function () { glow.style.opacity = '0'; }, 200); // flare then settle
-  }
-
   var faded = false;
   function fadeIn() {
     if (faded) return;
     faded = true;
     for (var i = 0; i < N; i++) {
       if (REDUCED) {
-        layers[i].canvas.style.opacity = '1';   // no stagger / glow on reduced-motion
+        layers[i].canvas.style.opacity = '1';   // no stagger on reduced-motion
       } else {
-        (function (canvas, band, delay) {
-          setTimeout(function () {
-            canvas.style.opacity = '1';
-            pulseGlow(band);                     // ring glows as it reveals
-          }, delay);
-        })(layers[i].canvas, i, i * 200);
+        (function (canvas, delay) {
+          setTimeout(function () { canvas.style.opacity = '1'; }, delay);
+        })(layers[i].canvas, i * 200);
       }
     }
   }
