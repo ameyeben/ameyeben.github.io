@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+package-lock.json
+
+# Build-time-only fonts for the low-poly bake scripts (only the baked JSON ships).
+# Re-fetch before running scripts/bake-intro-lowpoly.mjs:
+#   https://github.com/notofonts/noto-cjk  (Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Bold.otf)
+fonts/NotoSansCJKsc-Bold.otf

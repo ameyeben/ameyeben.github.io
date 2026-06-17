@@ -207,14 +207,29 @@ function runIntro() {
           'Welcome',
         ];
 
+        // Low-poly scatter→settle (same effect as the hero name) drives the words
+        // when available; the welcome div hosts the SVG and is sized to each glyph
+        // so the BSOD box hugs it. Without it, fall back to a plain text cycle.
+        const lowPoly = window.introLowPoly || null;
+
         const welcome = document.createElement('div');
         welcome.className = 'intro-welcome';
-        welcome.textContent = variants[0];
+        if (lowPoly) lowPoly.mount(welcome);
+        else welcome.textContent = variants[0];
         overlay.querySelector('.intro-content').appendChild(welcome);
 
         const bsodBox = document.createElement('div');
         bsodBox.className = 'intro-bsod-box';
         overlay.appendChild(bsodBox);
+
+        // Size the host to a word's settled glyph (low-poly) so getBoundingClientRect
+        // reports the tight box; plain-text fallback lets the text size it.
+        function sizeWelcome(i) {
+          if (!lowPoly) { welcome.textContent = variants[i]; return; }
+          const s = lowPoly.size(i);
+          welcome.style.width = s.w + 'px';
+          welcome.style.height = s.h + 'px';
+        }
 
         function updateBox() {
           const rect = welcome.getBoundingClientRect();
@@ -224,6 +239,7 @@ function runIntro() {
           bsodBox.style.width  = (rect.width  + pad * 2) + 'px';
           bsodBox.style.height = (rect.height + pad * 2) + 'px';
         }
+        sizeWelcome(0);
         updateBox();
 
         let removed = false;
@@ -253,22 +269,34 @@ function runIntro() {
           setTimeout(removeOverlay, 1500);
         }
 
-        let idx = 1;
-        const exitFallback = setTimeout(exitOverlay, 10000);
+        const HOLD_MS = 450;     // pause on a settled word before advancing
+        const FADE_MS = 160;     // fade-out between words (low-poly only)
+        const LAST_HOLD = 1700;  // pause on the final word before exiting
 
-        function showNext() {
-          const isLast = idx >= variants.length - 1;
-          welcome.textContent = variants[idx];
-          updateBox();
-          if (isLast) {
+        let exited = false;
+        function doExit() { if (exited) return; exited = true; exitOverlay(); }
+        const exitFallback = setTimeout(doExit, 16000);
+
+        function advanceAfter(i) {
+          if (i >= variants.length - 1) {
             clearTimeout(exitFallback);
-            setTimeout(exitOverlay, 2500);
-          } else {
-            idx++;
-            setTimeout(showNext, 270);
+            setTimeout(doExit, LAST_HOLD);
+            return;
           }
+          setTimeout(() => {
+            if (lowPoly) lowPoly.hide();
+            setTimeout(() => showWord(i + 1), lowPoly ? FADE_MS : 0);
+          }, HOLD_MS);
         }
-        setTimeout(showNext, 270);
+
+        function showWord(i) {
+          sizeWelcome(i);
+          updateBox();
+          if (lowPoly) lowPoly.show(i, () => advanceAfter(i));
+          else advanceAfter(i);
+        }
+
+        showWord(0);
       }, 400);
     },
   });
