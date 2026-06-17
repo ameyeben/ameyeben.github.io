@@ -38,7 +38,7 @@
   for (var i = 0; i < N; i++) {
     var canvas = document.createElement('canvas');
     canvas.style.opacity = '0';                 // hidden until fadeIn (center → out)
-    canvas.style.transition = 'opacity 0.6s ease';
+    canvas.style.transition = 'opacity 0.8s ease';
     wrapper.appendChild(canvas);
     layers.push({
       canvas: canvas,
@@ -179,12 +179,14 @@
       } else {
         (function (canvas, delay) {
           setTimeout(function () { canvas.style.opacity = '1'; }, delay);
-        })(layers[i].canvas, i * 100);
+        })(layers[i].canvas, i * 200);
       }
     }
   }
   // Trigger once the intro overlay clears so the stagger is visible. Fallback in
   // case the event is missed, so the background can never stay invisible.
   window.addEventListener('introComplete', fadeIn);
-  setTimeout(fadeIn, 8000);
+  // Safety net only — must outlast the full intro (~14s) so it never preempts the
+  // introComplete trigger and burn the one-shot reveal behind the overlay.
+  setTimeout(fadeIn, 20000);
 })();
