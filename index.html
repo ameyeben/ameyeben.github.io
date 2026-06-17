@@ -17,8 +17,8 @@
 
 <body style="font-size: 16px">
 
-  <!-- ── Background noise layer (static, aspect-aware) ─ -->
-  <canvas id="noise-bg" aria-hidden="true"></canvas>
+  <!-- ── Background noise layer (parallax depth, cursor-follow) ─ -->
+  <div id="noise-bg" aria-hidden="true"></div>
 
   <!-- ── Intro overlay ─────────────────────────────── -->
   <!-- INTRO ANIMATION TEXT — edit the scramble quote ONLY in the data-text below.
@@ -280,104 +280,7 @@ Ameye</h1>
     <button id="grid-toggle" aria-pressed="false">grid off</button>
   </div>
 
-  <script>
-    (function () {
-      var region = document.getElementById('ascii-bg-region');
-      var canvas = document.getElementById('ascii-bg-canvas');
-      if (!canvas || !region) return;
-
-      var CELL_PX = 18;
-      var CHUNK_X = 20;
-      var CHUNK_Y = 4;
-      var DELAY = 80;
-      var PAUSE_MS = 1000;
-      var FLASH_MS = 800;
-      var ALPHA_FLASH = 0.35;
-      var ALPHA_REST = 0.12;
-
-      var dpr = window.devicePixelRatio || 1;
-      var w = region.clientWidth;
-      var h = region.clientHeight;
-      var gridCols = Math.floor(w / CELL_PX);
-      var gridRows = Math.floor(h / CELL_PX);
-
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = w + 'px';
-      canvas.style.height = h + 'px';
-
-      var ctx = canvas.getContext('2d');
-      ctx.scale(dpr, dpr);
-      ctx.font = '11px "JetBrains Mono", monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-
-      var total = gridRows * gridCols;
-      var revealTimes = new Float64Array(total);
-      var allChunksRevealedAt = 0;
-
-      function easeOut(t) { return 1 - (1 - t) * (1 - t); }
-
-      function drawFrame(now) {
-        ctx.clearRect(0, 0, w, h);
-        ctx.fillStyle = 'black';
-        var allDone = allChunksRevealedAt > 0;
-
-        for (var r = 0; r < gridRows; r++) {
-          for (var c = 0; c < gridCols; c++) {
-            var rt = revealTimes[r * gridCols + c];
-            if (!rt) { allDone = false; continue; }
-            var t = (now - rt) / FLASH_MS;
-            if (t < 1) { allDone = false; } else { t = 1; }
-            ctx.globalAlpha = ALPHA_FLASH + (ALPHA_REST - ALPHA_FLASH) * easeOut(t);
-            ctx.fillText('\\', c * CELL_PX + CELL_PX * 0.5, r * CELL_PX + CELL_PX * 0.5);
-          }
-        }
-        ctx.globalAlpha = 1;
-
-        if (allDone) {
-          region.classList.add('ascii-hidden');
-          setTimeout(function () { window._asciiDone = true; }, 500);
-          return;
-        }
-        requestAnimationFrame(drawFrame);
-      }
-
-      function animate() {
-        var chunks = [];
-        for (var br = 0; br < gridRows; br += CHUNK_Y) {
-          for (var bc = 0; bc < gridCols; bc += CHUNK_X) {
-            chunks.push({ r: br, c: bc });
-          }
-        }
-        var idx = 0;
-        var midpoint = Math.floor(chunks.length * 0.35);
-
-        function revealNext() {
-          if (idx >= chunks.length) {
-            allChunksRevealedAt = performance.now();
-            return;
-          }
-          var origin = chunks[idx];
-          var rEnd = Math.min(origin.r + CHUNK_Y, gridRows);
-          var cEnd = Math.min(origin.c + CHUNK_X, gridCols);
-          var now = performance.now();
-          for (var r = origin.r; r < rEnd; r++) {
-            for (var c = origin.c; c < cEnd; c++) {
-              revealTimes[r * gridCols + c] = now;
-            }
-          }
-          idx++;
-          setTimeout(revealNext, idx === midpoint ? PAUSE_MS : DELAY);
-        }
-        revealNext();
-      }
-
-      window._asciiDone = false;
-      requestAnimationFrame(drawFrame);
-      animate();
-    })();
-  </script>
+  <script src="js/intro-ascii.js"></script>
 
   <script src="js/noise-bg.js"></script>
   <script src="node_modules/animejs/dist/bundles/anime.umd.min.js"></script>
@@ -391,129 +294,9 @@ Ameye</h1>
   <script src="js/bounds-guide.js"></script>
 
 
-  <script>
-    // Auto-update copyright year
-    document.getElementById('year').textContent = new Date().getFullYear();
+  <script src="js/dev-overlays.js"></script>
 
-    // Grid overlay toggle — press G or click the button
-    const overlay = document.getElementById('grid-overlay');
-    const gridBtn = document.getElementById('grid-toggle');
-    const ratioBtn = document.getElementById('ratio-toggle');
-    const sectionsBtn = document.getElementById('sections-toggle');
-
-    function toggleGrid() {
-      const on = overlay.classList.toggle('visible');
-      gridBtn.textContent = on ? 'grid on' : 'grid off';
-      gridBtn.setAttribute('aria-pressed', on);
-    }
-
-    function toggleRatio() {
-      const on = document.body.classList.toggle('show-4-3-guide');
-      ratioBtn.textContent = on ? '4:3 on' : '4:3 off';
-      ratioBtn.setAttribute('aria-pressed', on);
-    }
-
-    function toggleSections() {
-      const on = document.body.classList.toggle('show-section-outlines');
-      sectionsBtn.textContent = on ? 'sections on' : 'sections off';
-      sectionsBtn.setAttribute('aria-pressed', on);
-    }
-
-    gridBtn.addEventListener('click', toggleGrid);
-    ratioBtn.addEventListener('click', toggleRatio);
-    sectionsBtn.addEventListener('click', toggleSections);
-    document.addEventListener('keydown', e => {
-      if (e.target.matches('input, textarea, select')) return;
-      if (e.key === 'g' || e.key === 'G') toggleGrid();
-      if (e.key === 'r' || e.key === 'R') toggleRatio();
-      if (e.key === 's' || e.key === 'S') toggleSections();
-    });
-  </script>
-
-  <script>
-    (function () {
-      var heroSection = document.getElementById('hero');
-      if (!heroSection) return;
-
-      var REVEAL_DURATION = 600;
-      var revealEls = [
-        heroSection.querySelector('.hero-title'),
-        heroSection.querySelector('p'),
-        heroSection.querySelector('.hero-subtitle--focus'),
-      ].concat(Array.from(heroSection.querySelectorAll('a')));
-      revealEls = revealEls.filter(Boolean);
-
-      var reveals = revealEls.map(function (el) {
-        return createTextReveal(el, { duration: REVEAL_DURATION });
-      });
-
-      var heroVisible = false;
-      var introCompleted = false;
-
-      function showHero() {
-        function showNext(idx) {
-          if (idx >= reveals.length) return;
-          reveals[idx].show(function () {
-            if (idx === 0 && window.heroLowPoly) window.heroLowPoly.swapIn();
-            if (idx === 2 && window.heroFocusCycle) window.heroFocusCycle.start(revealEls[2]);
-            setTimeout(function () { showNext(idx + 1); }, 80);
-          });
-        }
-        showNext(0);
-      }
-
-      function hideHero(onComplete) {
-        if (window.heroLowPoly) window.heroLowPoly.swapOut();
-        if (window.heroFocusCycle) window.heroFocusCycle.stop();
-        function hideNext(idx) {
-          if (idx < 0) {
-            reveals.forEach(function (r) { r.reset(); });
-            if (onComplete) onComplete();
-            return;
-          }
-          reveals[idx].hide(function () { hideNext(idx - 1); });
-        }
-        hideNext(reveals.length - 1);
-      }
-
-      function tryShow() {
-        if (introCompleted && heroVisible) showHero();
-      }
-
-      window.addEventListener('introComplete', function () {
-        introCompleted = true;
-        tryShow();
-      });
-
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting && !heroVisible) {
-            heroVisible = true;
-            tryShow();
-          } else if (!entry.isIntersecting && heroVisible) {
-            heroVisible = false;
-            if (window.heroLowPoly) window.heroLowPoly.swapOut();
-            if (window.heroFocusCycle) window.heroFocusCycle.stop();
-            reveals.forEach(function (r) { r.reset(); });
-          }
-        });
-      }, { threshold: 0.5 });
-
-      observer.observe(heroSection);
-
-      document.querySelectorAll('header nav a[href^="#"]').forEach(function (link) {
-        link.addEventListener('click', function (e) {
-          var target = link.getAttribute('href');
-          if (target === '#hero' || !heroVisible) return;
-          e.preventDefault();
-          hideHero(function () {
-            var el = document.querySelector(target);
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          });
-        });
-      });
-    })();
-  </script>
+  <script src="js/hero-reveal.js"></script>
 
 </body>
 

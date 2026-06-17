@@ -36,7 +36,7 @@ body {
   background: transparent;
 }
 
-/* ── Background noise layer ────────────────── */
+/* ── Background noise layer (parallax depth) ─── */
 #noise-bg {
   position: fixed;
   inset: 0;
@@ -45,6 +45,15 @@ body {
   z-index: -1;
   pointer-events: none;
   display: block;
+  overflow: hidden;        /* clip oversized translating layers to viewport */
+  background: #1a1a1a;      /* flat backdrop (was canvas fill) */
+}
+
+#noise-bg canvas {
+  position: absolute;
+  mix-blend-mode: overlay;  /* neutral-128 pixels invisible → stacks like old overlay */
+  will-change: transform;
+  pointer-events: none;
 }
 
 header {

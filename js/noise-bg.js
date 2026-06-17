@@ -1,28 +1,30 @@
-/* ── Background: dark backdrop + center-dense banded film grain ───────────
-   Flat dark fill, with a monochrome Gaussian film grain composited `overlay`.
-   Grain strength is stepped by concentric rectangle bands whose aspect matches
-   the viewport (max/Chebyshev metric): strongest at center, faint at the edge.
+/* ── Background: dark backdrop + parallax banded film grain ────────────────
+   Flat dark fill (CSS on #noise-bg), with monochrome Gaussian film grain
+   composited `overlay`. Grain strength is stepped by concentric rectangle
+   bands whose aspect matches the viewport (max/Chebyshev metric): strongest at
+   center, faint at the edge.
 
-   Self-contained: one IIFE, single fixed canvas behind all content,
-   pointer-events none. Static — rendered once, re-rendered on debounced
-   resize. No animation loop.
+   Each band is its OWN stacked canvas (overlay blend). The layers follow the
+   cursor with a per-layer magnitude — sparse outer bands travel far, the dense
+   center barely moves — giving a parallax depth feel. Grain is static (drawn
+   once per layer, re-drawn on debounced resize); only CSS transform animates,
+   smoothed in a rAF lerp. Reduced-motion → static, centered, no loop.
    ──────────────────────────────────────────────────────────────────────── */
 (function () {
-  var canvas = document.getElementById('noise-bg');
-  if (!canvas) return;
-  var ctx = canvas.getContext('2d');
-  if (!ctx) return;
+  var wrapper = document.getElementById('noise-bg');
+  if (!wrapper) return;
 
   // ── Tunables ──────────────────────────────────────────────────────────
-  var BG = '#1a1a1a';         // flat backdrop (matches site theme)
   // Grain strength per band, center → out (full center, faint edge).
   var STRENGTH = [1.0, 0.78, 0.58, 0.40, 0.26, 0.14, 0.06];
   var GRAIN_SCALE = 2;        // grain generated at 1/N res then upscaled → coarseness
   var SIGMA = 0.5;            // grain intensity (std dev of luminance offset, 0..1)
-  var BLEND = 'overlay';      // grain blend mode ('overlay' strong, 'soft-light' gentle)
+  var MAX_SHIFT = 48;         // px parallax travel for the most mobile (outer) layer
+  var EASE = 0.08;            // rAF lerp toward target offset (lower = laggier/smoother)
+  var FOLLOW = 1;             // +1 = layers move toward cursor; -1 = push away (depth)
 
-  var offscreen = document.createElement('canvas');
-  var offCtx = offscreen.getContext('2d');
+  var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var N = STRENGTH.length;
 
   // Box–Muller Gaussian ~ N(0,1).
   function gaussian() {
@@ -31,49 +33,77 @@
     return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
   }
 
-  function render() {
-    var dpr = window.devicePixelRatio || 1;
-    var w = window.innerWidth;
-    var h = window.innerHeight;
+  // One stacked canvas per band. mag: sparse (low strength) moves more.
+  var layers = [];
+  for (var i = 0; i < N; i++) {
+    var canvas = document.createElement('canvas');
+    wrapper.appendChild(canvas);
+    layers.push({
+      canvas: canvas,
+      ctx: canvas.getContext('2d'),
+      band: i,
+      mag: MAX_SHIFT * (1 - STRENGTH[i]),
+    });
+  }
 
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
+  // Re-usable offscreen for the downscaled grain.
+  var offscreen = document.createElement('canvas');
+  var offCtx = offscreen.getContext('2d');
+
+  // Render one layer's grain: real grain only where the Chebyshev band == i,
+  // neutral 128 elsewhere (invisible under overlay). Canvas is oversized by
+  // MAX_SHIFT on all sides so translating never exposes a viewport edge.
+  function renderLayer(layer, w, h, dpr) {
+    var canvas = layer.canvas;
+    var ctx = layer.ctx;
+
+    // Padded element box (CSS px), shifted so the unpadded region maps to the viewport.
+    var pw = w + 2 * MAX_SHIFT;
+    var ph = h + 2 * MAX_SHIFT;
+    canvas.style.left = -MAX_SHIFT + 'px';
+    canvas.style.top = -MAX_SHIFT + 'px';
+    canvas.style.width = pw + 'px';
+    canvas.style.height = ph + 'px';
+    canvas.width = pw * dpr;
+    canvas.height = ph * dpr;
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
     ctx.globalCompositeOperation = 'source-over';
 
-    // ── Pass 1: flat dark fill ────────────────────────────────────────
-    ctx.fillStyle = BG;
-    ctx.fillRect(0, 0, w, h);
-
-    // ── Pass 2: banded Gaussian grain, overlay blend ──────────────────
-    var N = STRENGTH.length;
-    var BW = 1 / N;
-    var gw = Math.max(1, Math.floor((w * dpr) / GRAIN_SCALE));
-    var gh = Math.max(1, Math.floor((h * dpr) / GRAIN_SCALE));
+    // Downscaled grain buffer covering the padded box.
+    var gw = Math.max(1, Math.floor((pw * dpr) / GRAIN_SCALE));
+    var gh = Math.max(1, Math.floor((ph * dpr) / GRAIN_SCALE));
     offscreen.width = gw;
     offscreen.height = gh;
 
+    var BW = 1 / N;
     var img = offCtx.createImageData(gw, gh);
     var data = img.data;
+
+    // Pad in grain-buffer pixels, so we can normalize over the UNPADDED viewport
+    // region → band rings land in the same on-screen positions as before.
+    var padGX = (MAX_SHIFT * dpr) / GRAIN_SCALE;
+    var padGY = (MAX_SHIFT * dpr) / GRAIN_SCALE;
+    var innerW = gw - 2 * padGX;
+    var innerH = gh - 2 * padGY;
+
     for (var idx = 0; idx < gw * gh; idx++) {
       var gx = idx % gw;
       var gy = (idx / gw) | 0;
-      // Viewport-normalized position; max metric → rectangle bands matching aspect.
-      var nx = (2 * gx) / gw - 1;
-      var ny = (2 * gy) / gh - 1;
+      // Viewport-normalized position (unpadded region → -1..1); max metric → rects.
+      var nx = (2 * (gx - padGX)) / innerW - 1;
+      var ny = (2 * (gy - padGY)) / innerH - 1;
       var d = Math.max(Math.abs(nx), Math.abs(ny));
       var band = Math.floor(d / BW);
       if (band > N - 1) band = N - 1;
-      var s = STRENGTH[band];
 
-      // Neutral 128 ⇒ overlay leaves backdrop unchanged. Strength scales the
-      // deviation: full grain at center, ~neutral (faint) at the edge.
-      var lum = 128 + gaussian() * SIGMA * 128 * s;
-      lum = lum < 0 ? 0 : lum > 255 ? 255 : lum;
+      var lum = 128;
+      if (band === layer.band) {
+        // Neutral 128 ⇒ overlay leaves backdrop unchanged. Strength scales deviation.
+        lum = 128 + gaussian() * SIGMA * 128 * STRENGTH[band];
+        lum = lum < 0 ? 0 : lum > 255 ? 255 : lum;
+      }
       var p = idx * 4;
       data[p] = data[p + 1] = data[p + 2] = lum;
       data[p + 3] = 255;
@@ -81,17 +111,58 @@
     offCtx.putImageData(img, 0, 0);
 
     ctx.imageSmoothingEnabled = false;   // crisp, coarse flecks on upscale
-    ctx.globalCompositeOperation = BLEND;
-    ctx.drawImage(offscreen, 0, 0, w, h);
-    ctx.globalCompositeOperation = 'source-over';
+    ctx.drawImage(offscreen, 0, 0, pw, ph);
   }
 
+  var vw = 0, vh = 0;
+  function renderAll() {
+    var dpr = window.devicePixelRatio || 1;
+    vw = window.innerWidth;
+    vh = window.innerHeight;
+    for (var i = 0; i < N; i++) renderLayer(layers[i], vw, vh, dpr);
+  }
+
+  // ── Cursor-follow parallax ──────────────────────────────────────────────
+  var tx = 0, ty = 0;   // target offset, normalized -1..1
+  var cx = 0, cy = 0;   // current (lerped) offset
+  var rafId = null;
+
+  function apply() {
+    for (var i = 0; i < N; i++) {
+      var m = layers[i].mag;
+      layers[i].canvas.style.transform =
+        'translate3d(' + (FOLLOW * cx * m) + 'px,' + (FOLLOW * cy * m) + 'px,0)';
+    }
+  }
+
+  function tick() {
+    cx += (tx - cx) * EASE;
+    cy += (ty - cy) * EASE;
+    apply();
+    // Stop when settled to avoid a forever-spinning loop; mousemove restarts it.
+    if (Math.abs(tx - cx) < 0.001 && Math.abs(ty - cy) < 0.001) {
+      cx = tx; cy = ty;
+      apply();
+      rafId = null;
+      return;
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function onMove(e) {
+    tx = (e.clientX / vw) * 2 - 1;
+    ty = (e.clientY / vh) * 2 - 1;
+    if (rafId == null) rafId = requestAnimationFrame(tick);
+  }
+
+  // ── Resize (debounced) ──────────────────────────────────────────────────
   var resizeTimer = null;
   function onResize() {
     if (resizeTimer) clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(render, 150);
+    resizeTimer = setTimeout(renderAll, 150);
   }
 
-  render();
+  renderAll();
   window.addEventListener('resize', onResize);
+  if (!REDUCED) window.addEventListener('mousemove', onMove);
 })();
