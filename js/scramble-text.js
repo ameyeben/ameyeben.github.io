@@ -269,9 +269,9 @@ function runIntro() {
           setTimeout(removeOverlay, 1500);
         }
 
-        const HOLD_MS = 450;     // pause on a settled word before advancing
-        const FADE_MS = 160;     // fade-out between words (low-poly only)
-        const LAST_HOLD = 1700;  // pause on the final word before exiting
+        const HOLD_MS = 280;     // pause on a settled word before advancing
+        const FADE_MS = 110;     // fade-out between words (low-poly only)
+        const LAST_HOLD = 1100;  // pause on the final word before exiting
 
         let exited = false;
         function doExit() { if (exited) return; exited = true; exitOverlay(); }
