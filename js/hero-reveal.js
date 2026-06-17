@@ -79,16 +79,6 @@
   }, { threshold: 0.5 });
 
   observer.observe(heroSection);
-
-  document.querySelectorAll('header nav a[href^="#"]').forEach(function (link) {
-    link.addEventListener('click', function (e) {
-      var target = link.getAttribute('href');
-      if (target === '#hero' || !heroVisible) return;
-      e.preventDefault();
-      hideHero(function () {
-        var el = document.querySelector(target);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      });
-    });
-  });
+  // Nav-link clicks are handled by js/section-transitions.js (cut, no travel):
+  // an instant scroll jump fires this observer's hide branch automatically.
 })();

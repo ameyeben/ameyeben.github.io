@@ -98,6 +98,30 @@ section .container {
   padding: var(--section-inner-padding-y) var(--section-inner-padding-x);
 }
 
+/* ── Section reveal (scroll-triggered + nav-cut) ─── */
+/* Non-hero sections fade + rise their content in when they enter the viewport
+   (IntersectionObserver toggles .in-view in js/section-transitions.js). The same
+   reveal plays after a nav-link cut, since the instant jump brings the target
+   into view. Hero has its own bespoke reveal and is excluded. */
+.section--reveal .container {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.section--reveal.in-view .container {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section--reveal .container {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 h1 {
   font-size: 2.5rem;
 }
