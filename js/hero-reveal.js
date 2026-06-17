@@ -36,7 +36,12 @@
         setTimeout(function () { showNext(idx + 1); }, 80);
       });
     }
-    setTimeout(function () { showNext(0); }, 1000);
+    // 4. Blue box (0.7s wipe) + name (settles from ~0.3s) are revealed by now —
+    //    signal so the noise background reveal can start after the hero, not with it.
+    setTimeout(function () {
+      window.dispatchEvent(new CustomEvent('heroRevealed'));
+      showNext(0);
+    }, 1000);
   }
 
   function hideHero(onComplete) {

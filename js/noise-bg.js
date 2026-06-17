@@ -183,10 +183,11 @@
       }
     }
   }
-  // Trigger once the intro overlay clears so the stagger is visible. Fallback in
-  // case the event is missed, so the background can never stay invisible.
-  window.addEventListener('introComplete', fadeIn);
-  // Safety net only — must outlast the full intro (~14s) so it never preempts the
-  // introComplete trigger and burn the one-shot reveal behind the overlay.
+  // Trigger after the hero is revealed (blue box + name), so the grain ripples in
+  // once the hero has landed — not at the same moment. Fallback in case the event is
+  // missed, so the background can never stay invisible.
+  window.addEventListener('heroRevealed', fadeIn);
+  // Safety net only — must outlast the full intro + hero reveal (~15s) so it never
+  // preempts the heroRevealed trigger and burn the one-shot reveal behind the overlay.
   setTimeout(fadeIn, 20000);
 })();
