@@ -379,11 +379,12 @@ header nav .container {
 }
 
 header nav ul {
-  grid-column: 11 / -1;
+  grid-column: 7 / -1;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 header nav ul a {
