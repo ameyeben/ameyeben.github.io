@@ -290,7 +290,31 @@ h3 {
   width: min(78vmin, 90vw);
   aspect-ratio: 1.618 / 1;
   margin-left: auto;
+  overflow: visible;        /* name distortion spills past the box edges */
+}
+
+/* Blue fill lives on ::before so the clip wipe never clips the name's low-poly
+   spill / scattered reveal vertices (which extend past the box via HIT_PAD_PX). */
+#hero-title-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background: #1d4ed8;
+  clip-path: inset(50% 50%);
+  transition: clip-path 0.7s cubic-bezier(0.7, 0, 0.3, 1);
+  z-index: 0;
+  pointer-events: none;
+}
+
+#hero-title-wrapper.revealed::before {
+  clip-path: inset(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #hero-title-wrapper::before {
+    clip-path: inset(0);
+    transition: none;
+  }
 }
 
 /* Name "Ben" over "Ameye" (literal newline + pre-line), right-aligned and
@@ -309,6 +333,8 @@ h3 {
   text-align: right;
   white-space: pre-line;
   color: #ffffff;
+  opacity: 0;          /* SVG low-poly name is the visible name; never flash text */
+  z-index: 1;          /* above the ::before blue fill */
 }
 
 .hero-title-svg {
@@ -319,6 +345,7 @@ h3 {
   opacity: 0;
   visibility: hidden;
   will-change: contents;
+  z-index: 1;          /* above the ::before blue fill */
 }
 
 .hero-subtitle {

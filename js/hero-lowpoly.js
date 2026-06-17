@@ -1,9 +1,10 @@
 // Hero title low-poly SVG swap + cursor magnetic distortion.
 //
-// After the hero title's text-reveal finishes, the inline hero script calls
-// heroLowPoly.swapIn(); on scroll-away reset it calls heroLowPoly.swapOut().
-// While the SVG is shown, vertices near the cursor lean gently toward it and
-// spring back. anime.js drives the global warp strength (enter/leave easing).
+// On hero reveal the orchestrator calls heroLowPoly.revealIn() — the SVG name is
+// shown directly and settles from scattered vertices into rest (no text crossfade);
+// on scroll-away it calls heroLowPoly.swapOut(). While the SVG is shown, vertices
+// near the cursor lean gently toward it and spring back. anime.js drives the global
+// warp strength (enter/leave easing).
 //
 // Two stacked layers share one cursor/strength sim: a darker-blue echo painted
 // underneath (stronger pull + small rest offset) and the original white name on
@@ -25,6 +26,7 @@
 
   var SPRING = 0.28;     // per-frame lerp toward target (higher = snappier)
   var HIT_PAD_PX = 130;  // canvas margin so pulled vertices don't clip (≥ max pull)
+  var REVEAL_SCATTER = 90; // px each vertex is flung out before settling on reveal
 
   // Layer specs, back-to-front (paint order = DOM order). pull is max vertex
   // displacement in screen px; reachMul scales the influence radius relative to
@@ -242,38 +244,56 @@
   var swapAnim = null;
   var shown = false;
 
-  function swapIn() {
+  // Reveal: show the SVG name directly (no live-text crossfade) and settle it from
+  // distortion — each vertex is flung out by a random vector, then the spring loop
+  // (frame(), target = base while the cursor is inactive) pulls it home.
+  function revealIn() {
     if (shown) return;
     shown = true;
-    // reset geometry to rest before showing
+
+    var scale = userPerPx();           // px → user units for the scatter magnitude
+    var scatterU = REVEAL_SCATTER * scale;
     for (var li = 0; li < layers.length; li++) {
       var layer = layers[li];
       for (var i = 0; i < layer.base.length; i++)
         for (var j = 0; j < layer.base[i].length; j++) {
-          layer.cur[i][j][0] = layer.base[i][j][0];
-          layer.cur[i][j][1] = layer.base[i][j][1];
+          var a = Math.random() * Math.PI * 2;
+          var m = scatterU * (0.5 + Math.random() * 0.5);
+          layer.cur[i][j][0] = layer.base[i][j][0] + Math.cos(a) * m;
+          layer.cur[i][j][1] = layer.base[i][j][1] + Math.sin(a) * m;
         }
     }
     strength.v = 0;
+    mouseU.active = false;
+    titleEl.style.opacity = '0';       // hide live text — SVG is the visible name
 
-    positionSvg(); // also draws each layer at rest (with offset)
+    positionSvg(); // draws each layer at its scattered start (with offset)
     window.addEventListener('resize', positionSvg);
     layers.forEach(function (l) { l.svg.style.visibility = 'visible'; });
     if (swapAnim) swapAnim.cancel();
     if (REDUCED) {
-      titleEl.style.opacity = '0';
-      layers.forEach(function (l) { l.svg.style.opacity = '1'; });
+      // No scatter on reduced-motion: snap geometry to rest, show instantly.
+      for (var rli = 0; rli < layers.length; rli++) {
+        var rl = layers[rli];
+        for (var ri = 0; ri < rl.base.length; ri++)
+          for (var rj = 0; rj < rl.base[ri].length; rj++) {
+            rl.cur[ri][rj][0] = rl.base[ri][rj][0];
+            rl.cur[ri][rj][1] = rl.base[ri][rj][1];
+          }
+        drawLayer(rl);
+        rl.svg.style.opacity = '1';
+      }
       return;
     }
-    anime.animate(titleEl, { opacity: [1, 0], duration: 250, ease: 'linear' });
     layers.forEach(function (l) {
       anime.animate(l.svg, { opacity: [0, 1], duration: 250, ease: 'linear' });
     });
-    // Attach listeners once both layers have faded in.
+    // Attach listeners once the layers have faded in.
     swapAnim = anime.animate(frontLayer.svg, {
       opacity: [0, 1], duration: 250, ease: 'linear',
       onComplete: function () { addListeners(); },
     });
+    ensureLoop();                      // spring the scattered vertices home
   }
 
   function swapOut() {
@@ -290,8 +310,8 @@
       l.svg.style.opacity = '0';
       l.svg.style.visibility = 'hidden';
     });
-    titleEl.style.opacity = ''; // restore for re-reveal
+    titleEl.style.opacity = '0'; // keep live text hidden; SVG is the visible name
   }
 
-  window.heroLowPoly = { swapIn: swapIn, swapOut: swapOut };
+  window.heroLowPoly = { revealIn: revealIn, swapOut: swapOut };
 })();
