@@ -18,7 +18,7 @@
   // Grain strength per band, center → out (full center, faint edge).
   var STRENGTH = [1.0, 0.78, 0.58, 0.40, 0.26, 0.14, 0.06];
   var GRAIN_SCALE = 2;        // grain generated at 1/N res then upscaled → coarseness
-  var SIGMA = 0.5;            // grain intensity (std dev of luminance offset, 0..1)
+  var SIGMA = 0.85;           // grain intensity (std dev of luminance offset, 0..1)
   var MAX_SHIFT = 48;         // px parallax travel for the most mobile (outer) layer
   var EASE = 0.08;            // rAF lerp toward target offset (lower = laggier/smoother)
   var FOLLOW = 1;             // +1 = layers move toward cursor; -1 = push away (depth)
