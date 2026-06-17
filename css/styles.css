@@ -161,22 +161,6 @@ h3 {
   opacity: 0;
 }
 
-#ascii-mask {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 33.333%;
-  height: 50%;
-  background: #f5f5f5;
-  z-index: 1;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-}
-
-#ascii-mask.mask-hidden {
-  opacity: 0;
-}
-
 #intro-overlay .intro-content {
   max-width: 800px;
   padding: 2rem;

@@ -7,7 +7,6 @@
   var CHUNK_X = 20;
   var CHUNK_Y = 4;
   var DELAY = 80;
-  var PAUSE_MS = 1000;
   var FLASH_MS = 800;
   var ALPHA_FLASH = 0.35;
   var ALPHA_REST = 0.12;
@@ -68,7 +67,6 @@
       }
     }
     var idx = 0;
-    var midpoint = Math.floor(chunks.length * 0.35);
 
     function revealNext() {
       if (idx >= chunks.length) {
@@ -85,7 +83,7 @@
         }
       }
       idx++;
-      setTimeout(revealNext, idx === midpoint ? PAUSE_MS : DELAY);
+      setTimeout(revealNext, DELAY);
     }
     revealNext();
   }

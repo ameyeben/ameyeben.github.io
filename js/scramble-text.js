@@ -253,13 +253,11 @@ function runIntro() {
           setTimeout(removeOverlay, 1500);
         }
 
-        const mask = document.getElementById('ascii-mask');
         let idx = 1;
         const exitFallback = setTimeout(exitOverlay, 10000);
 
         function showNext() {
           const isLast = idx >= variants.length - 1;
-          if (idx === variants.length - 3 && mask) mask.classList.add('mask-hidden');
           welcome.textContent = variants[idx];
           updateBox();
           if (isLast) {
