@@ -446,3 +446,251 @@ header nav ul a {
   font-size: 0.7rem;
   font-weight: 300;
 }
+
+/* ══ Content sections (about / projects / skills / contact / footer) ══════
+   Extends the established identity: #1a1a1a bg, #fff text, royal-blue accent,
+   φ structure, JetBrains Mono + Newsreader + Satoshi. Hero is excluded. */
+:root {
+  --accent: #2563EB;
+  --accent-deep: #1d4ed8;
+  --hairline: rgba(255, 255, 255, 0.12);
+  --muted: rgba(255, 255, 255, 0.55);
+}
+
+/* Vertically center each non-hero band within its 100dvh section. */
+#about .container,
+#projects .container,
+#skills .container,
+#contact .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100dvh;
+}
+
+/* ── About ─────────────────────────────────── */
+.bio {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.3rem;
+  line-height: 1.55;
+  max-width: 62ch;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+#about a[download] {
+  display: inline-block;
+  margin-top: 1.75rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  padding: 0.5em 1em;
+  background: var(--accent-deep);
+  color: #fff;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+#about a[download]:hover {
+  background: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* Resume verify = real terminal snippet (subject-grounded signature). */
+.resume-verify {
+  margin-top: 1.1rem;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 62ch;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--hairline);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.resume-verify code {
+  font-family: inherit;
+  word-break: break-all;
+}
+
+.resume-verify code:first-of-type {
+  color: var(--accent);
+}
+
+/* ── Projects: engineering index ───────────── */
+#projects > .container > ul {
+  display: flex;
+  flex-direction: column;
+}
+
+#projects > .container > ul > li {
+  display: grid;
+  grid-template-columns: minmax(0, 1.618fr) minmax(0, 1fr);
+  gap: 1rem 2rem;
+  align-items: start;
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--hairline);
+}
+
+#projects > .container > ul > li:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+
+#projects h3 {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.01em;
+  transition: color 0.18s ease;
+}
+
+#projects > .container > ul > li:hover h3 {
+  color: var(--accent);
+}
+
+#projects li > p {
+  margin-top: 0.4rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* tech-tags + links share the right column */
+.tech-tags {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.5rem;
+  align-content: start;
+}
+
+.tech-tags li {
+  font-size: 0.7rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.tech-tags li::before { content: '['; color: var(--accent); }
+.tech-tags li::after  { content: ']'; color: var(--accent); }
+
+#projects li > a {
+  grid-column: 1;
+  display: inline-block;
+  margin-top: 0.7rem;
+  margin-right: 1.25rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--hairline);
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+#projects li > a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ── Skills ────────────────────────────────── */
+/* h2 + three sibling group <div>s under .container. Grid the container so h2
+   spans the top and the three groups become side-by-side columns. Overrides the
+   flex centering rule above (same specificity, later wins); align-content keeps
+   the band vertically centered in the 100dvh section. */
+#skills > .container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem 2rem;
+  align-content: center;
+}
+
+#skills > .container > h2 {
+  grid-column: 1 / -1;
+}
+
+#skills h3 {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+#skills h3 + ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+#skills h3 + ul li {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.15s ease;
+}
+
+#skills h3 + ul li:hover {
+  color: var(--accent);
+}
+
+/* ── Contact ───────────────────────────────── */
+#contact > .container > p {
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.contact-links a {
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  transition: color 0.18s ease, padding-left 0.18s ease;
+}
+
+.contact-links a::before {
+  content: '→ ';
+  color: var(--accent);
+}
+
+.contact-links a:hover {
+  color: var(--accent);
+  padding-left: 0.3rem;
+}
+
+/* ── Footer ────────────────────────────────── */
+footer .container {
+  padding: 2rem var(--section-inner-padding-x);
+  text-align: center;
+}
+
+footer p {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+/* ── Focus ring (a11y floor) ───────────────── */
+#about a:focus-visible,
+#projects a:focus-visible,
+#skills a:focus-visible,
+#contact a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ── Mobile ────────────────────────────────── */
+@media (max-width: 700px) {
+  #projects > .container > ul > li {
+    grid-template-columns: 1fr;
+  }
+  .tech-tags {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 0.6rem;
+  }
+  #skills > .container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .bio { font-size: 1.15rem; }
+}

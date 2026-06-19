@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Your Name — Portfolio" />
-  <title>Your Name | Portfolio</title>
+  <meta name="description" content="Benjamin Ameye — Computer Science student building tools to solve real problems." />
+  <title>Benjamin Ameye | Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -81,12 +81,16 @@ Ameye</h1>
     <section id="about" class="section--reveal">
       <div class="container">
         <h2>About</h2>
-        <img src="your-photo.jpg" alt="Photo of Your Name" width="200" height="200" />
-        <p>
+        <p class="bio">
+          <!-- BIO_PLACEHOLDER -->
           Write 2–3 sentences about yourself: your background, what you build,
           and what you care about. Keep it human, not a job description.
         </p>
-        <a href="your-resume.pdf" download>Download Resume</a>
+        <a href="Benjamin_Ameye_Resume.pdf" download>Download Resume</a>
+        <p class="resume-verify">
+          SHA-256: <code>SHA256_PLACEHOLDER</code><br>
+          Verify: <code>shasum -a 256 Benjamin_Ameye_Resume.pdf</code>
+        </p>
       </div>
     </section>
 
@@ -97,30 +101,46 @@ Ameye</h1>
 
         <ul>
 
-          <!-- Repeat this block for each project -->
           <li>
-            <img src="project-thumbnail.jpg" alt="Screenshot of Project Name" />
-            <h3>Project Name</h3>
-            <p>Short description of what it does and the problem it solves.</p>
-            <ul>
+            <h3>AI Resume Scoring Web Application</h3>
+            <p>Full-stack capstone that parses resumes and scores them against job
+              descriptions using NLP — tokenization, keyword extraction, and semantic
+              similarity via Hugging Face Transformers. Flask REST API + React frontend,
+              shipped through a CI/CD pipeline.</p>
+            <ul class="tech-tags">
+              <li>Python</li>
+              <li>Flask</li>
               <li>React</li>
-              <li>Node.js</li>
-              <li>PostgreSQL</li>
+              <li>spaCy</li>
+              <li>Hugging Face Transformers</li>
+              <li>CI/CD</li>
             </ul>
-            <a href="https://github.com/you/project" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://your-project.com" target="_blank" rel="noopener">Live Demo</a>
+            <a href="GITHUB_AIRESUME_PLACEHOLDER" target="_blank" rel="noopener">GitHub</a>
+            <!-- LIVEDEMO_AIRESUME_PLACEHOLDER -->
           </li>
 
           <li>
-            <img src="project-thumbnail.jpg" alt="Screenshot of Project Name" />
-            <h3>Project Name</h3>
-            <p>Short description of what it does and the problem it solves.</p>
-            <ul>
-              <li>Vue</li>
-              <li>Python</li>
+            <h3>Video Aspect Ratio Resizer CLI</h3>
+            <p>Rust CLI that applies linear-algebra transforms — matrix scaling and
+              affine transforms — to programmatically resize and adjust the aspect ratio
+              of video files. Bridges Linear Algebra coursework with systems-level
+              programming.</p>
+            <ul class="tech-tags">
+              <li>Rust</li>
             </ul>
-            <a href="https://github.com/you/project" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://your-project.com" target="_blank" rel="noopener">Live Demo</a>
+            <a href="GITHUB_VIDEORESIZER_PLACEHOLDER" target="_blank" rel="noopener">GitHub</a>
+          </li>
+
+          <li>
+            <h3>Team Maker Discord Bot</h3>
+            <p>Interactive Discord bot that builds teams from reaction-based
+              participation, implementing multiple team-formation algorithms via the
+              Discord API.</p>
+            <ul class="tech-tags">
+              <li>Python</li>
+              <li>Discord API</li>
+            </ul>
+            <a href="GITHUB_TEAMMAKER_PLACEHOLDER" target="_blank" rel="noopener">GitHub</a>
           </li>
 
         </ul>
@@ -136,9 +156,14 @@ Ameye</h1>
         <div>
           <h3>Languages</h3>
           <ul>
-            <li>JavaScript</li>
+            <li>Rust</li>
             <li>Python</li>
+            <li>JavaScript</li>
+            <li>C++</li>
+            <li>C</li>
+            <li>SQL</li>
             <li>HTML &amp; CSS</li>
+            <li>Assembly</li>
           </ul>
         </div>
 
@@ -146,17 +171,25 @@ Ameye</h1>
           <h3>Frameworks &amp; Libraries</h3>
           <ul>
             <li>React</li>
-            <li>Node.js</li>
-            <li>Express</li>
+            <li>Flask</li>
+            <li>spaCy</li>
+            <li>Hugging Face Transformers</li>
+            <li>Discord API</li>
+            <li>Microsoft Graph API</li>
+            <li>p5.js</li>
           </ul>
         </div>
 
         <div>
-          <h3>Tools</h3>
+          <h3>Tools &amp; Platforms</h3>
           <ul>
             <li>Git</li>
             <li>Docker</li>
-            <li>Figma</li>
+            <li>AWS</li>
+            <li>Google Cloud Platform</li>
+            <li>CI/CD</li>
+            <li>Unix/Linux</li>
+            <li>VS Code</li>
           </ul>
         </div>
       </div>
@@ -166,26 +199,12 @@ Ameye</h1>
     <section id="contact" class="section--reveal">
       <div class="container">
         <h2>Contact</h2>
-        <p>Open to work / freelance / collaboration — reach out.</p>
+        <p>Open to work / internships / collaboration — reach out.</p>
 
-        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-          <!-- Replace action URL with your form handler (Formspree, Netlify Forms, etc.) -->
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required autocomplete="name" />
-
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required autocomplete="email" />
-
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="5" required></textarea>
-
-          <button type="submit">Send</button>
-        </form>
-
-        <ul>
-          <li><a href="https://github.com/you" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="https://linkedin.com/in/you" target="_blank" rel="noopener">LinkedIn</a></li>
-          <li><a href="mailto:you@email.com">you@email.com</a></li>
+        <ul class="contact-links">
+          <li><a href="GITHUB_PROFILE_PLACEHOLDER" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="LINKEDIN_PLACEHOLDER" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="mailto:benameye@gmail.com">benameye@gmail.com</a></li>
         </ul>
       </div>
     </section>
@@ -195,7 +214,7 @@ Ameye</h1>
   <!-- ── Footer ─────────────────────────────────────── -->
   <footer class="section--reveal">
     <div class="container">
-      <p>&copy; <span id="year"></span> Your Name. All rights reserved.</p>
+      <p>&copy; <span id="year"></span> Benjamin Ameye. All rights reserved.</p>
     </div>
   </footer>
 
