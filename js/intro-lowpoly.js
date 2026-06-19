@@ -16,7 +16,7 @@
 
   var SVGNS = 'http://www.w3.org/2000/svg';
   var TARGET_PX = 44;            // rendered glyph height-scale reference (font px)
-  var SPRING = 0.3;              // per-frame lerp toward rest (higher = snappier)
+  var SPRING = 0.48;             // per-frame lerp toward rest (higher = snappier)
   var REVEAL_SCATTER = 70;       // px each vertex is flung out before settling
   var SETTLE_EPS = 0.6;          // user-unit maxDelta below which a word is "settled"
   var FILL = '#ffffff';          // white glyph on the blue BSOD box

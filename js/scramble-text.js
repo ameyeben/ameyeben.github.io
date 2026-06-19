@@ -148,6 +148,15 @@ function scrambleText(els, text, opts = {}) {
   requestAnimationFrame(tick);
 }
 
+// Resolves when the page has finished loading, or after a hard cap so a stalled
+// asset can never freeze the intro. ponytail: window 'load' covers
+// images/fonts/scripts; the cap is the escape hatch if one stalls.
+const assetsReady = new Promise((resolve) => {
+  if (document.readyState === 'complete') return resolve();
+  window.addEventListener('load', resolve, { once: true });
+  setTimeout(resolve, 8000);
+});
+
 function runIntro() {
   const overlay = document.getElementById('intro-overlay');
   if (!overlay) return;
@@ -186,13 +195,19 @@ function runIntro() {
     duration: 1.5,
     charSet: 'latin-ascii',
     holdDuration: 500,
-    settleHoldDuration: 2500,
+    settleHoldDuration: 0,
     flashAfterScramble: 150,
     flashBeforeSettle: 150,
     onSettle: () => {
       bg.style.opacity = '0';
     },
     onComplete: () => {
+      // Always pause on the settled English quote for at least MIN_QUOTE_HOLD, then
+      // extend until the page has finished loading. Guarantees the quote is shown
+      // and paused on even when every asset is already loaded.
+      const MIN_QUOTE_HOLD = 2500;
+      const minHold = new Promise((r) => setTimeout(r, MIN_QUOTE_HOLD));
+      Promise.all([assetsReady, minHold]).then(() => {
       setTimeout(() => {
         overlay.classList.add('intro-done');
         overlay.classList.add('intro-bsod');
@@ -269,9 +284,9 @@ function runIntro() {
           setTimeout(removeOverlay, 1500);
         }
 
-        const HOLD_MS = 280;     // pause on a settled word before advancing
-        const FADE_MS = 110;     // fade-out between words (low-poly only)
-        const LAST_HOLD = 1100;  // pause on the final word before exiting
+        const HOLD_MS = 110;     // pause on a settled word before advancing
+        const FADE_MS = 55;      // fade-out between words (low-poly only)
+        const LAST_HOLD = 450;   // pause on the final word before exiting
 
         let exited = false;
         function doExit() { if (exited) return; exited = true; exitOverlay(); }
@@ -298,6 +313,7 @@ function runIntro() {
 
         showWord(0);
       }, 400);
+      });
     },
   });
 }

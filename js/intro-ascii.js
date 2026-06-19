@@ -6,7 +6,6 @@
   var CELL_PX = 18;
   var CHUNK_X = 20;
   var CHUNK_Y = 4;
-  var DELAY = 80;
   var FLASH_MS = 800;
   var ALPHA_FLASH = 0.35;
   var ALPHA_REST = 0.12;
@@ -31,6 +30,32 @@
   var total = gridRows * gridCols;
   var revealTimes = new Float64Array(total);
   var allChunksRevealedAt = 0;
+
+  // Real load progress: declared page resources that have a finished Performance
+  // entry / total. ponytail: poll Performance instead of wiring load/error per
+  // element. The reveal counter is monotonic so a dip in the ratio never un-reveals.
+  var urls = [], resTotal = 1, forced = false;
+  function collect() {
+    urls = [].slice.call(
+      document.querySelectorAll('img[src],script[src],link[rel="stylesheet"][href]')
+    ).map(function (e) { return e.src || e.href; });
+    resTotal = urls.length || 1;
+  }
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', collect); // full DOM → stable total
+  else collect();
+  window.addEventListener('load', function () { forced = true; });
+  setTimeout(function () { forced = true; }, 8000);          // cap, mirrors scramble-text
+  function progress() {
+    if (forced) return 1;
+    if (!urls.length) return 0;
+    var done = new Set(performance.getEntriesByType('resource')
+      .filter(function (r) { return r.responseEnd > 0; })
+      .map(function (r) { return r.name; }));
+    var n = 0;
+    for (var i = 0; i < urls.length; i++) if (done.has(urls[i])) n++;
+    return n / resTotal;
+  }
 
   function easeOut(t) { return 1 - (1 - t) * (1 - t); }
 
@@ -59,6 +84,17 @@
     requestAnimationFrame(drawFrame);
   }
 
+  function revealChunk(origin) {
+    var rEnd = Math.min(origin.r + CHUNK_Y, gridRows);
+    var cEnd = Math.min(origin.c + CHUNK_X, gridCols);
+    var now = performance.now();
+    for (var r = origin.r; r < rEnd; r++) {
+      for (var c = origin.c; c < cEnd; c++) {
+        revealTimes[r * gridCols + c] = now;
+      }
+    }
+  }
+
   function animate() {
     var chunks = [];
     for (var br = 0; br < gridRows; br += CHUNK_Y) {
@@ -66,26 +102,21 @@
         chunks.push({ r: br, c: bc });
       }
     }
-    var idx = 0;
+    var revealed = 0;
 
-    function revealNext() {
-      if (idx >= chunks.length) {
+    // Reveal chunks in step with real load progress (monotonic).
+    (function pump() {
+      var target = Math.ceil(progress() * chunks.length);
+      while (revealed < target && revealed < chunks.length) {
+        revealChunk(chunks[revealed]);
+        revealed++;
+      }
+      if (revealed >= chunks.length) {
         allChunksRevealedAt = performance.now();
         return;
       }
-      var origin = chunks[idx];
-      var rEnd = Math.min(origin.r + CHUNK_Y, gridRows);
-      var cEnd = Math.min(origin.c + CHUNK_X, gridCols);
-      var now = performance.now();
-      for (var r = origin.r; r < rEnd; r++) {
-        for (var c = origin.c; c < cEnd; c++) {
-          revealTimes[r * gridCols + c] = now;
-        }
-      }
-      idx++;
-      setTimeout(revealNext, DELAY);
-    }
-    revealNext();
+      requestAnimationFrame(pump);
+    })();
   }
 
   window._asciiDone = false;

@@ -10,8 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/aspect-ratio-overlay.css" />
-  <link rel="stylesheet" href="css/margin-tool.css" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 
@@ -201,83 +199,7 @@ Ameye</h1>
     </div>
   </footer>
 
-  <!-- ── 12-col grid overlay ────────────────────────── -->
-  <div id="grid-overlay" aria-hidden="true">
-    <div class="grid-inner">
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-    </div>
-  </div>
-
-  <!-- ── Grid bounds overlay ──────────────────────── -->
-  <div id="bounds-overlay" aria-hidden="true" hidden>
-    <div class="bounds-header-line"></div>
-    <div class="bounds-inner">
-      <div class="bounds-track">
-        <div class="bounds-line bounds-line-left"></div>
-        <div class="bounds-line bounds-line-right"></div>
-        <div class="bounds-line bounds-line-bottom"></div>
-      </div>
-    </div>
-  </div>
-
-  <div id="margin-panel" hidden>
-    <h2>Margins</h2>
-    <div class="control">
-      <label for="margin-bounds-line-width">Line thickness <span class="value"
-          id="margin-bounds-line-width-value">1px</span></label>
-      <input type="range" id="margin-bounds-line-width" min="1" max="8" step="1" value="1" />
-    </div>
-    <div class="control">
-      <label for="margin-bounds-width">Bounds box width <span class="value"
-          id="margin-bounds-width-value">1000px</span></label>
-      <input type="range" id="margin-bounds-width" min="400" max="1400" step="10" value="1000" />
-    </div>
-    <div class="control">
-      <label for="margin-max-width">Content width <span class="value" id="margin-max-width-value">1000px</span></label>
-      <input type="range" id="margin-max-width" min="600" max="1400" step="10" value="1000" />
-    </div>
-    <div class="control">
-      <label for="margin-padding-x">Horizontal padding <span class="value"
-          id="margin-padding-x-value">1.5rem</span></label>
-      <input type="range" id="margin-padding-x" min="0" max="6" step="0.25" value="1.5" />
-    </div>
-    <div class="control">
-      <label for="margin-section-y">Section spacing <span class="value" id="margin-section-y-value">8rem</span></label>
-      <input type="range" id="margin-section-y" min="1" max="10" step="0.25" value="8" />
-    </div>
-    <div class="control">
-      <label for="margin-section-inner-x">Section inner X <span class="value"
-          id="margin-section-inner-x-value">1.5rem</span></label>
-      <input type="range" id="margin-section-inner-x" min="0" max="10" step="0.25" value="1.5" />
-    </div>
-    <div class="control">
-      <label for="margin-section-inner-y">Section inner Y <span class="value"
-          id="margin-section-inner-y-value">0rem</span></label>
-      <input type="range" id="margin-section-inner-y" min="0" max="6" step="0.25" value="0" />
-    </div>
-    <div class="actions">
-      <button type="button" id="margin-copy">Copy CSS</button>
-    </div>
-  </div>
-
-  <div id="dev-toggles">
-    <button id="bounds-toggle" aria-pressed="false">bounds off</button>
-    <button id="sections-toggle" aria-pressed="false">sections off</button>
-    <button id="margin-toggle" aria-pressed="false">margins</button>
-    <button id="ratio-toggle" aria-pressed="false">4:3 off</button>
-    <button id="grid-toggle" aria-pressed="false">grid off</button>
-  </div>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 
   <script src="js/intro-ascii.js"></script>
 
@@ -286,19 +208,12 @@ Ameye</h1>
   <script src="js/intro-lowpoly-data.js"></script>
   <script src="js/intro-lowpoly.js"></script>
   <script src="js/scramble-text-anime.js"></script>
-  <script src="js/scramble-text.js?v=5"></script>
+  <script src="js/scramble-text.js?v=6"></script>
   <script src="js/text-reveal.js"></script>
   <script src="js/hero-lowpoly-data.js"></script>
   <script src="js/hero-lowpoly.js"></script>
   <script src="js/hero-focus-cycle.js"></script>
-  <script src="js/margin-tool.js"></script>
-  <script src="js/bounds-guide.js"></script>
-
-
-  <script src="js/dev-overlays.js"></script>
-
   <script src="js/hero-reveal.js"></script>
-
   <script src="js/section-transitions.js"></script>
 
 </body>
