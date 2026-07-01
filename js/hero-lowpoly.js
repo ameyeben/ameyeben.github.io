@@ -28,25 +28,57 @@
   var HIT_PAD_PX = 130;  // canvas margin so pulled vertices don't clip (≥ max pull)
   var REVEAL_SCATTER = 90; // px each vertex is flung out before settling on reveal
 
+  // Vertical-line halftone: the glyph path is filled with a vertical-stripe
+  // pattern instead of a solid color, so the letters read as vertical lines.
+  // ponytail: the two aesthetic knobs — line spacing + how much of each period
+  // is inked. In viewBox user units (glyph cap-height ≈ data.metrics.fontSize).
+  var STRIPE_PERIOD = 70; // center-to-center spacing of the lines
+  var STRIPE_DUTY = 0.3;  // fraction of the period inked (lower = thinner lines)
+
   // Layer specs, back-to-front (paint order = DOM order). pull is max vertex
   // displacement in screen px; reachMul scales the influence radius relative to
   // the hero section's diagonal (1 = letters react from anywhere in the hero);
   // offsetPx is a constant screen-px shift applied at draw time.
   var LAYERS = [
-    { fill: '#1741b8', pull: 90, reachMul: 1.0, offsetPx: [0, 0] }, // darker-blue echo
-    { fill: '#ffffff', pull: 44, reachMul: 0.85, offsetPx: [0, 0] }, // original white
+    { fill: '#1741b8', pull: 90, reachMul: 1.0, offsetPx: [0, 0], opacity: 1 },    // darker-blue echo
+    { fill: '#ffffff', pull: 44, reachMul: 0.85, offsetPx: [0, 0], opacity: 0.78 }, // white name
+    { fill: '#ffffff', pull: 44, reachMul: 0.85, offsetPx: [7, 5], opacity: 0.78 }, // offset ghost
   ];
 
   var SVGNS = 'http://www.w3.org/2000/svg';
 
-  function makeLayer(spec) {
+  function makeLayer(spec, index) {
     var svg = document.createElementNS(SVGNS, 'svg');
     svg.setAttribute('class', 'hero-title-svg');
     svg.setAttribute('viewBox', data.viewBox.join(' '));
     svg.setAttribute('aria-hidden', 'true');
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+    // Vertical-stripe pattern in user space — tiles with the path coords, so it
+    // scales with the name and warps through the glyph as the path distorts.
+    var patternId = 'hero-stripes-' + index;
+    // Full-height tile (not 1 unit — that scales sub-pixel and renders empty).
+    var tileH = data.viewBox[3];
+    var defs = document.createElementNS(SVGNS, 'defs');
+    var pattern = document.createElementNS(SVGNS, 'pattern');
+    pattern.setAttribute('id', patternId);
+    pattern.setAttribute('patternUnits', 'userSpaceOnUse');
+    pattern.setAttribute('x', data.viewBox[0]);
+    pattern.setAttribute('y', data.viewBox[1]);
+    pattern.setAttribute('width', STRIPE_PERIOD);
+    pattern.setAttribute('height', tileH);
+    var stripe = document.createElementNS(SVGNS, 'rect');
+    stripe.setAttribute('x', 0);
+    stripe.setAttribute('y', 0);
+    stripe.setAttribute('width', STRIPE_PERIOD * STRIPE_DUTY);
+    stripe.setAttribute('height', tileH);
+    stripe.setAttribute('fill', spec.fill);
+    pattern.appendChild(stripe);
+    defs.appendChild(pattern);
+    svg.appendChild(defs);
+
     var pathEl = document.createElementNS(SVGNS, 'path');
-    pathEl.setAttribute('fill', spec.fill);
+    pathEl.setAttribute('fill', 'url(#' + patternId + ')');
     pathEl.setAttribute('fill-rule', 'evenodd');
     svg.appendChild(pathEl);
     wrapper.appendChild(svg);
@@ -61,7 +93,7 @@
     };
   }
 
-  var layers = LAYERS.map(makeLayer);
+  var layers = LAYERS.map(function (spec, i) { return makeLayer(spec, i); });
   var frontLayer = layers[layers.length - 1]; // white — hosts cursor hit-testing
   // Interaction is handled on the hero section (hitEl); the svg canvases are
   // purely visual, so they ignore pointer events and never block clicks.
@@ -281,16 +313,16 @@
             rl.cur[ri][rj][1] = rl.base[ri][rj][1];
           }
         drawLayer(rl);
-        rl.svg.style.opacity = '1';
+        rl.svg.style.opacity = String(rl.spec.opacity);
       }
       return;
     }
     layers.forEach(function (l) {
-      anime.animate(l.svg, { opacity: [0, 1], duration: 250, ease: 'linear' });
+      anime.animate(l.svg, { opacity: [0, l.spec.opacity], duration: 250, ease: 'linear' });
     });
     // Attach listeners once the layers have faded in.
     swapAnim = anime.animate(frontLayer.svg, {
-      opacity: [0, 1], duration: 250, ease: 'linear',
+      opacity: [0, frontLayer.spec.opacity], duration: 250, ease: 'linear',
       onComplete: function () { addListeners(); },
     });
     ensureLoop();                      // spring the scattered vertices home
