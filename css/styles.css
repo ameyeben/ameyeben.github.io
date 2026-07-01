@@ -29,7 +29,7 @@ html::-webkit-scrollbar { display: none; }
      the 1400px design width content = 1400/φ ≈ 865px; floored for small screens. */
   --section-inner-padding-x: clamp(1.5rem, 9vw, 8rem);
   --section-inner-padding-y: 1rem;
-  --header-height: 8rem;
+  --header-height: 3.5rem;
 }
 
 body {
@@ -90,8 +90,14 @@ ul {
 
 section {
   padding: var(--section-padding-y) 0;
-  height: 100dvh;
+  min-height: 100dvh;
   scroll-snap-align: start;
+}
+
+/* Hero is fixed-size and its low-poly name spills past its box; keep it clipped
+   to one viewport. */
+#hero {
+  height: 100dvh;
   overflow: hidden;
 }
 
@@ -464,8 +470,8 @@ header nav ul a {
 #contact .container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-height: 100dvh;
+  justify-content: flex-start;
+  padding-top: var(--header-height);
 }
 
 /* ── About ─────────────────────────────────── */
@@ -596,7 +602,8 @@ header nav ul a {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem 2rem;
-  align-content: center;
+  align-content: start;
+  padding-top: var(--header-height);
 }
 
 #skills > .container > h2 {
