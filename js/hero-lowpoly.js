@@ -30,6 +30,9 @@
 
   // Vertical-line halftone: the glyph path is filled with a vertical-stripe
   // pattern instead of a solid color, so the letters read as vertical lines.
+  // Flip HALFTONE to false to render the plain solid name (pre-effect look);
+  // the pattern/ghost code below stays intact for re-enabling.
+  var HALFTONE = false;
   // ponytail: the two aesthetic knobs — line spacing + how much of each period
   // is inked. In viewBox user units (glyph cap-height ≈ data.metrics.fontSize).
   var STRIPE_PERIOD = 70; // center-to-center spacing of the lines
@@ -41,9 +44,9 @@
   // offsetPx is a constant screen-px shift applied at draw time.
   var LAYERS = [
     { fill: '#1741b8', pull: 90, reachMul: 1.0, offsetPx: [0, 0], opacity: 1 },    // darker-blue echo
-    { fill: '#ffffff', pull: 44, reachMul: 0.85, offsetPx: [0, 0], opacity: 0.78 }, // white name
+    { fill: '#ffffff', pull: 44, reachMul: 0.85, offsetPx: [0, 0], opacity: HALFTONE ? 0.78 : 1 }, // white name
     { fill: '#ffffff', pull: 44, reachMul: 0.85, offsetPx: [7, 5], opacity: 0.78 }, // offset ghost
-  ];
+  ].slice(0, HALFTONE ? 3 : 2); // drop ghost layer when not halftone
 
   var SVGNS = 'http://www.w3.org/2000/svg';
 
@@ -57,28 +60,30 @@
     // Vertical-stripe pattern in user space — tiles with the path coords, so it
     // scales with the name and warps through the glyph as the path distorts.
     var patternId = 'hero-stripes-' + index;
-    // Full-height tile (not 1 unit — that scales sub-pixel and renders empty).
-    var tileH = data.viewBox[3];
-    var defs = document.createElementNS(SVGNS, 'defs');
-    var pattern = document.createElementNS(SVGNS, 'pattern');
-    pattern.setAttribute('id', patternId);
-    pattern.setAttribute('patternUnits', 'userSpaceOnUse');
-    pattern.setAttribute('x', data.viewBox[0]);
-    pattern.setAttribute('y', data.viewBox[1]);
-    pattern.setAttribute('width', STRIPE_PERIOD);
-    pattern.setAttribute('height', tileH);
-    var stripe = document.createElementNS(SVGNS, 'rect');
-    stripe.setAttribute('x', 0);
-    stripe.setAttribute('y', 0);
-    stripe.setAttribute('width', STRIPE_PERIOD * STRIPE_DUTY);
-    stripe.setAttribute('height', tileH);
-    stripe.setAttribute('fill', spec.fill);
-    pattern.appendChild(stripe);
-    defs.appendChild(pattern);
-    svg.appendChild(defs);
+    if (HALFTONE) {
+      // Full-height tile (not 1 unit — that scales sub-pixel and renders empty).
+      var tileH = data.viewBox[3];
+      var defs = document.createElementNS(SVGNS, 'defs');
+      var pattern = document.createElementNS(SVGNS, 'pattern');
+      pattern.setAttribute('id', patternId);
+      pattern.setAttribute('patternUnits', 'userSpaceOnUse');
+      pattern.setAttribute('x', data.viewBox[0]);
+      pattern.setAttribute('y', data.viewBox[1]);
+      pattern.setAttribute('width', STRIPE_PERIOD);
+      pattern.setAttribute('height', tileH);
+      var stripe = document.createElementNS(SVGNS, 'rect');
+      stripe.setAttribute('x', 0);
+      stripe.setAttribute('y', 0);
+      stripe.setAttribute('width', STRIPE_PERIOD * STRIPE_DUTY);
+      stripe.setAttribute('height', tileH);
+      stripe.setAttribute('fill', spec.fill);
+      pattern.appendChild(stripe);
+      defs.appendChild(pattern);
+      svg.appendChild(defs);
+    }
 
     var pathEl = document.createElementNS(SVGNS, 'path');
-    pathEl.setAttribute('fill', 'url(#' + patternId + ')');
+    pathEl.setAttribute('fill', HALFTONE ? 'url(#' + patternId + ')' : spec.fill);
     pathEl.setAttribute('fill-rule', 'evenodd');
     svg.appendChild(pathEl);
     wrapper.appendChild(svg);

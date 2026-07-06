@@ -1,3 +1,20 @@
+/* ── Fonts ────────────────────────────────── */
+/* IBM PC CP437 / VGA bitmap font (Px437 IBM VGA 8x16, VileR, CC BY-SA 4.0).
+   Pixel-perfect at multiples of 16px. Use `.font-vga` to experiment. */
+@font-face {
+  font-family: 'Px437 IBM VGA';
+  src: url('../fonts/Px437_IBM_VGA_8x16.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-vga {
+  font-family: 'Px437 IBM VGA', 'JetBrains Mono', monospace;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
 /* ── Reset ────────────────────────────────── */
 *,
 *::before,
@@ -99,6 +116,7 @@ section {
 #hero {
   height: 100dvh;
   overflow: hidden;
+  position: relative;
 }
 
 footer {
@@ -126,7 +144,8 @@ section .container {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .section--reveal .container {
+  .section--reveal .container,
+  .hero-cta {
     opacity: 1;
     transform: none;
     transition: none;
@@ -428,6 +447,102 @@ h3 {
   50% { opacity: 0; }
 }
 
+/* CTAs anchored bottom-left: diagonal balance against the top-right name,
+   fills the empty lower-left quadrant, clear of the animated focus caret. */
+.hero-cta {
+  position: absolute;
+  left: var(--section-inner-padding-x);
+  bottom: clamp(4rem, 16vh, 11rem);
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  z-index: 2;
+  text-transform: uppercase;
+  opacity: 0;                       /* fades in with the lower hero content */
+  transition: opacity 0.6s ease;
+}
+
+.hero-cta.revealed {
+  opacity: 1;
+}
+
+/* Primary "button" fill is CP437 solid blocks in the VGA font, not a CSS
+   rectangle. A long █ run clipped by overflow:hidden fills the box regardless
+   of label length; the label rides above it. */
+.hero-cta__primary {
+  position: relative;
+  isolation: isolate;               /* keeps the block fill behind the label */
+  overflow: hidden;
+  font-family: 'Px437 IBM VGA', 'JetBrains Mono', monospace;
+  font-weight: 400;
+  font-size: 1rem;
+  color: #ffffff;
+  padding: 0.7em 1.3em;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.hero-cta__primary::before {
+  content: '████████████████████████████████';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  font-family: 'Px437 IBM VGA', 'JetBrains Mono', monospace;
+  color: #1d4ed8;
+  white-space: nowrap;
+  line-height: 2.4;                 /* fills the padded box height */
+  transition: color 0.2s ease;
+}
+
+.hero-cta__primary:hover,
+.hero-cta__primary:focus-visible {
+  transform: translateY(-2px);
+}
+
+.hero-cta__primary:hover::before,
+.hero-cta__primary:focus-visible::before {
+  color: #2563EB;
+}
+
+/* Secondary underline is a CP437 lower-block strip in the VGA font, muted to
+   sit below the primary in the hierarchy. */
+.hero-cta__secondary {
+  position: relative;
+  overflow: hidden;
+  font-family: 'Px437 IBM VGA', 'JetBrains Mono', monospace;
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 0.7em 0.2em;
+  transition: color 0.2s ease;
+}
+
+.hero-cta__secondary::after {
+  content: '____________________';
+  position: absolute;
+  left: 0.2em;
+  right: 0;
+  bottom: 0.15em;
+  font-family: 'Px437 IBM VGA', 'JetBrains Mono', monospace;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: color 0.2s ease;
+}
+
+.hero-cta__secondary:hover,
+.hero-cta__secondary:focus-visible {
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .hero-cta {
+    left: var(--section-inner-padding-x);
+    right: var(--section-inner-padding-x);
+  }
+}
+
 
 /* ── Navigation ───────────────────────────── */
 header nav .container {
@@ -475,6 +590,79 @@ header nav ul a {
 }
 
 /* ── About ─────────────────────────────────── */
+/* Two-column: bio + resume-verify left, duotone portrait right (φ ~1/3).
+   Overrides the shared flex-column rule above via the added .about-grid. */
+#about .container.about-grid {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 34%);
+  gap: clamp(1.5rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.about-portrait {
+  margin: 0;
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+  align-self: start;
+}
+
+.about-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Hover peek: over the portrait, hide the cursor and let #portrait-peek (the
+   original ogBen photo) track the pointer in its place. Hover-capable only. */
+@media (hover: hover) {
+  .about-portrait {
+    cursor: none;
+  }
+}
+
+#portrait-peek {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: clamp(120px, 12vw, 175px);
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  will-change: transform, opacity;
+}
+
+#portrait-peek.on {
+  opacity: 1;
+}
+
+#portrait-peek img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 1px solid var(--hairline);
+}
+
+.peek-caption {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* Stack on narrow screens: text first, portrait below. */
+@media (max-width: 720px) {
+  #about .container.about-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-portrait {
+    max-width: 20rem;
+  }
+}
+
 .bio {
   font-family: 'Newsreader', Georgia, serif;
   font-size: 1.3rem;

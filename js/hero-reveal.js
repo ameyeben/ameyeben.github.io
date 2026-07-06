@@ -4,12 +4,13 @@
 
   var REVEAL_DURATION = 600;
   var titleWrapper = document.getElementById('hero-title-wrapper');
+  var ctaEl = heroSection.querySelector('.hero-cta');
   var focusEl = heroSection.querySelector('.hero-subtitle--focus');
   // Name is revealed by the low-poly module (settle-from-distortion), not here.
   var revealEls = [
     heroSection.querySelector('p'),
     focusEl,
-  ].concat(Array.from(heroSection.querySelectorAll('a')));
+  ].concat(Array.from(heroSection.querySelectorAll('a:not(.hero-cta a)')));
   revealEls = revealEls.filter(Boolean);
 
   var reveals = revealEls.map(function (el) {
@@ -40,12 +41,14 @@
     //    signal so the noise background reveal can start after the hero, not with it.
     setTimeout(function () {
       window.dispatchEvent(new CustomEvent('heroRevealed'));
+      if (ctaEl) ctaEl.classList.add('revealed');
       showNext(0);
     }, 1000);
   }
 
   function hideHero(onComplete) {
     if (titleWrapper) titleWrapper.classList.remove('revealed');
+    if (ctaEl) ctaEl.classList.remove('revealed');
     if (window.heroLowPoly) window.heroLowPoly.swapOut();
     if (window.heroFocusCycle) window.heroFocusCycle.stop();
     function hideNext(idx) {
@@ -76,6 +79,7 @@
       } else if (!entry.isIntersecting && heroVisible) {
         heroVisible = false;
         if (titleWrapper) titleWrapper.classList.remove('revealed');
+        if (ctaEl) ctaEl.classList.remove('revealed');
         if (window.heroLowPoly) window.heroLowPoly.swapOut();
         if (window.heroFocusCycle) window.heroFocusCycle.stop();
         reveals.forEach(function (r) { r.reset(); });

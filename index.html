@@ -70,27 +70,38 @@
           <h1 class="hero-title" style="font-weight: 700;">Ben
 Ameye</h1>
         </div>
-        <p class="hero-subtitle">I build tools to solve real problems.</p>
+        <p class="hero-subtitle">I have too many project ideas.</p>
         <p class="hero-subtitle hero-subtitle--focus">Current focus is </p>
-        <a href="#projects">View my work</a>
-        <a href="#contact">Get in touch</a>
+        <div class="hero-cta">
+          <a href="#projects" class="hero-cta__primary">View my work</a>
+          <a href="#contact" class="hero-cta__secondary">Get in touch</a>
+        </div>
       </div>
     </section>
 
     <!-- ── About ──────────────────────────────────────── -->
     <section id="about" class="section--reveal">
-      <div class="container">
-        <h2>About</h2>
-        <p class="bio">
-          <!-- BIO_PLACEHOLDER -->
-          Write 2–3 sentences about yourself: your background, what you build,
-          and what you care about. Keep it human, not a job description.
-        </p>
-        <a href="Benjamin_Ameye_Resume.pdf" download>Download Resume</a>
-        <p class="resume-verify">
-          SHA-256: <code>SHA256_PLACEHOLDER</code><br>
-          Verify: <code>shasum -a 256 Benjamin_Ameye_Resume.pdf</code>
-        </p>
+      <div class="container about-grid">
+        <div class="about-text">
+          <h2>About</h2>
+          <p class="bio">
+            <!-- BIO_PLACEHOLDER -->
+            Write 2–3 sentences about yourself: your background, what you build,
+            and what you care about. Keep it human, not a job description.
+          </p>
+          <a href="Benjamin_Ameye_Resume.pdf" download>Download Resume</a>
+          <p class="resume-verify">
+            SHA-256: <code>SHA256_PLACEHOLDER</code><br>
+            Verify: <code>shasum -a 256 Benjamin_Ameye_Resume.pdf</code>
+          </p>
+        </div>
+        <figure class="about-portrait">
+          <img src="ben.png" alt="Benjamin Ameye" width="1122" height="1402" loading="lazy">
+        </figure>
+      </div>
+      <div id="portrait-peek" aria-hidden="true">
+        <img src="ogBen.png" alt="">
+        <span class="peek-caption font-vga">original prompt image</span>
       </div>
     </section>
 
@@ -234,6 +245,7 @@ Ameye</h1>
   <script src="js/hero-focus-cycle.js"></script>
   <script src="js/hero-reveal.js"></script>
   <script src="js/section-transitions.js"></script>
+  <script src="js/portrait-peek.js"></script>
 
 </body>
 
