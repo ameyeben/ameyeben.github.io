@@ -19,9 +19,18 @@
 
   function rand() { return CHARS[(Math.random() * CHARS.length) | 0]; }
 
+  // The focus span lives inside focusEl, which is a text-reveal target. A stray
+  // re-reveal can rebuild focusEl's innerHTML and orphan our span, so re-attach
+  // it if it ever gets detached — otherwise writes go to a node no one can see.
+  function ensureSpan() {
+    if (span && pEl && !span.isConnected) pEl.appendChild(span);
+  }
+
   function scrambleTo(text, done) {
     var start = performance.now();
     function frame() {
+      if (!running) return;
+      ensureSpan();
       var t = (performance.now() - start) / SCRAMBLE_MS;
       if (t >= 1) {
         span.textContent = text;
@@ -52,9 +61,9 @@
   }
 
   function start(p) {
-    if (running) return;
+    if (!p) return;
+    stop();               // clean restart: never bail on a stale run with an orphaned span
     pEl = p;
-    if (!pEl) return;
     span = document.createElement('span');
     span.className = 'hero-focus';
     pEl.appendChild(span);

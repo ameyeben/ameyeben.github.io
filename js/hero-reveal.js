@@ -19,8 +19,11 @@
 
   var heroVisible = false;
   var introCompleted = false;
+  var shown = false; // guard: re-running rebuilds focusEl innerHTML, wiping the live focus-cycle span
 
   function showHero() {
+    if (shown) return;
+    shown = true;
     // 1. Blue box wipes open from center (CSS clip-path on ::before).
     if (titleWrapper) titleWrapper.classList.add('revealed');
     // 2. Name settles from distortion once the box has begun opening.
@@ -47,6 +50,7 @@
   }
 
   function hideHero(onComplete) {
+    shown = false;
     if (titleWrapper) titleWrapper.classList.remove('revealed');
     if (ctaEl) ctaEl.classList.remove('revealed');
     if (window.heroLowPoly) window.heroLowPoly.swapOut();
@@ -78,6 +82,7 @@
         tryShow();
       } else if (!entry.isIntersecting && heroVisible) {
         heroVisible = false;
+        shown = false;
         if (titleWrapper) titleWrapper.classList.remove('revealed');
         if (ctaEl) ctaEl.classList.remove('revealed');
         if (window.heroLowPoly) window.heroLowPoly.swapOut();

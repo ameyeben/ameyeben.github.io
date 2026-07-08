@@ -1,3 +1,7 @@
+// Refresh always replays the intro and lands on the hero; the browser's default
+// scroll restoration would otherwise drop you back at your previous position.
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
 const CHAR_SETS = {
   cp850:
     'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞß' +
