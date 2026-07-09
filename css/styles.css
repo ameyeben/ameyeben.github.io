@@ -581,7 +581,6 @@ header nav ul a {
 /* Vertically center each non-hero band within its 100dvh section. */
 #about .container,
 #projects .container,
-#skills .container,
 #contact .container {
   display: flex;
   flex-direction: column;
@@ -781,48 +780,30 @@ header nav ul a {
   border-color: var(--accent);
 }
 
-/* ── Skills ────────────────────────────────── */
-/* h2 + three sibling group <div>s under .container. Grid the container so h2
-   spans the top and the three groups become side-by-side columns. Overrides the
-   flex centering rule above (same specificity, later wins); align-content keeps
-   the band vertically centered in the 100dvh section. */
-#skills > .container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem 2rem;
-  align-content: start;
-  padding-top: var(--header-height);
+/* Desktop: pin the section to one viewport and let only the project list scroll,
+   so the "Projects" heading stays put as the index grows. Mobile flips to natural
+   flow — see the max-width:700px block. */
+#projects {
+  height: 100dvh;
+  overflow: hidden;
 }
 
-#skills > .container > h2 {
-  grid-column: 1 / -1;
+#projects > .container {
+  height: 100%;
+  min-height: 0;
 }
 
-#skills h3 {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-  margin-bottom: 0.9rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--hairline);
+#projects > .container > ul {
+  flex: 1 1 auto;
+  min-height: 0;          /* let the flex child shrink below content so it scrolls */
+  overflow-y: auto;
 }
 
-#skills h3 + ul {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+#projects > .container > ul:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }
 
-#skills h3 + ul li {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.8);
-  transition: color 0.15s ease;
-}
-
-#skills h3 + ul li:hover {
-  color: var(--accent);
-}
 
 /* ── Contact ───────────────────────────────── */
 #contact > .container > p {
@@ -867,7 +848,6 @@ footer p {
 /* ── Focus ring (a11y floor) ───────────────── */
 #about a:focus-visible,
 #projects a:focus-visible,
-#skills a:focus-visible,
 #contact a:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
@@ -875,6 +855,25 @@ footer p {
 
 /* ── Mobile ────────────────────────────────── */
 @media (max-width: 700px) {
+  /* Projects flows naturally instead of inner-scrolling: no pinned heading, the
+     section just grows with the list. Soften snap to proximity so a projects
+     section taller than the viewport doesn't trap between snap points. */
+  html {
+    scroll-snap-type: y proximity;
+  }
+  #projects {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+  #projects > .container {
+    height: auto;
+  }
+  #projects > .container > ul {
+    flex: none;
+    overflow: visible;
+  }
+
   #projects > .container > ul > li {
     grid-template-columns: 1fr;
   }
@@ -882,10 +881,6 @@ footer p {
     grid-column: 1;
     grid-row: auto;
     margin-top: 0.6rem;
-  }
-  #skills > .container {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
   }
   .bio { font-size: 1.15rem; }
 }

@@ -52,7 +52,6 @@
         <ul>
           <li><a href="#about">About</a></li>
           <li><a href="#projects">Projects</a></li>
-          <li><a href="#skills">Skills</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
@@ -85,9 +84,13 @@ Ameye</h1>
         <div class="about-text">
           <h2>About</h2>
           <p class="bio">
-            <!-- BIO_PLACEHOLDER -->
-            Write 2–3 sentences about yourself: your background, what you build,
-            and what you care about. Keep it human, not a job description.
+            My name is Ben. I'm a computer science student at Lawrence Technological University, with my learning
+            path focused on AI/ML. I care more about performance than looks when it comes to the tech that I use.
+            In my free time I like to play competitive video games and read.
+            Reading on paper is cool and all, but reading on the Boox Go 6 (gen 2) is too convenient to compare.
+            My interest in computer science started with trying to comprehend how a Game Boy Color worked,
+            and then became tangible when I made a "website" using HTML in middle school.
+
           </p>
           <a href="Benjamin_Ameye_Resume.pdf" download>Download Resume</a>
           <p class="resume-verify">
@@ -110,14 +113,17 @@ Ameye</h1>
       <div class="container">
         <h2>Projects</h2>
 
-        <ul>
+        <!-- tabindex=0: on desktop this list scrolls internally; keep it
+             keyboard-reachable so arrow keys can scroll it. -->
+        <ul tabindex="0">
 
           <li>
-            <h3>AI Resume Scoring Web Application</h3>
+            <h3>AI Resume Scoring Web Application (CURRENTLY REVISITING)</h3>
             <p>Full-stack capstone that parses resumes and scores them against job
               descriptions using NLP — tokenization, keyword extraction, and semantic
               similarity via Hugging Face Transformers. Flask REST API + React frontend,
-              shipped through a CI/CD pipeline.</p>
+              shipped through a CI/CD pipeline. Currently implementing HackerRank's grading
+              logic for resumes.</p>
             <ul class="tech-tags">
               <li>Python</li>
               <li>Flask</li>
@@ -125,13 +131,17 @@ Ameye</h1>
               <li>spaCy</li>
               <li>Hugging Face Transformers</li>
               <li>CI/CD</li>
+              <li>Agile Workflow</li>
+              <li>Scrum Leader</li>
+
             </ul>
-            <a href="GITHUB_AIRESUME_PLACEHOLDER" target="_blank" rel="noopener">GitHub</a>
-            <!-- LIVEDEMO_AIRESUME_PLACEHOLDER -->
+            <!-- TODO(Ben): repo is private — add a short demo video here instead.
+                 Embed with <video controls src="airesume-demo.mp4"></video> or a
+                 link to the hosted clip once recorded. -->
           </li>
 
           <li>
-            <h3>Video Aspect Ratio Resizer CLI</h3>
+            <h3>Video Aspect Ratio Resizer CLI </h3>
             <p>Rust CLI that applies linear-algebra transforms — matrix scaling and
               affine transforms — to programmatically resize and adjust the aspect ratio
               of video files. Bridges Linear Algebra coursework with systems-level
@@ -139,11 +149,11 @@ Ameye</h1>
             <ul class="tech-tags">
               <li>Rust</li>
             </ul>
-            <a href="GITHUB_VIDEORESIZER_PLACEHOLDER" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://github.com/ameyeben/vidstretch" target="_blank" rel="noopener">GitHub</a>
           </li>
 
           <li>
-            <h3>Team Maker Discord Bot</h3>
+            <h3>Team Maker Discord Bot (ARCHIVED)</h3>
             <p>Interactive Discord bot that builds teams from reaction-based
               participation, implementing multiple team-formation algorithms via the
               Discord API.</p>
@@ -151,58 +161,9 @@ Ameye</h1>
               <li>Python</li>
               <li>Discord API</li>
             </ul>
-            <a href="GITHUB_TEAMMAKER_PLACEHOLDER" target="_blank" rel="noopener">GitHub</a>
           </li>
 
         </ul>
-      </div>
-    </section>
-
-    <!-- ── Skills ─────────────────────────────────────── -->
-    <section id="skills" class="section--reveal">
-      <div class="container">
-        <h2>Skills</h2>
-
-        <!-- Group skills however makes sense for your field -->
-        <div>
-          <h3>Languages</h3>
-          <ul>
-            <li>Rust</li>
-            <li>Python</li>
-            <li>JavaScript</li>
-            <li>C++</li>
-            <li>C</li>
-            <li>SQL</li>
-            <li>HTML &amp; CSS</li>
-            <li>Assembly</li>
-          </ul>
-        </div>
-
-        <div>
-          <h3>Frameworks &amp; Libraries</h3>
-          <ul>
-            <li>React</li>
-            <li>Flask</li>
-            <li>spaCy</li>
-            <li>Hugging Face Transformers</li>
-            <li>Discord API</li>
-            <li>Microsoft Graph API</li>
-            <li>p5.js</li>
-          </ul>
-        </div>
-
-        <div>
-          <h3>Tools &amp; Platforms</h3>
-          <ul>
-            <li>Git</li>
-            <li>Docker</li>
-            <li>AWS</li>
-            <li>Google Cloud Platform</li>
-            <li>CI/CD</li>
-            <li>Unix/Linux</li>
-            <li>VS Code</li>
-          </ul>
-        </div>
       </div>
     </section>
 
@@ -213,8 +174,8 @@ Ameye</h1>
         <p>Open to work / internships / collaboration — reach out.</p>
 
         <ul class="contact-links">
-          <li><a href="GITHUB_PROFILE_PLACEHOLDER" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="LINKEDIN_PLACEHOLDER" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://github.com/ameyeben" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/benjamin-ameye-b15b06262/" target="_blank" rel="noopener">LinkedIn</a></li>
           <li><a href="mailto:benameye@gmail.com">benameye@gmail.com</a></li>
         </ul>
       </div>
