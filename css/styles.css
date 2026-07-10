@@ -574,13 +574,34 @@ header nav ul a {
 :root {
   --accent: #2563EB;
   --accent-deep: #1d4ed8;
+  /* VGA amber — same saturation/lightness as --accent (hsl 221,83%,53%),
+     hue shifted to gold to tag work experience distinctly from projects. */
+  --accent-vga: hsl(38, 83%, 53%);
   --hairline: rgba(255, 255, 255, 0.12);
   --muted: rgba(255, 255, 255, 0.55);
 }
 
+/* Project/experience type badges */
+.exp-badge,
+.proj-badge {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5em;
+  font-family: 'Px437 IBM VGA', 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  padding: 0.15em 0.45em;
+  border: 1px solid currentColor;
+  translate: 0 -0.1em;
+}
+
+.exp-badge  { color: var(--accent-vga); }
+.proj-badge { color: var(--accent); }
+
 /* Vertically center each non-hero band within its 100dvh section. */
 #about .container,
 #projects .container,
+#credentials .container,
 #contact .container {
   display: flex;
   flex-direction: column;
@@ -663,9 +684,9 @@ header nav ul a {
 }
 
 .bio {
-  font-family: 'Newsreader', Georgia, serif;
-  font-size: 1.3rem;
-  line-height: 1.55;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 1.05rem;
+  line-height: 1.7;
   max-width: 62ch;
   color: rgba(255, 255, 255, 0.85);
 }
@@ -804,6 +825,42 @@ header nav ul a {
   outline-offset: 4px;
 }
 
+
+/* ── Certifications & Activities ───────────── */
+.credentials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: clamp(1.5rem, 5vw, 4rem);
+  margin-top: 1rem;
+}
+
+.cred-col h3 {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.cred-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.cred-list li {
+  padding-left: 1rem;
+  text-indent: -1rem;
+}
+
+.cred-list li::before {
+  content: '▸ ';
+  color: var(--accent);
+}
 
 /* ── Contact ───────────────────────────────── */
 #contact > .container > p {

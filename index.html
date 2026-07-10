@@ -52,6 +52,7 @@
         <ul>
           <li><a href="#about">About</a></li>
           <li><a href="#projects">Projects</a></li>
+          <li><a href="#credentials">Credentials</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
@@ -86,15 +87,16 @@ Ameye</h1>
           <p class="bio">
             My name is Ben. I'm a computer science student at Lawrence Technological University, with my learning
             path focused on AI/ML. I care more about performance than looks when it comes to the tech that I use.
+            <br><br>
             In my free time I like to play competitive video games and read.
             Reading on paper is cool and all, but reading on the Boox Go 6 (gen 2) is too convenient to compare.
+            <br><br>
             My interest in computer science started with trying to comprehend how a Game Boy Color worked,
             and then became tangible when I made a "website" using HTML in middle school.
-
           </p>
           <a href="Benjamin_Ameye_Resume.pdf" download>Download Resume</a>
           <p class="resume-verify">
-            SHA-256: <code>SHA256_PLACEHOLDER</code><br>
+            SHA-256: <code>171cddfb0c55b38e8eb3cd4cbeb4e3c272104462a075d0727b10a32fe8b61d29</code><br>
             Verify: <code>shasum -a 256 Benjamin_Ameye_Resume.pdf</code>
           </p>
         </div>
@@ -111,14 +113,47 @@ Ameye</h1>
     <!-- ── Projects ───────────────────────────────────── -->
     <section id="projects" class="section--reveal">
       <div class="container">
-        <h2>Projects</h2>
+        <h2>Projects and Experience</h2>
 
         <!-- tabindex=0: on desktop this list scrolls internally; keep it
              keyboard-reachable so arrow keys can scroll it. -->
+        <!-- TODO(Ben): later — clicking a <li> opens a sub-window (modal) with an
+             elaborate write-up per project/role. Give each item a data-detail id,
+             wire a click handler + <dialog>. Not built yet. -->
         <ul tabindex="0">
 
           <li>
-            <h3>AI Resume Scoring Web Application (CURRENTLY REVISITING)</h3>
+            <h3><span class="exp-badge">EXPERIENCE</span> Software Engineering Intern &mdash; Office Medicine</h3>
+            <p>Built a Python package integrating the OpenAI ChatGPT API into Office
+              Medicine's software, letting users query drug codes, generic medication
+              alternatives, and clinical information with structured HTML-formatted
+              responses. Packaged for internal integration; authored the README and
+              usage docs for developer adoption. <em>May&ndash;Aug 2024.</em></p>
+            <ul class="tech-tags">
+              <li>Python</li>
+              <li>OpenAI API</li>
+            </ul>
+          </li>
+
+          <li>
+            <h3><span class="exp-badge">EXPERIENCE</span> Office Assistant &mdash; Dr. Hernandez Internal Medicine</h3>
+            <p>Independently designed and built internal software tools to automate office
+              workflows. Proposed and implemented a NAS backup system for patient records;
+              deployed an automated fax/email sorting and printing tool integrated with
+              Microsoft Outlook, cutting daily staff processing time ~75% (~20&nbsp;min &rarr;
+              ~5&nbsp;min/day); built a Python medical-record parser using pytesseract OCR and
+              the Microsoft Graph API to extract fields from incoming faxes and auto-sort
+              records by office-defined priority. <em>2023&ndash;Present.</em></p>
+            <ul class="tech-tags">
+              <li>Python</li>
+              <li>pytesseract OCR</li>
+              <li>Microsoft Graph API</li>
+              <li>NAS</li>
+            </ul>
+          </li>
+
+          <li>
+            <h3><span class="proj-badge">PROJECT</span> AI Resume Scoring Web Application (CURRENTLY REVISITING)</h3>
             <p>Full-stack capstone that parses resumes and scores them against job
               descriptions using NLP — tokenization, keyword extraction, and semantic
               similarity via Hugging Face Transformers. Flask REST API + React frontend,
@@ -141,19 +176,23 @@ Ameye</h1>
           </li>
 
           <li>
-            <h3>Video Aspect Ratio Resizer CLI </h3>
-            <p>Rust CLI that applies linear-algebra transforms — matrix scaling and
-              affine transforms — to programmatically resize and adjust the aspect ratio
-              of video files. Bridges Linear Algebra coursework with systems-level
-              programming.</p>
+            <h3><span class="proj-badge">PROJECT</span> Video Aspect Ratio CLI (vidstretch)</h3>
+            <p>Rust CLI that batch-processes video aspect-ratio conversion via a parallel
+              wrapper around FFmpeg. Includes a bounded worker pool for concurrent jobs,
+              glob/recursive file discovery, interactive conflict resolution, and JSON
+              reporting. Built on FFmpeg's optimized scaler rather than reimplementing the
+              transform math — custom engineering focused on concurrency, UX, and
+              reliability.</p>
             <ul class="tech-tags">
               <li>Rust</li>
+              <li>FFmpeg</li>
+              <li>Concurrency</li>
             </ul>
             <a href="https://github.com/ameyeben/vidstretch" target="_blank" rel="noopener">GitHub</a>
           </li>
 
           <li>
-            <h3>Team Maker Discord Bot (ARCHIVED)</h3>
+            <h3><span class="proj-badge">PROJECT</span> Team Maker Discord Bot (ARCHIVED)</h3>
             <p>Interactive Discord bot that builds teams from reaction-based
               participation, implementing multiple team-formation algorithms via the
               Discord API.</p>
@@ -164,6 +203,31 @@ Ameye</h1>
           </li>
 
         </ul>
+      </div>
+    </section>
+
+    <!-- ── Certifications & Activities ────────────────── -->
+    <section id="credentials" class="section--reveal">
+      <div class="container">
+        <h2>Certifications &amp; Activities</h2>
+        <div class="credentials-grid">
+          <div class="cred-col">
+            <h3>Certifications</h3>
+            <ul class="cred-list">
+              <li>Google Cybersecurity Professional Certificate V2 &mdash; Google (Coursera)</li>
+              <li>AWS Educate: Machine Learning Foundations &mdash; Amazon Web Services</li>
+              <li>Introducing Generative AI with AWS &mdash; Amazon Web Services</li>
+            </ul>
+          </div>
+          <div class="cred-col">
+            <h3>Activities &amp; Accomplishments</h3>
+            <ul class="cred-list">
+              <li>Founded and organized a summer software developer group to collaborate on projects and share technical knowledge</li>
+              <li>Participated in two collegiate hackathons</li>
+              <li>Varsity Soccer &mdash; 2&times; All-District, All-Conference, District Champion</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
 
