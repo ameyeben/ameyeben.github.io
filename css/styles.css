@@ -145,6 +145,7 @@ section .container {
 
 @media (prefers-reduced-motion: reduce) {
   .section--reveal .container,
+  #projects > .container > ul > li,
   .hero-cta {
     opacity: 1;
     transform: none;
@@ -747,6 +748,37 @@ header nav ul a {
   border-bottom: 1px solid var(--hairline);
 }
 
+/* Per-item reveal: same fade+rise as .section--reveal .container, but driven
+   per-item by the inner scroll (js/projects-reveal.js). Partly-scrolled items
+   stay hidden, so no half-clipped card at the list edges. */
+#projects > .container > ul > li {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+#projects > .container > ul > li.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── "scroll for more" affordances (above/below the list) ─── */
+.scroll-more {
+  flex: none;
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.scroll-more--up   { margin-bottom: 0.4rem; }
+.scroll-more--down { margin-top: 0.4rem; }
+
+.scroll-more.visible { opacity: 1; }
+
 #projects h3 {
   font-family: 'Satoshi', sans-serif;
   font-weight: 700;
@@ -807,16 +839,25 @@ header nav ul a {
 #projects {
   height: 100dvh;
   overflow: hidden;
+  padding: 0;              /* reclaim section padding so the bottom "scroll for more" fits */
 }
 
 #projects > .container {
   height: 100%;
   min-height: 0;
+  padding-top: var(--header-height);   /* just clear the sticky header, no extra gap */
+  padding-bottom: 0.5rem;
+}
+
+/* Tighter heading so the list starts higher, closer to the header. */
+#projects h2 {
+  margin-bottom: 1rem;
 }
 
 #projects > .container > ul {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-height: 0;          /* let the flex child shrink below content so it scrolls */
+  max-height: 60vh;       /* shorter scroll window, sits nearer center */
   overflow-y: auto;
 }
 
@@ -929,11 +970,16 @@ footer p {
   #projects > .container > ul {
     flex: none;
     overflow: visible;
+    max-height: none;
   }
 
   #projects > .container > ul > li {
     grid-template-columns: 1fr;
+    /* natural flow, no inner scroll → no per-item hiding */
+    opacity: 1;
+    transform: none;
   }
+  .scroll-more { display: none; }
   .tech-tags {
     grid-column: 1;
     grid-row: auto;

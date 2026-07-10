@@ -120,6 +120,7 @@ Ameye</h1>
         <!-- TODO(Ben): later — clicking a <li> opens a sub-window (modal) with an
              elaborate write-up per project/role. Give each item a data-detail id,
              wire a click handler + <dialog>. Not built yet. -->
+        <p class="scroll-more scroll-more--up font-vga" aria-hidden="true">&uarr; scroll for more</p>
         <ul tabindex="0">
 
           <li>
@@ -203,13 +204,14 @@ Ameye</h1>
           </li>
 
         </ul>
+        <p class="scroll-more scroll-more--down font-vga" aria-hidden="true">scroll for more &darr;</p>
       </div>
     </section>
 
     <!-- ── Certifications & Activities ────────────────── -->
     <section id="credentials" class="section--reveal">
       <div class="container">
-        <h2>Certifications &amp; Activities</h2>
+        <h2>Certifications, Activities, &amp; Future Projects</h2>
         <div class="credentials-grid">
           <div class="cred-col">
             <h3>Certifications</h3>
@@ -225,6 +227,13 @@ Ameye</h1>
               <li>Founded and organized a summer software developer group to collaborate on projects and share technical knowledge</li>
               <li>Participated in two collegiate hackathons</li>
               <li>Varsity Soccer &mdash; 2&times; All-District, All-Conference, District Champion</li>
+            </ul>
+          </div>
+          <div class="cred-col">
+            <h3>Future Projects</h3>
+            <ul class="cred-list">
+              <li>Optimal study-retention app</li>
+              <li>AI editing Neovim plugin</li>
             </ul>
           </div>
         </div>
@@ -270,6 +279,7 @@ Ameye</h1>
   <script src="js/hero-focus-cycle.js"></script>
   <script src="js/hero-reveal.js"></script>
   <script src="js/section-transitions.js"></script>
+  <script src="js/projects-reveal.js"></script>
   <script src="js/portrait-peek.js"></script>
 
 </body>
