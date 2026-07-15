@@ -695,10 +695,12 @@ header nav ul a {
 }
 
 /* Inline (mobile) shows the full source image — the square cover-crop used for
-   the desktop cursor peek lops off the head/feet of the 2024×2274 portrait. */
+   the desktop cursor peek lops off the head/feet of the 2024×2274 portrait.
+   Pin the intrinsic ratio so the box can't collapse to zero height (the <img>
+   has no width/height attrs). */
 #portrait-peek.peek--inline img {
-  aspect-ratio: auto;
-  object-fit: contain;
+  aspect-ratio: 2024 / 2274;
+  object-fit: cover;
   height: auto;
 }
 
@@ -1044,8 +1046,7 @@ footer p {
     justify-content: space-between;
     align-items: center;
     gap: 0.75rem;
-    padding-top: 0.6rem;
-    padding-bottom: 0.4rem;
+    padding: 0.6rem 1rem 0.4rem;   /* side padding so nav doesn't touch the edges */
   }
   header nav ul {
     gap: 0.9rem;
