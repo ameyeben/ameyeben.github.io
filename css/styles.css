@@ -116,6 +116,14 @@ section {
   scroll-snap-align: start;
 }
 
+/* Cap decorative overflow (the h2 swipe bars at width 161.8%) at the viewport so
+   the document never grows wider than the screen — otherwise mobile shrinks-to-
+   fit and lets you zoom out. clip on main is honored where overflow-x on the
+   scroll-snap root (html) is not on iOS Safari. */
+main {
+  overflow-x: clip;
+}
+
 /* Hero is fixed-size and its low-poly name spills past its box; keep it clipped
    to one viewport. */
 #hero {
@@ -254,7 +262,10 @@ h3 {
 .intro-title-bg,
 .intro-title-fg {
   font-family: 'Newsreader', Georgia, 'Times New Roman', Times, serif;
-  font-size: 1.75rem;
+  /* Scale to viewport so each explicit line of the quote fits on one line —
+     the chars are individual inline-blocks, so an over-wide line would wrap
+     mid-word. Caps at the 1.75rem design size on desktop. */
+  font-size: clamp(0.95rem, 4.2vw, 1.75rem);
   letter-spacing: 0.05em;
   line-height: 1.5;
   text-align: center;
@@ -681,6 +692,14 @@ header nav ul a {
   margin-top: 0.75rem;
   pointer-events: auto;
   z-index: auto;
+}
+
+/* Inline (mobile) shows the full source image — the square cover-crop used for
+   the desktop cursor peek lops off the head/feet of the 2024×2274 portrait. */
+#portrait-peek.peek--inline img {
+  aspect-ratio: auto;
+  object-fit: contain;
+  height: auto;
 }
 
 .peek-caption {
