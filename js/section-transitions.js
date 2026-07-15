@@ -24,12 +24,15 @@
   }
 
   // ── 1. Scroll-triggered reveal ──────────────────────────────────────────
+  // Small threshold, not 0.4: a section taller than the viewport (About/Projects
+  // stacked on mobile) can never show 40% of itself at once, so 0.4 would leave
+  // its content stuck at opacity 0. 0.05 fires as soon as the section enters.
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) entry.target.classList.add('in-view');
       else entry.target.classList.remove('in-view');
     });
-  }, { threshold: 0.4 });
+  }, { threshold: 0.05 });
   sections.forEach(function (s) { io.observe(s); });
 
   // ── 2. Instant jump (cut, no travel) ────────────────────────────────────

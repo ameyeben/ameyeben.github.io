@@ -1014,3 +1014,23 @@ footer p {
     grid-template-columns: 1fr;
   }
 }
+
+/* Compact nav on phones: the 12-col grid + right-flushed links overflow a narrow
+   screen. Collapse to a simple flex row (logo left, links right, wrapping) and
+   shrink the header reserve so sections don't start with a big top gap. */
+@media (max-width: 700px) {
+  :root { --header-height: 2.75rem; }
+  header nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.6rem;
+    padding-bottom: 0.4rem;
+  }
+  header nav ul {
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+}
