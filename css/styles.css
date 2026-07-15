@@ -27,6 +27,11 @@
 html {
   scroll-behavior: smooth;
   scroll-snap-type: y mandatory;
+  /* Decorative bits intentionally spill past their box (h2 swipe bar at 161.8%,
+     hero name distortion). Clip horizontally so that overshoot never widens the
+     document and shrinks-to-fit on mobile. clip (not hidden) keeps html the
+     scroll root, so vertical snap + sticky header stay intact. */
+  overflow-x: clip;
   scroll-padding-top: var(--header-height, 3rem);
   background: #1a1a1a;
   scrollbar-width: none;       /* Firefox */
