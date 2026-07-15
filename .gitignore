@@ -2,6 +2,13 @@
 node_modules/
 package-lock.json
 
+# Dev tooling / generated output — not part of the published site.
+.claude/
+.cursor/
+graphify-out/
+AGENTS.md
+*.docx
+
 # Build-time-only fonts for the low-poly bake scripts (only the baked JSON ships).
 # Re-fetch before running scripts/bake-intro-lowpoly.mjs:
 #   https://github.com/notofonts/noto-cjk  (Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Bold.otf)

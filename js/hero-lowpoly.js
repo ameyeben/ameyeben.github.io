@@ -23,10 +23,17 @@
   var hitEl = wrapper;
 
   var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var HOVER = window.matchMedia('(hover: hover)').matches; // desktop cursor vs touch scroll
 
   var SPRING = 0.28;     // per-frame lerp toward target (higher = snappier)
   var HIT_PAD_PX = 130;  // canvas margin so pulled vertices don't clip (≥ max pull)
   var REVEAL_SCATTER = 90; // px each vertex is flung out before settling on reveal
+
+  // Touch: warp strength tracks scroll velocity instead of a cursor. Tuned so a
+  // normal flick lands near full strength; the virtual pull-point sits one glyph
+  // above/below center in the scroll direction so letters trail the motion.
+  var SCROLL_FULL_VEL = 2.2; // px/ms mapping to strength 1 (higher = needs faster scroll)
+  var SCROLL_DECAY = 0.90;   // per-frame strength falloff once scrolling stops
 
   // Vertical-line halftone: the glyph path is filled with a vertical-stripe
   // pattern instead of a solid color, so the letters read as vertical lines.
@@ -233,6 +240,12 @@
       drawLayer(layer);
     }
 
+    // Touch: no leave event to spring strength back, so bleed it off each frame.
+    if (!HOVER) {
+      strength.v *= SCROLL_DECAY;
+      if (strength.v < 0.02) { strength.v = 0; mouseU.active = false; }
+    }
+
     if (mouseU.active || s > 0.001 || maxDelta > 0.1) {
       rafId = requestAnimationFrame(frame);
     } else {
@@ -262,19 +275,49 @@
     ensureLoop();
   }
 
+  // Touch: drive strength from scroll speed, pulling the letters toward a virtual
+  // point one glyph-height past center in the scroll direction.
+  var lastY = 0, lastT = 0;
+  function onScroll() {
+    var now = performance.now();
+    var y = window.scrollY || window.pageYOffset || 0;
+    var dt = now - lastT;
+    if (lastT && dt > 0) {
+      var vel = (y - lastY) / dt;                 // px/ms, signed
+      var mag = Math.min(Math.abs(vel) / SCROLL_FULL_VEL, 1);
+      if (mag > strength.v) strength.v = mag;      // ramp up fast, frame() decays it
+      var vb = data.viewBox;
+      mouseU.x = vb[0] + vb[2] / 2;                // glyph center X
+      mouseU.y = vb[1] + vb[3] / 2 + (vel > 0 ? 1 : -1) * vb[3];
+      mouseU.active = true;
+      ensureLoop();
+    }
+    lastY = y; lastT = now;
+  }
+
   var listening = false;
   function addListeners() {
     if (listening || REDUCED) return;
-    hitEl.addEventListener('mousemove', onMove);
-    hitEl.addEventListener('mouseenter', onEnter);
-    hitEl.addEventListener('mouseleave', onLeave);
+    if (HOVER) {
+      hitEl.addEventListener('mousemove', onMove);
+      hitEl.addEventListener('mouseenter', onEnter);
+      hitEl.addEventListener('mouseleave', onLeave);
+    } else {
+      lastT = 0; lastY = window.scrollY || window.pageYOffset || 0;
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
     listening = true;
   }
   function removeListeners() {
     if (!listening) return;
-    hitEl.removeEventListener('mousemove', onMove);
-    hitEl.removeEventListener('mouseenter', onEnter);
-    hitEl.removeEventListener('mouseleave', onLeave);
+    if (HOVER) {
+      hitEl.removeEventListener('mousemove', onMove);
+      hitEl.removeEventListener('mouseenter', onEnter);
+      hitEl.removeEventListener('mouseleave', onLeave);
+    } else {
+      window.removeEventListener('scroll', onScroll);
+      strength.v = 0; mouseU.active = false;
+    }
     listening = false;
   }
 

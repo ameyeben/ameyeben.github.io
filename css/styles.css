@@ -602,7 +602,7 @@ header nav ul a {
 /* Vertically center each non-hero band within its 100dvh section. */
 #about .container,
 #projects .container,
-#credentials .container,
+#misc .container,
 #contact .container {
   display: flex;
   flex-direction: column;
@@ -663,6 +663,19 @@ header nav ul a {
   aspect-ratio: 1;
   object-fit: cover;
   border: 1px solid var(--hairline);
+}
+/* ── Inline peek (touch devices): JS adds .peek--inline and moves #portrait-peek
+   right after .about-portrait, so it flows naturally instead of fixed-following
+   the cursor. Scroll-triggered by IntersectionObserver in portrait-peek.js. */
+#portrait-peek.peek--inline {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 100%;
+  max-width: 20rem;
+  margin-top: 0.75rem;
+  pointer-events: auto;
+  z-index: auto;
 }
 
 .peek-caption {
@@ -866,11 +879,10 @@ header nav ul a {
   outline-offset: 4px;
 }
 
-
-/* ── Certifications & Activities ───────────── */
+/* ── Misc (Certifications & Activities) ───── */
 .credentials-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: clamp(1.5rem, 5vw, 4rem);
   margin-top: 1rem;
 }
@@ -986,4 +998,14 @@ footer p {
     margin-top: 0.6rem;
   }
   .bio { font-size: 1.15rem; }
+  /* Stack credentials into two columns on tablet/mobile */
+  .credentials-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .credentials-grid {
+    grid-template-columns: 1fr;
+  }
 }
