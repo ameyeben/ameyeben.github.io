@@ -33,7 +33,7 @@ html {
      scroll root, so vertical snap + sticky header stay intact. */
   overflow-x: clip;
   scroll-padding-top: var(--header-height, 3rem);
-  background: #1a1a1a;
+  background: #0a0a0c;
   scrollbar-width: none;       /* Firefox */
   -ms-overflow-style: none;    /* old Edge/IE */
 }
@@ -73,7 +73,7 @@ body {
   pointer-events: none;
   display: block;
   overflow: hidden;        /* clip oversized translating layers to viewport */
-  background: #1a1a1a;      /* flat backdrop (was canvas fill) */
+  background: #0a0a0c;      /* near-black, faint blue tint (Unkey-style field) */
 }
 
 #noise-bg canvas {
@@ -111,7 +111,7 @@ ul {
 }
 
 section {
-  padding: var(--section-padding-y) 0;
+  padding: var(--section-padding-y) 0 0;   /* breathe at top, tight at bottom */
   min-height: 100dvh;
   scroll-snap-align: start;
 }
@@ -171,28 +171,27 @@ h1 {
 }
 
 h2 {
-  font-size: 1.75rem;
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 500;          /* confidence via scale, not thickness */
+  font-size: clamp(1.75rem, 3.2vw, 2.25rem);
+  letter-spacing: -0.025em;
   margin-bottom: 2rem;
   display: inline-block;     /* shrink-wrap so 100% == text width */
+  align-self: flex-start;    /* keep shrink-wrap inside flex-column sections */
   position: relative;
-  z-index: 0;                /* stacking context so ::before can sit behind */
 }
 
-h2::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 161.8%;             /* φ × text width */
-  height: 1em;               /* hug text, ~cap-height swipe */
-  background: #2563EB;
-  z-index: -1;
+/* The signature: text-hugging accent highlight. Ink text on the one accent,
+   sharp corners, bleeds slightly below the baseline (Unkey <mark>). */
+mark {
+  background: var(--accent);
+  color: var(--ink);
+  border-radius: 0;
+  padding: 0 0.15em 0.12em 0.1em;
 }
 
-/* Section index rides the swipe bar's empty right overhang. The bar was
-   decorative wallpaper repeated identically per section; the counter turns it
-   into wayfinding (01–04, scroll/nav order) and makes each heading distinct. */
+/* Section index (01–04, scroll/nav order) hangs off the heading's right edge
+   as quiet mono wayfinding. */
 main { counter-reset: sec; }
 #about, #projects, #misc, #contact { counter-increment: sec; }
 
@@ -206,7 +205,7 @@ h2::after {
   -webkit-font-smoothing: none;
   font-size: 0.8rem;
   letter-spacing: 0.06em;
-  color: #fff;               /* white on the blue overhang */
+  color: var(--muted);
   pointer-events: none;
 }
 
@@ -302,7 +301,7 @@ h3 {
 }
 
 .intro-title-fg {
-  color: #1a1a1a;
+  color: #0a0a0c;
   position: relative;
   z-index: 2;
 }
@@ -348,7 +347,7 @@ h3 {
   letter-spacing: 0.05em;
   line-height: 1.5;
   text-align: center;
-  color: #1a1a1a;
+  color: #0a0a0c;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -608,18 +607,20 @@ header nav ul a {
 }
 
 /* ══ Content sections (about / projects / skills / contact / footer) ══════
-   Extends the established identity: #1a1a1a bg, #fff text, royal-blue accent,
+   Extends the established identity: #0a0a0c bg, #fff text, royal-blue accent,
    φ structure, JetBrains Mono + Newsreader + Satoshi. Hero is excluded. */
 :root {
+  /* One-accent rule (Unkey / principle 02): royal blue is the ONLY hue on the
+     page. It survives on the hero box, <mark> highlights, the resume CTA, and
+     hover/focus feedback. Everything else is a grayscale ramp. */
   --accent: #2563EB;
   --accent-deep: #1d4ed8;
-  /* VGA amber — same saturation/lightness as --accent (hsl 221,83%,53%),
-     hue shifted to gold to tag work experience distinctly from projects. */
-  --accent-vga: hsl(38, 83%, 53%);
-  --hairline: rgba(255, 255, 255, 0.12);
-  --muted: rgba(255, 255, 255, 0.55);
+  --ink: #0a0a0c;                    /* background color, used as text on accent */
+  --hairline: #27272a;               /* nearly-black hairline borders */
+  --divider: #2E3038;                /* lighter hairline between sections */
+  --muted: #a1a1aa;
   /* Principle 09 (Shadows): directional light from above anchors elevated
-     surfaces to the flat #1a1a1a field and reads as depth, not decoration.
+     surfaces to the flat #0a0a0c field and reads as depth, not decoration.
      --shadow-rest sits things down; --shadow-lift is the hover elevation. */
   --shadow-rest: 0 6px 24px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.5);
   --shadow-lift: 0 16px 44px rgba(0, 0, 0, 0.55), 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -639,14 +640,30 @@ header nav ul a {
   translate: 0 -0.1em;
 }
 
-.exp-badge  { color: var(--accent-vga); }
-.proj-badge { color: var(--accent); }
+/* Monochrome badge pair (one-accent rule): experience = filled, project =
+   outlined. Fill-vs-outline carries the distinction the old amber hue did. */
+.exp-badge  { background: #fff; color: var(--ink); border-color: #fff; }
+.proj-badge { color: var(--muted); }
 
-/* Vertically center each non-hero band within its 100dvh section. */
+/* Hairline dividers between sections (no boxes, no shadows) — the lighter
+   #2E3038 variant so the seam reads at a glance against #0a0a0c. */
+#about, #projects, #misc, #contact, footer {
+  border-top: 1px solid var(--divider);
+}
+
+/* Asymmetric section rhythm (Unkey): breathe at the top, stack tight at the
+   bottom. Large pt, zero pb. #projects keeps its own pinned-viewport padding. */
 #about .container,
-#projects .container,
 #misc .container,
 #contact .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: calc(var(--header-height) + clamp(1.5rem, 8vh, 5.5rem));
+  padding-bottom: 0;
+}
+
+#projects .container {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -838,7 +855,7 @@ header nav ul a {
   text-align: center;
   font-size: 0.7rem;
   letter-spacing: 0.04em;
-  color: var(--accent);
+  color: var(--muted);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -851,7 +868,7 @@ header nav ul a {
 
 #projects h3 {
   font-family: 'Satoshi', sans-serif;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 1.15rem;
   letter-spacing: 0.01em;
   transition: color 0.18s ease;
@@ -884,8 +901,8 @@ header nav ul a {
   white-space: nowrap;
 }
 
-.tech-tags li::before { content: '['; color: var(--accent); }
-.tech-tags li::after  { content: ']'; color: var(--accent); }
+.tech-tags li::before { content: '['; color: var(--muted); }
+.tech-tags li::after  { content: ']'; color: var(--muted); }
 
 #projects li > a {
   grid-column: 1;
@@ -946,7 +963,7 @@ header nav ul a {
 
 .cred-col h3 {
   font-family: 'Satoshi', sans-serif;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 1.05rem;
   margin-bottom: 0.9rem;
   padding-bottom: 0.5rem;
@@ -973,14 +990,9 @@ header nav ul a {
   translate: 0 -0.15em;
 }
 
-.cred-col--verified .unit-state,
-.cred-col--logged   .unit-state { color: var(--accent); }
-.cred-col--queued   .unit-state { color: var(--muted); }
-.cred-col--running  .unit-state { color: var(--accent-vga); }
-
-/* Marker colour tracks the same state; RUNNING/QUEUED read active vs pending. */
-.cred-col--queued  { --marker-color: var(--muted); }
-.cred-col--running { --marker-color: var(--accent-vga); }
+/* One-accent rule: state chips stay grayscale — the label text carries the
+   state, colour doesn't need to. */
+.unit-state { color: var(--muted); }
 
 .cred-list {
   display: flex;
@@ -998,7 +1010,7 @@ header nav ul a {
 
 .cred-list li::before {
   content: '\203A ';
-  color: var(--marker-color, var(--accent));
+  color: var(--muted);
 }
 
 /* ── Contact ───────────────────────────────── */
@@ -1021,7 +1033,7 @@ header nav ul a {
 
 .contact-links a::before {
   content: '→ ';
-  color: var(--accent);
+  color: var(--muted);
 }
 
 .contact-links a:hover {
