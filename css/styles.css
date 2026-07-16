@@ -190,6 +190,26 @@ h2::before {
   z-index: -1;
 }
 
+/* Section index rides the swipe bar's empty right overhang. The bar was
+   decorative wallpaper repeated identically per section; the counter turns it
+   into wayfinding (01–04, scroll/nav order) and makes each heading distinct. */
+main { counter-reset: sec; }
+#about, #projects, #misc, #contact { counter-increment: sec; }
+
+h2::after {
+  content: counter(sec, decimal-leading-zero);
+  position: absolute;
+  left: calc(100% + 0.65em);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Px437 IBM VGA', 'JetBrains Mono', monospace;
+  -webkit-font-smoothing: none;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: #fff;               /* white on the blue overhang */
+  pointer-events: none;
+}
+
 h3 {
   font-size: 1.2rem;
 }
@@ -931,7 +951,36 @@ header nav ul a {
   margin-bottom: 0.9rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--hairline);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5em;
+  flex-wrap: wrap;
 }
+
+/* CP437 state chip — reuses the project/experience badge vocabulary. State is
+   true about each column: certs proven, activities done, future not built,
+   stack live now. Colour carries the state; RUNNING borrows the amber that
+   already tags "current" on experience. */
+.unit-state {
+  flex: none;
+  font-family: 'Px437 IBM VGA', 'JetBrains Mono', monospace;
+  -webkit-font-smoothing: none;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  padding: 0.2em 0.45em;
+  border: 1px solid currentColor;
+  translate: 0 -0.15em;
+}
+
+.cred-col--verified .unit-state,
+.cred-col--logged   .unit-state { color: var(--accent); }
+.cred-col--queued   .unit-state { color: var(--muted); }
+.cred-col--running  .unit-state { color: var(--accent-vga); }
+
+/* Marker colour tracks the same state; RUNNING/QUEUED read active vs pending. */
+.cred-col--queued  { --marker-color: var(--muted); }
+.cred-col--running { --marker-color: var(--accent-vga); }
 
 .cred-list {
   display: flex;
@@ -948,8 +997,8 @@ header nav ul a {
 }
 
 .cred-list li::before {
-  content: '▸ ';
-  color: var(--accent);
+  content: '\203A ';
+  color: var(--marker-color, var(--accent));
 }
 
 /* ── Contact ───────────────────────────────── */
