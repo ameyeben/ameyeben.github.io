@@ -4,9 +4,12 @@
    live logit panel shows the candidate distribution for each step — the top
    (chosen) token lights amber and commits to the output.
 
+   Isolation (principle 01): the NAME decodes first and owns the space; the
+   summary streams smaller beneath it. The logit panel (right) forms a diptych
+   (07) with the completion — meaning lives in the gap between them.
+
    Everything degrades to the finished text if prefers-reduced-motion or JS off
-   (the completion text is authored in the DOM in index-alt.html and only
-   revealed/animated here). */
+   (both lines are authored in the DOM in index-alt.html). */
 (function () {
   'use strict';
 
@@ -14,23 +17,22 @@
   if (!root) return;
 
   var promptEl = root.querySelector('.dec-prompt-type');
-  var outEl = root.querySelector('.dec-output');
+  var nameEl = root.querySelector('.dec-name');
+  var sumEl = root.querySelector('.dec-summary');
   var panel = root.querySelector('.dec-logits');
   var statEl = root.querySelector('.dec-stat-rate');
   var cta = root.querySelector('.dec-cta');
 
-  // The completion, pre-tokenized. Newline tokens ("\n") become line breaks.
-  // Kept LLM-ish: words, punctuation and the odd sub-word split feel like real
-  // decoding without hurting readability.
-  var TOKENS = [
-    'Benjamin', ' Ameye', '\n',
-    'software', ' engineer', ' optimizing', ' for', ' AI', '/', 'ML', ' systems', '.', '\n',
-    'ships', ' Rust', ' CLIs', ',', ' Python', ' inference', ' tooling', ',', ' full', '-', 'stack', ' ML', ' apps', '.', '\n',
+  // Two token streams so the name can be isolated from the summary.
+  var NAME = ['Benjamin', ' Ameye'];
+  var SUMMARY = [
+    'software', ' engineer', ' optimizing', ' for', ' AI', '/', 'ML', ' systems', '.', ' ',
+    'ships', ' Rust', ' CLIs', ',', ' Python', ' inference', ' tooling', ',', ' full', '-', 'stack', ' ML', ' apps', '.', ' ',
     'currently', ' open', ' to', ' internships', '.'
   ];
 
-  // Plausible distractor tokens for the logit panel. Never shown as chosen —
-  // the real token is always slotted at the top with the highest probability.
+  // Plausible distractor tokens for the logit panel. Never chosen — the real
+  // token is always slotted at the top with the highest probability.
   var DISTRACTORS = [
     ' neural', ' latent', ' gradient', ' vector', ' the', ' a', ' model', ' data',
     ' async', ' Go', ' C', ' systems', ' backend', ' research', ' agents', ' compilers',
@@ -42,16 +44,9 @@
   var reduce = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function esc(t) { return t === '\n' ? '<br>' : t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
-
-  function finalText() {
-    return TOKENS.map(esc).join('');
-  }
-
-  // Reduced motion / no anim: just show the finished completion + CTAs.
+  // Reduced motion / no anim: show the authored final completion + CTAs.
   if (reduce) {
     if (promptEl) promptEl.textContent = 'introduce the candidate';
-    outEl.innerHTML = finalText();
     if (panel) panel.setAttribute('data-idle', '');
     if (cta) cta.classList.add('revealed');
     if (statEl) statEl.textContent = '—';
@@ -65,16 +60,15 @@
     return t;
   }
 
-  // Build a descending probability distribution for a step. Top = chosen token.
+  // Descending probability distribution for a step. Top row = chosen token.
   function distribution(chosen) {
     var top = 0.55 + Math.random() * 0.34;            // 0.55–0.89 confidence
     var rows = [{ tok: chosen, p: top, hit: true }];
-    var remaining = 1 - top;
-    var used = { };
+    var remaining = 1 - top, used = {};
     used[chosen] = 1;
     for (var i = 0; i < 4; i++) {
       var d = pick(DISTRACTORS, chosen);
-      if (used[d]) { d = pick(DISTRACTORS, chosen); }
+      if (used[d]) d = pick(DISTRACTORS, chosen);
       used[d] = 1;
       var share = remaining * (0.55 - i * 0.11) * (0.7 + Math.random() * 0.6);
       rows.push({ tok: d, p: Math.max(0.01, share), hit: false });
@@ -84,12 +78,11 @@
   }
 
   function renderPanel(rows) {
-    var max = rows[0].p;
-    var html = '';
+    var max = rows[0].p, html = '';
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i];
       var w = Math.round((r.p / max) * 100);
-      var label = r.tok === '\n' ? '\\n' : r.tok.replace(/ /g, '·').replace(/</g, '&lt;');
+      var label = r.tok.replace(/ /g, '·').replace(/</g, '&lt;');
       html +=
         '<div class="logit-row' + (r.hit ? ' logit-row--hit' : '') + '">' +
           '<span class="logit-tok">' + label + '</span>' +
@@ -102,47 +95,55 @@
 
   // ── Sequence ──
   var PROMPT = 'introduce the candidate';
-  var start;
-  var committed = 0;
+  var start, committed = 0;
+  // phase 0: name stream, phase 1: summary stream
+  var phase = 0, target = nameEl, tokens = NAME;
+
+  function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
 
   function typePrompt(i) {
     promptEl.textContent = PROMPT.slice(0, i);
     if (i <= PROMPT.length) {
       setTimeout(function () { typePrompt(i + 1); }, 34);
     } else {
-      root.classList.add('dec-thinking');
+      root.classList.add('dec-thinking', 'dec-caret-name');
       setTimeout(decodeStep, 420);
     }
   }
 
   function decodeStep() {
-    if (committed >= TOKENS.length) return finish();
-    var tok = TOKENS[committed];
+    if (committed >= tokens.length) {
+      if (phase === 0) {                 // name done → move caret to summary
+        phase = 1; committed = 0; target = sumEl; tokens = SUMMARY;
+        root.classList.remove('dec-caret-name');
+        root.classList.add('dec-caret-sum');
+        return setTimeout(decodeStep, 260);
+      }
+      return finish();
+    }
+    var tok = tokens[committed];
     renderPanel(distribution(tok));
-    // brief hold on the distribution, then commit the chosen token
     setTimeout(function () {
-      outEl.insertAdjacentHTML('beforeend', esc(tok));
+      target.insertAdjacentHTML('beforeend', esc(tok));
       committed++;
-      // newlines and long spans decode a touch slower, like a real stream
-      var delay = tok === '\n' ? 150 : (60 + rand(70));
+      var delay = 58 + rand(64);
       setTimeout(decodeStep, delay);
     }, 78);
   }
 
   function finish() {
     var secs = (performance.now() - start) / 1000;
-    var rate = (TOKENS.length / secs).toFixed(1);
-    if (statEl) statEl.textContent = rate + ' tok/s';
-    root.classList.remove('dec-thinking');
+    if (statEl) statEl.textContent = (30 / secs).toFixed(1) + ' tok/s';
+    root.classList.remove('dec-thinking', 'dec-caret-sum', 'dec-caret-name');
     root.classList.add('dec-done');
     if (panel) panel.setAttribute('data-idle', '');
     if (cta) cta.classList.add('revealed');
   }
 
-  // Kick off after first paint so fonts are likely ready. Clear the authored
-  // fallback text (present for no-JS) before streaming it back in.
+  // Clear the authored fallback text, then stream it back in.
   requestAnimationFrame(function () {
-    outEl.innerHTML = '';
+    nameEl.innerHTML = '';
+    sumEl.innerHTML = '';
     if (promptEl) promptEl.textContent = '';
     start = performance.now();
     typePrompt(0);
