@@ -13,3 +13,19 @@ AGENTS.md
 # Re-fetch before running scripts/bake-intro-lowpoly.mjs:
 #   https://github.com/notofonts/noto-cjk  (Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Bold.otf)
 fonts/NotoSansCJKsc-Bold.otf
+
+# Local dev / experiments — not part of the published site (GitHub Pages
+# serves every tracked file as a live URL).
+ascii-loading-animation.html
+aspect-ratio-guide.html
+index-alt.html
+css/alt.css
+js/alt-decode.js
+package.json
+scripts/
+start-localhost.sh
+stop-localhost.sh
+fonts/Satoshi-Bold.ttf
+*.pdf
+!Benjamin_Ameye_Resume.pdf
+*.md
