@@ -11,6 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css" />
+  <!-- Set theme before first paint to avoid a flash of the wrong theme. -->
+  <script>document.documentElement.dataset.theme = localStorage.getItem('theme') || 'dark';</script>
 </head>
 
 <body style="font-size: 16px">
@@ -54,6 +56,7 @@
           <li><a href="#projects">Projects</a></li>
           <li><a href="#misc">Misc</a></li>
           <li><a href="#contact">Contact</a></li>
+          <li><button id="theme-toggle" type="button" aria-label="Switch color theme">LIGHT</button></li>
         </ul>
       </div>
     </nav>
@@ -87,8 +90,8 @@ Ameye</h1>
         <div class="about-text">
           <h2><mark>About</mark></h2>
           <p class="bio">
-            My name is Ben. I'm a computer science student at Lawrence Technological University, with my learning
-            path focused on AI/ML. I care more about performance than looks when it comes to the tech that I use.
+            My name is Ben. I'm a <mark class="kw">computer science</mark> student at Lawrence Technological University, with my learning
+            path focused on <mark class="kw">AI/ML</mark>. I care more about performance than looks when it comes to the tech that I use.
             <br><br>
             In my free time I like to play competitive video games and read.
             Reading on paper is cool and all, but reading on the Boox Go 6 (gen 2) is too convenient to compare.
@@ -127,7 +130,7 @@ Ameye</h1>
 
           <li>
             <h3><span class="exp-badge">EXPERIENCE</span> Software Engineering Intern &mdash; Office Medicine</h3>
-            <p>Built a Python package integrating the OpenAI ChatGPT API into Office
+            <p>Built a <mark class="kw">Python</mark> package integrating the <mark class="kw">OpenAI ChatGPT API</mark> into Office
               Medicine's software, letting users query drug codes, generic medication
               alternatives, and clinical information with structured HTML-formatted
               responses. Packaged for internal integration; authored the README and
@@ -144,8 +147,8 @@ Ameye</h1>
               workflows. Proposed and implemented a NAS backup system for patient records;
               deployed an automated fax/email sorting and printing tool integrated with
               Microsoft Outlook, cutting daily staff processing time ~75% (~20&nbsp;min &rarr;
-              ~5&nbsp;min/day); built a Python medical-record parser using pytesseract OCR and
-              the Microsoft Graph API to extract fields from incoming faxes and auto-sort
+              ~5&nbsp;min/day); built a Python medical-record parser using <mark class="kw">pytesseract OCR</mark> and
+              the <mark class="kw">Microsoft Graph API</mark> to extract fields from incoming faxes and auto-sort
               records by office-defined priority. <em>2023&ndash;Present.</em></p>
             <ul class="tech-tags">
               <li>Python</li>
@@ -157,10 +160,10 @@ Ameye</h1>
 
           <li>
             <h3><span class="proj-badge">PROJECT</span> AI Resume Scoring Web Application (CURRENTLY REVISITING)</h3>
-            <p>Full-stack capstone that parses resumes and scores them against job
-              descriptions using NLP — tokenization, keyword extraction, and semantic
-              similarity via Hugging Face Transformers. Flask REST API + React frontend,
-              shipped through a CI/CD pipeline. Currently implementing HackerRank's grading
+            <p><mark class="kw">Full-stack</mark> capstone that parses resumes and scores them against job
+              descriptions using <mark class="kw">NLP</mark> — tokenization, keyword extraction, and semantic
+              similarity via <mark class="kw">Hugging Face Transformers</mark>. <mark class="kw">Flask REST API</mark> + <mark class="kw">React</mark> frontend,
+              shipped through a <mark class="kw">CI/CD pipeline</mark>. Currently implementing HackerRank's grading
               logic for resumes.</p>
             <ul class="tech-tags">
               <li>Python</li>
@@ -180,8 +183,8 @@ Ameye</h1>
 
           <li>
             <h3><span class="proj-badge">PROJECT</span> Video Aspect Ratio CLI (vidstretch)</h3>
-            <p>Rust CLI that batch-processes video aspect-ratio conversion via a parallel
-              wrapper around FFmpeg. Includes a bounded worker pool for concurrent jobs,
+            <p><mark class="kw">Rust</mark> CLI that batch-processes video aspect-ratio conversion via a parallel
+              wrapper around <mark class="kw">FFmpeg</mark>. Includes a bounded worker pool for <mark class="kw">concurrent</mark> jobs,
               glob/recursive file discovery, interactive conflict resolution, and JSON
               reporting. Built on FFmpeg's optimized scaler rather than reimplementing the
               transform math — custom engineering focused on concurrency, UX, and
@@ -197,8 +200,8 @@ Ameye</h1>
           <li>
             <h3><span class="proj-badge">PROJECT</span> Team Maker Discord Bot (ARCHIVED)</h3>
             <p>Interactive Discord bot that builds teams from reaction-based
-              participation, implementing multiple team-formation algorithms via the
-              Discord API.</p>
+              participation, implementing multiple team-formation <mark class="kw">algorithms</mark> via the
+              <mark class="kw">Discord API</mark>.</p>
             <ul class="tech-tags">
               <li>Python</li>
               <li>Discord API</li>
@@ -218,9 +221,9 @@ Ameye</h1>
           <div class="cred-col cred-col--verified">
             <h3>Certifications <span class="unit-state">VERIFIED</span></h3>
             <ul class="cred-list">
-              <li>Google Cybersecurity Professional Certificate V2 &mdash; Google (Coursera)</li>
-              <li>AWS Educate: Machine Learning Foundations &mdash; Amazon Web Services</li>
-              <li>Introducing Generative AI with AWS &mdash; Amazon Web Services</li>
+              <li>Google <mark class="kw">Cybersecurity</mark> Professional Certificate V2 &mdash; Google (Coursera)</li>
+              <li>AWS Educate: <mark class="kw">Machine Learning</mark> Foundations &mdash; Amazon Web Services</li>
+              <li>Introducing <mark class="kw">Generative AI</mark> with AWS &mdash; Amazon Web Services</li>
             </ul>
           </div>
           <div class="cred-col cred-col--logged">
@@ -258,7 +261,7 @@ Ameye</h1>
     <section id="contact" class="section--reveal">
       <div class="container">
         <h2><mark>Contact</mark></h2>
-        <p>Open to work / internships / collaboration — reach out.</p>
+        <p>Open to work / <mark class="kw">internships</mark> / collaboration — reach out.</p>
 
         <ul class="contact-links">
           <li><a href="https://github.com/ameyeben" target="_blank" rel="noopener">GitHub</a></li>
@@ -279,6 +282,20 @@ Ameye</h1>
 
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 
+  <script>
+    (function () {
+      var btn = document.getElementById('theme-toggle');
+      var root = document.documentElement;
+      function sync() { btn.textContent = root.dataset.theme === 'dark' ? 'LIGHT' : 'DARK'; }
+      btn.addEventListener('click', function () {
+        root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', root.dataset.theme);
+        sync();
+      });
+      sync();
+    })();
+  </script>
+
   <script src="js/intro-ascii.js"></script>
 
   <script src="js/noise-bg.js"></script>
@@ -294,6 +311,7 @@ Ameye</h1>
   <script src="js/hero-reveal.js"></script>
   <script src="js/section-transitions.js"></script>
   <script src="js/projects-reveal.js"></script>
+  <script src="js/kw-highlight.js"></script>
   <script src="js/portrait-peek.js"></script>
 
 </body>
