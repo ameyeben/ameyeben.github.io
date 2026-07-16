@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Benjamin Ameye — software engineer optimizing for AI/ML systems. Open to internships." />
+  <title>Benjamin Ameye — Decoder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/alt.css" />
+</head>
+
+<body>
+
+  <!-- ── Nav ─────────────────────────────────────────── -->
+  <header class="nav">
+    <div class="wrap">
+      <a href="#top" class="nav__brand mono"><b>ben-ameye</b><span> · v5.decoder</span></a>
+      <nav class="nav__links">
+        <a href="#about">about</a>
+        <a href="#projects">runs</a>
+        <a href="#misc">checkpoints</a>
+        <a href="#contact">contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ══ HERO — live decode (signature) ══════════════ -->
+    <section class="hero" id="decoder" aria-label="Introduction">
+      <div class="wrap">
+        <div class="dec-console">
+          <div class="dec-promptline mono">
+            <span class="caret">&gt;</span>
+            <span class="dec-prompt-type">introduce the candidate</span>
+          </div>
+          <!-- Authored fallback text is streamed back in by JS; shown as-is
+               when JS is off or reduced-motion is set. -->
+          <div class="dec-output" aria-label="Benjamin Ameye — software engineer optimizing for AI/ML systems. Ships Rust CLIs, Python inference tooling, full-stack ML apps. Currently open to internships.">Benjamin Ameye<br>software engineer optimizing for AI/ML systems.<br>ships Rust CLIs, Python inference tooling, full-stack ML apps.<br>currently open to internships.</div>
+
+          <div class="dec-meta mono">
+            <span>model <b>ben-ameye/v5</b></span>
+            <span>temp <b>0.7</b></span>
+            <span>rate <b class="dec-stat-rate">…</b></span>
+          </div>
+
+          <div class="dec-cta">
+            <a href="#projects" class="btn btn--primary">view runs</a>
+            <a href="#contact" class="btn btn--ghost">get in touch</a>
+          </div>
+        </div>
+
+        <!-- logit panel: live candidate distribution per decode step -->
+        <aside class="dec-panel" aria-hidden="true">
+          <div class="dec-panel__head mono">
+            <span>logits · top-5</span>
+            <span class="dec-panel__dot"></span>
+          </div>
+          <div class="dec-logits mono"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ══ About / model card ══════════════════════════ -->
+    <section class="sec" id="about">
+      <div class="wrap reveal">
+        <p class="sec__label mono" data-cell="In[1]">system prompt</p>
+        <h2 class="sec__title">Who is behind the weights</h2>
+        <div class="about">
+          <div>
+            <div class="about__bio">
+              <p>My name is Ben. I'm a computer science student at Lawrence Technological University, on an AI/ML learning path. I care more about performance than looks in the tech I use.</p>
+              <p>In my free time I play competitive video games and read — paper is fine, but the Boox Go 6 (gen 2) is too convenient to compare.</p>
+              <p>My interest in CS started with trying to comprehend how a Game Boy Color worked, then became tangible when I built a "website" in HTML in middle school.</p>
+            </div>
+            <a href="Benjamin_Ameye_Resume.pdf" download class="dl mono">download resume</a>
+            <p class="verify mono">
+              SHA-256 <b>171cddfb0c55b38e8eb3cd4cbeb4e3c272104462a075d0727b10a32fe8b61d29</b><br>
+              verify: shasum -a 256 Benjamin_Ameye_Resume.pdf
+            </p>
+          </div>
+          <figure class="about__card">
+            <img src="ben.png" alt="Benjamin Ameye" width="1122" height="1402" loading="lazy">
+            <figcaption class="mono"><span>ben.png</span><span>1122×1402</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Projects / runs ═════════════════════════════ -->
+    <section class="sec" id="projects">
+      <div class="wrap reveal">
+        <p class="sec__label mono" data-cell="In[2]">training + eval runs</p>
+        <h2 class="sec__title">Projects &amp; experience</h2>
+        <div class="runs">
+
+          <article class="run">
+            <div>
+              <div class="run__head">
+                <span class="run__badge run__badge--exp mono">EXP</span>
+                <h3 class="run__title">Software Engineering Intern — Office Medicine</h3>
+              </div>
+              <p class="run__desc">Built a Python package integrating the OpenAI API into Office Medicine's software, letting users query drug codes, generic alternatives, and clinical info with structured HTML responses. Packaged for internal integration; authored README and usage docs. <em>May–Aug 2024</em></p>
+            </div>
+            <ul class="tags mono"><li>Python</li><li>OpenAI API</li></ul>
+          </article>
+
+          <article class="run">
+            <div>
+              <div class="run__head">
+                <span class="run__badge run__badge--exp mono">EXP</span>
+                <h3 class="run__title">Office Assistant — Dr. Hernandez Internal Medicine</h3>
+              </div>
+              <p class="run__desc">Designed and built internal tools to automate office workflows: a NAS backup system for patient records; an automated fax/email sorting + printing tool integrated with Outlook, cutting daily processing ~75% (~20→~5 min/day); a Python record parser using pytesseract OCR + the Microsoft Graph API to extract fields and auto-sort by priority. <em>2023–present</em></p>
+            </div>
+            <ul class="tags mono"><li>Python</li><li>pytesseract OCR</li><li>MS Graph API</li><li>NAS</li></ul>
+          </article>
+
+          <article class="run">
+            <div>
+              <div class="run__head">
+                <span class="run__badge run__badge--proj mono">PROJ</span>
+                <h3 class="run__title">AI Resume Scoring Web App <span class="mono" style="font-size:.6em;color:var(--signal)">· revisiting</span></h3>
+              </div>
+              <p class="run__desc">Full-stack capstone that parses resumes and scores them against job descriptions using NLP — tokenization, keyword extraction, and semantic similarity via Hugging Face Transformers. Flask REST API + React frontend, shipped through CI/CD. Implementing HackerRank's grading logic.</p>
+            </div>
+            <ul class="tags mono"><li>Python</li><li>Flask</li><li>React</li><li>spaCy</li><li>HF Transformers</li><li>CI/CD</li><li>Scrum</li></ul>
+          </article>
+
+          <article class="run">
+            <div>
+              <div class="run__head">
+                <span class="run__badge run__badge--proj mono">PROJ</span>
+                <h3 class="run__title">Video Aspect Ratio CLI (vidstretch)</h3>
+              </div>
+              <p class="run__desc">Rust CLI that batch-processes video aspect-ratio conversion via a parallel wrapper around FFmpeg: bounded worker pool for concurrent jobs, glob/recursive discovery, interactive conflict resolution, JSON reporting. Built on FFmpeg's scaler — engineering focused on concurrency, UX, and reliability.</p>
+              <a href="https://github.com/ameyeben/vidstretch" target="_blank" rel="noopener" class="run__link mono">github ↗</a>
+            </div>
+            <ul class="tags mono"><li>Rust</li><li>FFmpeg</li><li>Concurrency</li></ul>
+          </article>
+
+          <article class="run">
+            <div>
+              <div class="run__head">
+                <span class="run__badge run__badge--proj mono">PROJ</span>
+                <h3 class="run__title">Team Maker Discord Bot <span class="mono" style="font-size:.6em;color:var(--muted)">· archived</span></h3>
+              </div>
+              <p class="run__desc">Interactive Discord bot that builds teams from reaction-based participation, implementing multiple team-formation algorithms via the Discord API.</p>
+            </div>
+            <ul class="tags mono"><li>Python</li><li>Discord API</li></ul>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Misc / checkpoints ══════════════════════════ -->
+    <section class="sec" id="misc">
+      <div class="wrap reveal">
+        <p class="sec__label mono" data-cell="In[3]">saved state</p>
+        <h2 class="sec__title">Checkpoints</h2>
+        <div class="ckpts">
+          <div class="ckpt ckpt--verified">
+            <div class="ckpt__head">Certifications <span class="ckpt__state mono">VERIFIED</span></div>
+            <ul>
+              <li>Google Cybersecurity Professional Certificate V2 — Google (Coursera)</li>
+              <li>AWS Educate: Machine Learning Foundations — AWS</li>
+              <li>Introducing Generative AI with AWS — AWS</li>
+            </ul>
+          </div>
+          <div class="ckpt ckpt--logged">
+            <div class="ckpt__head">Activities <span class="ckpt__state mono">LOGGED</span></div>
+            <ul>
+              <li>Founded and organized a summer software developer group</li>
+              <li>Participated in two collegiate hackathons</li>
+              <li>Varsity Soccer — 2× All-District, All-Conference, District Champion</li>
+            </ul>
+          </div>
+          <div class="ckpt ckpt--queued">
+            <div class="ckpt__head">Future <span class="ckpt__state mono">QUEUED</span></div>
+            <ul>
+              <li>Optimal study-retention app</li>
+              <li>AI editing Neovim plugin</li>
+            </ul>
+          </div>
+          <div class="ckpt ckpt--running">
+            <div class="ckpt__head">Tech stack <span class="ckpt__state mono">RUNNING</span></div>
+            <ul>
+              <li>Oh My Pi — AI coding harness</li>
+              <li>Helix — editor</li>
+              <li>Neovim — backup editor</li>
+              <li>Tmux — multiplexer</li>
+              <li>WezTerm — terminal</li>
+              <li>Git · Zsh</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Contact / endpoints ═════════════════════════ -->
+    <section class="sec" id="contact">
+      <div class="wrap reveal">
+        <p class="sec__label mono" data-cell="In[4]">available endpoints</p>
+        <h2 class="sec__title">Get in touch</h2>
+        <p class="contact-lead">Open to work, internships, and collaboration — reach out.</p>
+        <div class="endpoints">
+          <a href="https://github.com/ameyeben" target="_blank" rel="noopener">github.com/ameyeben</a>
+          <a href="https://www.linkedin.com/in/benjamin-ameye-b15b06262/" target="_blank" rel="noopener">linkedin.com/in/benjamin-ameye</a>
+          <a href="mailto:benameye@gmail.com">benameye@gmail.com</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <div class="wrap" style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;max-width:var(--maxw);margin:0 auto;">
+      <span>© <span id="year"></span> Benjamin Ameye</span>
+      <span>rendered token-by-token · no build step</span>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script>
+    // scroll reveal
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  </script>
+  <script src="js/alt-decode.js"></script>
+
+</body>
+
+</html>
