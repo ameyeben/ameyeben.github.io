@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "animejs": "^4.4.1"
+  },
+  "devDependencies": {
+    "opentype.js": "^2.0.0"
+  }
+}

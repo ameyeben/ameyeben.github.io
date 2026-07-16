@@ -1,0 +1,145 @@
+// Bake the intro "welcome" words into low-poly SVG contours (same pipeline as the
+// hero name). Each translation of "Welcome" becomes one entry; at runtime
+// js/intro-lowpoly.js scatters each word's vertices and springs them into rest.
+//
+// Latin words use Satoshi-Bold (matches the hero). The CJK words (Chinese / Korean /
+// Japanese) use Noto Sans CJK, which carries Hanzi + Hangul + Hiragana glyphs.
+// Fonts here are BUILD-TIME ONLY — only the baked JSON ships to the browser.
+//
+// Re-run after changing WORDS / FONT_SIZE / curve resolution:
+//   node scripts/bake-intro-lowpoly.mjs
+
+import opentype from 'opentype.js';
+import { writeFileSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, '..');
+
+const FONT_SIZE = 1000;
+const SEG_PER_CURVE = 3;
+const LETTER_SPACING = 0.02; // em
+
+// Font files (build-time only). One Noto Sans CJK covers all three CJK scripts.
+const FONTS = {
+  satoshi: 'Satoshi-Bold.ttf',
+  cjk: 'NotoSansCJKsc-Bold.otf',
+};
+
+// Welcome cycle — must match the `variants` array in js/scramble-text.js (same order).
+const WORDS = [
+  { text: 'Bienvenue', font: 'satoshi' },
+  { text: '欢迎', font: 'cjk' },
+  { text: 'Bienvenido', font: 'satoshi' },
+  { text: '환영합니다', font: 'cjk' },
+  { text: 'ようこそ', font: 'cjk' },
+  { text: 'Willkommen', font: 'satoshi' },
+  { text: 'Welcome', font: 'satoshi' },
+];
+
+const fontCache = {};
+function loadFont(key) {
+  if (fontCache[key]) return fontCache[key];
+  const buf = readFileSync(join(ROOT, 'fonts', FONTS[key]));
+  const font = opentype.parse(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
+  fontCache[key] = font;
+  return font;
+}
+
+function quad(p0, p1, p2, t) {
+  const u = 1 - t;
+  return [
+    u * u * p0[0] + 2 * u * t * p1[0] + t * t * p2[0],
+    u * u * p0[1] + 2 * u * t * p1[1] + t * t * p2[1],
+  ];
+}
+function cubic(p0, p1, p2, p3, t) {
+  const u = 1 - t;
+  return [
+    u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0],
+    u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1],
+  ];
+}
+
+const ROUND = (n) => Math.round(n * 100) / 100;
+
+// Single-line, left-to-right layout. x=0 = left edge; y=0 = baseline (ascenders
+// negative). Mirrors the hero bake's flatten / clean / viewBox math.
+function bakeWord(text, fontKey) {
+  const font = loadFont(fontKey);
+  const lsUnits = LETTER_SPACING * FONT_SIZE;
+  const path = new opentype.Path();
+  const glyphs = font.stringToGlyphs(text);
+  let penX = 0;
+  for (const g of glyphs) {
+    path.extend(g.getPath(penX, 0, FONT_SIZE));
+    penX += (g.advanceWidth / font.unitsPerEm) * FONT_SIZE + lsUnits;
+  }
+
+  const contours = [];
+  let cur = null, start = null, pos = null;
+  for (const c of path.commands) {
+    if (c.type === 'M') {
+      if (cur && cur.length) contours.push(cur);
+      cur = [[c.x, c.y]]; start = [c.x, c.y]; pos = [c.x, c.y];
+    } else if (c.type === 'L') {
+      cur.push([c.x, c.y]); pos = [c.x, c.y];
+    } else if (c.type === 'Q') {
+      for (let i = 1; i <= SEG_PER_CURVE; i++) cur.push(quad(pos, [c.x1, c.y1], [c.x, c.y], i / SEG_PER_CURVE));
+      pos = [c.x, c.y];
+    } else if (c.type === 'C') {
+      for (let i = 1; i <= SEG_PER_CURVE; i++) cur.push(cubic(pos, [c.x1, c.y1], [c.x2, c.y2], [c.x, c.y], i / SEG_PER_CURVE));
+      pos = [c.x, c.y];
+    } else if (c.type === 'Z') {
+      pos = start ? [start[0], start[1]] : pos;
+    }
+  }
+  if (cur && cur.length) contours.push(cur);
+
+  const cleaned = contours.map((pts) => {
+    const out = [];
+    for (const [x, y] of pts) {
+      const rx = ROUND(x), ry = ROUND(y);
+      const last = out[out.length - 1];
+      if (!last || Math.abs(last[0] - rx) > 0.5 || Math.abs(last[1] - ry) > 0.5) out.push([rx, ry]);
+    }
+    return out;
+  }).filter((pts) => pts.length >= 3);
+
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const pts of cleaned) for (const [x, y] of pts) {
+    if (x < minX) minX = x; if (y < minY) minY = y;
+    if (x > maxX) maxX = x; if (y > maxY) maxY = y;
+  }
+  const PAD = FONT_SIZE * 0.3; // breathing room so scattered vertices aren't clipped
+  // viewBox is PAD-symmetric around the ink box → its center == the ink center,
+  // which lets the runtime center the SVG on the box with a plain translate(-50%,-50%).
+  const viewBox = [
+    ROUND(minX - PAD), ROUND(minY - PAD),
+    ROUND(maxX - minX + PAD * 2), ROUND(maxY - minY + PAD * 2),
+  ];
+
+  return {
+    text,
+    viewBox,
+    ink: [ROUND(minX), ROUND(minY), ROUND(maxX), ROUND(maxY)],
+    contours: cleaned,
+    metrics: {
+      fontSize: FONT_SIZE,
+      unitsPerEm: font.unitsPerEm,
+      letterSpacing: LETTER_SPACING,
+    },
+    points: cleaned.reduce((n, c) => n + c.length, 0),
+  };
+}
+
+const baked = WORDS.map((w) => bakeWord(w.text, w.font));
+
+const out =
+  `// AUTO-GENERATED by scripts/bake-intro-lowpoly.mjs — do not edit by hand.\n` +
+  `// Intro "welcome" cycle — ${baked.length} words.\n` +
+  `window.INTRO_LOWPOLY = ${JSON.stringify(baked.map(({ points, ...rest }) => rest))};\n`;
+
+writeFileSync(join(ROOT, 'js', 'intro-lowpoly-data.js'), out);
+for (const b of baked) console.log(`baked "${b.text}": ${b.contours.length} contours, ${b.points} points`);

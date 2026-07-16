@@ -1,0 +1,150 @@
+// Bake the hero headline into low-poly SVG contours.
+//
+// Loads the Satoshi-Bold glyphs, flattens each contour's béziers into a small
+// number of straight segments (low-poly), and writes the resulting polygon
+// contours to js/hero-lowpoly-data.js as `window.HERO_LOWPOLY`.
+//
+// Re-run after changing TEXT / FONT_SIZE / curve resolution:
+//   node scripts/bake-hero-lowpoly.mjs
+//
+// Tuning:
+//   SEG_PER_CURVE  segments each bézier is flattened into (higher = smoother,
+//                  more points). 3 keeps letters readable while staying faceted.
+//   FONT_SIZE      em size used for coordinates (arbitrary; SVG scales via CSS).
+
+import opentype from 'opentype.js';
+import { writeFileSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, '..');
+
+const TEXT = 'Ben Ameye';        // aria-label for the SVG
+const LINES = ['Ben', 'Ameye'];  // stacked lines, right-aligned (top → bottom)
+const FONT_SIZE = 1000;
+const SEG_PER_CURVE = 3;
+const LETTER_SPACING = 0.02; // em — must match css .hero-title letter-spacing
+const LINE_HEIGHT = 0.9;     // em — must match css .hero-title line-height
+
+const fontBuf = readFileSync(join(ROOT, 'fonts', 'Satoshi-Bold.ttf'));
+const font = opentype.parse(fontBuf.buffer.slice(fontBuf.byteOffset, fontBuf.byteOffset + fontBuf.byteLength));
+
+// Lay out glyphs manually so we can apply CSS letter-spacing (opentype's
+// getPath does not). Two stacked, RIGHT-ALIGNED lines: x=0 is the shared right
+// edge (glyphs run left, negative x); y=0 is the LAST line's baseline (earlier
+// lines sit one lineGap above). Mirrors css text-align:right + line-height.
+const lsUnits = LETTER_SPACING * FONT_SIZE;
+const lineGap = LINE_HEIGHT * FONT_SIZE;
+const path = new opentype.Path();
+for (let li = 0; li < LINES.length; li++) {
+  const lineGlyphs = font.stringToGlyphs(LINES[li]);
+  let lineW = 0;
+  for (const g of lineGlyphs) {
+    lineW += (g.advanceWidth / font.unitsPerEm) * FONT_SIZE + lsUnits;
+  }
+  const baselineY = -(LINES.length - 1 - li) * lineGap;
+  let penX = -lineW; // place the line so its right edge lands on x=0
+  for (const g of lineGlyphs) {
+    path.extend(g.getPath(penX, baselineY, FONT_SIZE));
+    penX += (g.advanceWidth / font.unitsPerEm) * FONT_SIZE + lsUnits;
+  }
+}
+
+// Flatten path commands into closed polygon contours (one per M…Z subpath).
+function quad(p0, p1, p2, t) {
+  const u = 1 - t;
+  return [
+    u * u * p0[0] + 2 * u * t * p1[0] + t * t * p2[0],
+    u * u * p0[1] + 2 * u * t * p1[1] + t * t * p2[1],
+  ];
+}
+function cubic(p0, p1, p2, p3, t) {
+  const u = 1 - t;
+  return [
+    u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0],
+    u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1],
+  ];
+}
+
+const contours = [];
+let cur = null;
+let start = null;
+let pos = null;
+
+for (const c of path.commands) {
+  if (c.type === 'M') {
+    if (cur && cur.length) contours.push(cur);
+    cur = [[c.x, c.y]];
+    start = [c.x, c.y];
+    pos = [c.x, c.y];
+  } else if (c.type === 'L') {
+    cur.push([c.x, c.y]);
+    pos = [c.x, c.y];
+  } else if (c.type === 'Q') {
+    for (let i = 1; i <= SEG_PER_CURVE; i++) {
+      cur.push(quad(pos, [c.x1, c.y1], [c.x, c.y], i / SEG_PER_CURVE));
+    }
+    pos = [c.x, c.y];
+  } else if (c.type === 'C') {
+    for (let i = 1; i <= SEG_PER_CURVE; i++) {
+      cur.push(cubic(pos, [c.x1, c.y1], [c.x2, c.y2], [c.x, c.y], i / SEG_PER_CURVE));
+    }
+    pos = [c.x, c.y];
+  } else if (c.type === 'Z') {
+    pos = start ? [start[0], start[1]] : pos;
+  }
+}
+if (cur && cur.length) contours.push(cur);
+
+// Round coords; drop near-duplicate consecutive points.
+const ROUND = (n) => Math.round(n * 100) / 100;
+const cleaned = contours.map((pts) => {
+  const out = [];
+  for (const [x, y] of pts) {
+    const rx = ROUND(x), ry = ROUND(y);
+    const last = out[out.length - 1];
+    if (!last || Math.abs(last[0] - rx) > 0.5 || Math.abs(last[1] - ry) > 0.5) {
+      out.push([rx, ry]);
+    }
+  }
+  return out;
+}).filter((pts) => pts.length >= 3);
+
+// Bounding box for the viewBox.
+let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+for (const pts of cleaned) for (const [x, y] of pts) {
+  if (x < minX) minX = x; if (y < minY) minY = y;
+  if (x > maxX) maxX = x; if (y > maxY) maxY = y;
+}
+const PAD = FONT_SIZE * 0.3; // breathing room so warp near edges isn't clipped
+const viewBox = [
+  ROUND(minX - PAD), ROUND(minY - PAD),
+  ROUND(maxX - minX + PAD * 2), ROUND(maxY - minY + PAD * 2),
+];
+
+const totalPts = cleaned.reduce((n, c) => n + c.length, 0);
+
+const data = {
+  text: TEXT,
+  viewBox,
+  // Tight glyph ink box (no padding), font units. x=0 is the right edge,
+  // y=0 is the last line's baseline. Used at runtime to scale/align onto text.
+  ink: [ROUND(minX), ROUND(minY), ROUND(maxX), ROUND(maxY)],
+  contours: cleaned,
+  metrics: {
+    fontSize: FONT_SIZE,            // em size used for coords (= 1 em)
+    unitsPerEm: font.unitsPerEm,
+    ascender: font.ascender,        // baseline → top, in font units
+    descender: font.descender,      // baseline → bottom (negative), font units
+    letterSpacing: LETTER_SPACING,  // em
+    lineHeight: LINE_HEIGHT,        // em
+  },
+};
+const out =
+  `// AUTO-GENERATED by scripts/bake-hero-lowpoly.mjs — do not edit by hand.\n` +
+  `// "${TEXT}" — ${cleaned.length} contours, ${totalPts} points.\n` +
+  `window.HERO_LOWPOLY = ${JSON.stringify(data)};\n`;
+
+writeFileSync(join(ROOT, 'js', 'hero-lowpoly-data.js'), out);
+console.log(`baked "${TEXT}": ${cleaned.length} contours, ${totalPts} points, viewBox ${viewBox.join(' ')}`);
