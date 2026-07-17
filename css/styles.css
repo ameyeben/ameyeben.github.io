@@ -87,6 +87,11 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
+  /* Opaque-ish backdrop: content scrolls under the sticky bar, so without a
+     background the nav text and section text overlap ("jumbled"). */
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 img {
@@ -633,13 +638,16 @@ header nav ul a {
 #theme-toggle {
   font-family: 'Px437 IBM VGA', 'JetBrains Mono', monospace;
   -webkit-font-smoothing: none;
-  font-size: 0.55rem;
+  font-size: 0.7rem;
   letter-spacing: 0.1em;
   color: var(--muted);
   background: none;
   border: 1px solid currentColor;
   border-radius: 0;
-  padding: 0.25em 0.5em;
+  padding: 0.4em 0.6em;
+  /* Fixed width: label flips LIGHT↔DARK (5 vs 4 chars) — don't let the chip resize. */
+  min-width: 7ch;
+  text-align: center;
   cursor: pointer;
   transition: color 0.15s ease;
 }
@@ -942,10 +950,24 @@ header nav ul a {
   color: var(--accent);
 }
 
-#projects li > p {
+/* Description bullets (same voice as .cred-list '›' markers). */
+.proj-points {
   margin-top: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
   font-size: 0.82rem;
   line-height: 1.5;
+  color: var(--muted);
+}
+
+.proj-points li {
+  padding-left: 1rem;
+  text-indent: -1rem;
+}
+
+.proj-points li::before {
+  content: '\203A ';
   color: var(--muted);
 }
 
@@ -968,18 +990,36 @@ header nav ul a {
 .tech-tags li::before { content: '['; color: var(--muted); }
 .tech-tags li::after  { content: ']'; color: var(--muted); }
 
-#projects li > a {
+/* Actions row: external link(s) + the [ MORE ] detail button, same voice. */
+.proj-actions {
   grid-column: 1;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
   margin-top: 0.7rem;
-  margin-right: 1.25rem;
+}
+
+.proj-actions a,
+.proj-more {
   font-size: 0.72rem;
   letter-spacing: 0.03em;
   border-bottom: 1px solid var(--hairline);
   transition: color 0.18s ease, border-color 0.18s ease;
 }
 
-#projects li > a:hover {
+.proj-more {
+  font-family: inherit;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--hairline);
+  border-radius: 0;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+.proj-actions a:hover,
+.proj-more:hover {
   color: var(--accent);
   border-color: var(--accent);
 }
@@ -1117,10 +1157,114 @@ footer p {
   letter-spacing: 0.04em;
 }
 
+/* ── Go to top ─────────────────────────────── */
+#to-top {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 90;                /* under the sticky header (100) */
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid currentColor;
+  padding: 0.45em 0.7em;
+  opacity: 0;
+  pointer-events: none;       /* hidden while the hero is on screen */
+  transition: opacity 0.3s ease, color 0.15s ease;
+}
+
+#to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#to-top:hover,
+#to-top:focus-visible {
+  color: var(--fg);
+}
+
+/* ── Project detail sub-window ─────────────── */
+#proj-dialog {
+  margin: auto;               /* centered */
+  width: min(42rem, calc(100vw - 2rem));
+  max-height: min(72vh, 40rem);
+  border: 1px solid var(--divider);
+  background: var(--bg);
+  color: var(--fg);
+  padding: 1.5rem 1.75rem;
+  box-shadow: var(--shadow-lift);
+  overflow: hidden;           /* the body is the scroller, not the dialog */
+}
+
+#proj-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+#proj-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+#proj-dialog-close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.75rem;
+  font-family: 'Px437 IBM VGA', 'JetBrains Mono', monospace;
+  -webkit-font-smoothing: none;
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0.2em 0.3em;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+#proj-dialog-close:hover,
+#proj-dialog-close:focus-visible {
+  color: var(--fg);
+}
+
+#proj-dialog-body {
+  min-height: 0;
+  overflow-y: auto;           /* long write-ups scroll inside (reading scroll) */
+}
+
+#proj-dialog-body h3 {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 500;
+  font-size: 1.2rem;
+  letter-spacing: 0.01em;
+  margin: 0 1.75rem 0.75rem 0;   /* right margin clears the [x] */
+}
+
+#proj-dialog-body p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--fg) 85%, transparent);
+}
+
+#proj-dialog-body p + p {
+  margin-top: 0.75rem;
+}
+
+/* Cloned mark.kw never gets the observer's .kw-on — show it highlighted. */
+#proj-dialog-body mark.kw {
+  background-size: 100% 100%;
+  color: #fff;
+}
+
 /* ── Focus ring (a11y floor) ───────────────── */
 #about a:focus-visible,
 #projects a:focus-visible,
-#contact a:focus-visible {
+#contact a:focus-visible,
+.proj-more:focus-visible,
+#proj-dialog-close:focus-visible,
+#to-top:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
@@ -1128,10 +1272,11 @@ footer p {
 /* ── Mobile ────────────────────────────────── */
 @media (max-width: 700px) {
   /* Projects flows naturally instead of inner-scrolling: no pinned heading, the
-     section just grows with the list. Soften snap to proximity so a projects
-     section taller than the viewport doesn't trap between snap points. */
+     section just grows with the list. Snap OFF entirely on phones: even
+     proximity snap flings the page a full section per flick, which testers
+     read as "scrolling too fast". Natural touch scrolling instead. */
   html {
-    scroll-snap-type: y proximity;
+    scroll-snap-type: none;
   }
   #projects {
     height: auto;

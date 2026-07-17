@@ -1,0 +1,11 @@
+User1: device: mobile
+- "feels too fast"
+- nav bar and website text content overlap "text looks jumbled"
+- "taskbar thing doesnt work for the links"
+- once user gets to contact section, nav links stop working.
+- the light mode toggle is too small. Also noted that the size of the toggle changes
+- "Maybe make your descriptions bullet points so it’s easier to read?"
+
+User2: device: desktop
+- center background rectangle stays static.
+- suggested adding different/interesting transition effects clicking on nav links

@@ -122,49 +122,76 @@ Ameye</h1>
 
         <!-- tabindex=0: on desktop this list scrolls internally; keep it
              keyboard-reachable so arrow keys can scroll it. -->
-        <!-- TODO(Ben): later — clicking a <li> opens a sub-window (modal) with an
-             elaborate write-up per project/role. Give each item a data-detail id,
-             wire a click handler + <dialog>. Not built yet. -->
+        <!-- Each item: bullet summary + hidden .proj-detail (full write-up).
+             [ MORE ] opens the shared #proj-dialog with that detail. -->
         <p class="scroll-more scroll-more--up font-vga" aria-hidden="true">&uarr; scroll for more</p>
         <ul tabindex="0">
 
           <li>
             <h3><span class="exp-badge">EXPERIENCE</span> Software Engineering Intern &mdash; Office Medicine</h3>
-            <p>Built a <mark class="kw">Python</mark> package integrating the <mark class="kw">OpenAI ChatGPT API</mark> into Office
-              Medicine's software, letting users query drug codes, generic medication
-              alternatives, and clinical information with structured HTML-formatted
-              responses. Packaged for internal integration; authored the README and
-              usage docs for developer adoption. <em>May&ndash;Aug 2024.</em></p>
+            <ul class="proj-points">
+              <li>Built a <mark class="kw">Python</mark> package integrating the <mark class="kw">OpenAI ChatGPT API</mark> into Office Medicine's software</li>
+              <li>Lets users query drug codes, generic medication alternatives, and clinical info with structured HTML-formatted responses</li>
+              <li>Packaged for internal integration; authored the README and usage docs for developer adoption</li>
+              <li><em>May&ndash;Aug 2024</em></li>
+            </ul>
             <ul class="tech-tags">
               <li>Python</li>
               <li>OpenAI API</li>
             </ul>
+            <div class="proj-actions">
+              <button class="proj-more" type="button">[ MORE ]</button>
+            </div>
+            <div class="proj-detail" hidden>
+              <h3>Software Engineering Intern &mdash; Office Medicine</h3>
+              <p>Built a <mark class="kw">Python</mark> package integrating the <mark class="kw">OpenAI ChatGPT API</mark> into Office
+                Medicine's software, letting users query drug codes, generic medication
+                alternatives, and clinical information with structured HTML-formatted
+                responses.</p>
+              <p>Packaged for internal integration; authored the README and usage docs
+                for developer adoption. <em>May&ndash;Aug 2024.</em></p>
+            </div>
           </li>
 
           <li>
             <h3><span class="exp-badge">EXPERIENCE</span> Office Assistant &mdash; Dr. Hernandez Internal Medicine</h3>
-            <p>Independently designed and built internal software tools to automate office
-              workflows. Proposed and implemented a NAS backup system for patient records;
-              deployed an automated fax/email sorting and printing tool integrated with
-              Microsoft Outlook, cutting daily staff processing time ~75% (~20&nbsp;min &rarr;
-              ~5&nbsp;min/day); built a Python medical-record parser using <mark class="kw">pytesseract OCR</mark> and
-              the <mark class="kw">Microsoft Graph API</mark> to extract fields from incoming faxes and auto-sort
-              records by office-defined priority. <em>2023&ndash;Present.</em></p>
+            <ul class="proj-points">
+              <li>Independently designed and built internal software tools to automate office workflows</li>
+              <li>Proposed and implemented a NAS backup system for patient records</li>
+              <li>Deployed an automated fax/email sorting and printing tool integrated with Microsoft Outlook &mdash; cut daily staff processing time ~75% (~20&nbsp;min &rarr; ~5&nbsp;min/day)</li>
+              <li>Built a Python medical-record parser using <mark class="kw">pytesseract OCR</mark> and the <mark class="kw">Microsoft Graph API</mark> to extract fields from incoming faxes and auto-sort records by office-defined priority</li>
+              <li><em>2023&ndash;Present</em></li>
+            </ul>
             <ul class="tech-tags">
               <li>Python</li>
               <li>pytesseract OCR</li>
               <li>Microsoft Graph API</li>
               <li>NAS</li>
             </ul>
+            <div class="proj-actions">
+              <button class="proj-more" type="button">[ MORE ]</button>
+            </div>
+            <div class="proj-detail" hidden>
+              <h3>Office Assistant &mdash; Dr. Hernandez Internal Medicine</h3>
+              <p>Independently designed and built internal software tools to automate office
+                workflows. Proposed and implemented a NAS backup system for patient records;
+                deployed an automated fax/email sorting and printing tool integrated with
+                Microsoft Outlook, cutting daily staff processing time ~75% (~20&nbsp;min &rarr;
+                ~5&nbsp;min/day).</p>
+              <p>Built a Python medical-record parser using <mark class="kw">pytesseract OCR</mark> and
+                the <mark class="kw">Microsoft Graph API</mark> to extract fields from incoming faxes and auto-sort
+                records by office-defined priority. <em>2023&ndash;Present.</em></p>
+            </div>
           </li>
 
           <li>
             <h3><span class="proj-badge">PROJECT</span> AI Resume Scoring Web Application (CURRENTLY REVISITING)</h3>
-            <p><mark class="kw">Full-stack</mark> capstone that parses resumes and scores them against job
-              descriptions using <mark class="kw">NLP</mark> — tokenization, keyword extraction, and semantic
-              similarity via <mark class="kw">Hugging Face Transformers</mark>. <mark class="kw">Flask REST API</mark> + <mark class="kw">React</mark> frontend,
-              shipped through a <mark class="kw">CI/CD pipeline</mark>. Currently implementing HackerRank's grading
-              logic for resumes.</p>
+            <ul class="proj-points">
+              <li><mark class="kw">Full-stack</mark> capstone that parses resumes and scores them against job descriptions using <mark class="kw">NLP</mark></li>
+              <li>Tokenization, keyword extraction, and semantic similarity via <mark class="kw">Hugging Face Transformers</mark></li>
+              <li><mark class="kw">Flask REST API</mark> + <mark class="kw">React</mark> frontend, shipped through a <mark class="kw">CI/CD pipeline</mark></li>
+              <li>Currently implementing HackerRank's grading logic for resumes</li>
+            </ul>
             <ul class="tech-tags">
               <li>Python</li>
               <li>Flask</li>
@@ -176,6 +203,18 @@ Ameye</h1>
               <li>Scrum Leader</li>
 
             </ul>
+            <div class="proj-actions">
+              <button class="proj-more" type="button">[ MORE ]</button>
+            </div>
+            <div class="proj-detail" hidden>
+              <h3>AI Resume Scoring Web Application</h3>
+              <p><mark class="kw">Full-stack</mark> capstone that parses resumes and scores them against job
+                descriptions using <mark class="kw">NLP</mark> &mdash; tokenization, keyword extraction, and semantic
+                similarity via <mark class="kw">Hugging Face Transformers</mark>.</p>
+              <p><mark class="kw">Flask REST API</mark> + <mark class="kw">React</mark> frontend, shipped through a
+                <mark class="kw">CI/CD pipeline</mark>. Currently revisiting the project to implement
+                HackerRank's grading logic for resumes.</p>
+            </div>
             <!-- TODO(Ben): repo is private — add a short demo video here instead.
                  Embed with <video controls src="airesume-demo.mp4"></video> or a
                  link to the hosted clip once recorded. -->
@@ -183,29 +222,51 @@ Ameye</h1>
 
           <li>
             <h3><span class="proj-badge">PROJECT</span> Video Aspect Ratio CLI (vidstretch)</h3>
-            <p><mark class="kw">Rust</mark> CLI that batch-processes video aspect-ratio conversion via a parallel
-              wrapper around <mark class="kw">FFmpeg</mark>. Includes a bounded worker pool for <mark class="kw">concurrent</mark> jobs,
-              glob/recursive file discovery, interactive conflict resolution, and JSON
-              reporting. Built on FFmpeg's optimized scaler rather than reimplementing the
-              transform math — custom engineering focused on concurrency, UX, and
-              reliability.</p>
+            <ul class="proj-points">
+              <li><mark class="kw">Rust</mark> CLI that batch-processes video aspect-ratio conversion via a parallel wrapper around <mark class="kw">FFmpeg</mark></li>
+              <li>Bounded worker pool for <mark class="kw">concurrent</mark> jobs, glob/recursive file discovery, interactive conflict resolution, JSON reporting</li>
+              <li>Built on FFmpeg's optimized scaler rather than reimplementing the transform math &mdash; custom engineering focused on concurrency, UX, and reliability</li>
+            </ul>
             <ul class="tech-tags">
               <li>Rust</li>
               <li>FFmpeg</li>
               <li>Concurrency</li>
             </ul>
-            <a href="https://github.com/ameyeben/vidstretch" target="_blank" rel="noopener">GitHub</a>
+            <div class="proj-actions">
+              <a href="https://github.com/ameyeben/vidstretch" target="_blank" rel="noopener">GitHub</a>
+              <button class="proj-more" type="button">[ MORE ]</button>
+            </div>
+            <div class="proj-detail" hidden>
+              <h3>Video Aspect Ratio CLI (vidstretch)</h3>
+              <p><mark class="kw">Rust</mark> CLI that batch-processes video aspect-ratio conversion via a parallel
+                wrapper around <mark class="kw">FFmpeg</mark>. Includes a bounded worker pool for <mark class="kw">concurrent</mark> jobs,
+                glob/recursive file discovery, interactive conflict resolution, and JSON
+                reporting.</p>
+              <p>Built on FFmpeg's optimized scaler rather than reimplementing the
+                transform math &mdash; custom engineering focused on concurrency, UX, and
+                reliability.</p>
+            </div>
           </li>
 
           <li>
             <h3><span class="proj-badge">PROJECT</span> Team Maker Discord Bot (ARCHIVED)</h3>
-            <p>Interactive Discord bot that builds teams from reaction-based
-              participation, implementing multiple team-formation <mark class="kw">algorithms</mark> via the
-              <mark class="kw">Discord API</mark>.</p>
+            <ul class="proj-points">
+              <li>Interactive Discord bot that builds teams from reaction-based participation</li>
+              <li>Implements multiple team-formation <mark class="kw">algorithms</mark> via the <mark class="kw">Discord API</mark></li>
+            </ul>
             <ul class="tech-tags">
               <li>Python</li>
               <li>Discord API</li>
             </ul>
+            <div class="proj-actions">
+              <button class="proj-more" type="button">[ MORE ]</button>
+            </div>
+            <div class="proj-detail" hidden>
+              <h3>Team Maker Discord Bot</h3>
+              <p>Interactive Discord bot that builds teams from reaction-based
+                participation, implementing multiple team-formation <mark class="kw">algorithms</mark> via the
+                <mark class="kw">Discord API</mark>. Archived &mdash; no longer maintained.</p>
+            </div>
           </li>
 
         </ul>
@@ -280,6 +341,17 @@ Ameye</h1>
     </div>
   </footer>
 
+  <!-- ── Go to top (visible once the hero scrolls off) ─ -->
+  <a href="#hero" id="to-top" class="font-vga" aria-label="Go to top">&uarr; TOP</a>
+
+  <!-- ── Project detail sub-window ──────────────────── -->
+  <!-- Filled from the clicked item's .proj-detail. Closes on [x], Esc,
+       backdrop click, or scrolling (see js/proj-dialog.js). -->
+  <dialog id="proj-dialog">
+    <button id="proj-dialog-close" class="font-vga" type="button" aria-label="Close">[x]</button>
+    <div id="proj-dialog-body"></div>
+  </dialog>
+
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 
   <script>
@@ -313,6 +385,7 @@ Ameye</h1>
   <script src="js/projects-reveal.js"></script>
   <script src="js/kw-highlight.js"></script>
   <script src="js/portrait-peek.js"></script>
+  <script src="js/proj-dialog.js"></script>
 
 </body>
 

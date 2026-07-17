@@ -16,7 +16,7 @@
    ──────────────────────────────────────────────────────────────────────── */
 (function () {
   var sections = document.querySelectorAll('.section--reveal');
-  var navLinks = document.querySelectorAll('header nav a[href^="#"]');
+  var navLinks = document.querySelectorAll('header nav a[href^="#"], #to-top');
   var docEl = document.documentElement;
 
   function validHash(h) {
@@ -38,11 +38,20 @@
   // ── 2. Instant jump (cut, no travel) ────────────────────────────────────
   function jumpTo(hash, push) {
     var el = validHash(hash) ? document.querySelector(hash) : null;
-    var prev = docEl.style.scrollBehavior;
+    var prevBehavior = docEl.style.scrollBehavior;
+    var prevSnap = docEl.style.scrollSnapType;
     docEl.style.scrollBehavior = 'auto';      // override global smooth → instant
+    // iOS Safari can cancel a programmatic jump to re-snap to the current
+    // section (worst at the last snap point, #contact) — the tap looks dead.
+    // Suspend snap for the jump, restore next frame (target is itself a snap
+    // point, so re-enabling doesn't move the page).
+    docEl.style.scrollSnapType = 'none';
     if (el) el.scrollIntoView({ block: 'start' });
     else window.scrollTo(0, 0);
-    docEl.style.scrollBehavior = prev;
+    requestAnimationFrame(function () {
+      docEl.style.scrollBehavior = prevBehavior;
+      docEl.style.scrollSnapType = prevSnap;
+    });
     if (push && validHash(hash)) history.pushState(null, '', hash);
   }
 
@@ -54,6 +63,15 @@
       jumpTo(hash, true);
     });
   });
+
+  // ── 3. "Go to top" button: visible once the hero is off-screen ──────────
+  var toTop = document.getElementById('to-top');
+  var heroEl = document.getElementById('hero');
+  if (toTop && heroEl) {
+    new IntersectionObserver(function (entries) {
+      toTop.classList.toggle('visible', !entries[0].isIntersecting);
+    }, { threshold: 0.15 }).observe(heroEl);
+  }
 
   // Back / forward: honor the hash without a smooth re-scroll.
   window.addEventListener('popstate', function () {

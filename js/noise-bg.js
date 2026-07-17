@@ -44,7 +44,9 @@
       canvas: canvas,
       ctx: canvas.getContext('2d'),
       band: i,
-      mag: MAX_SHIFT * (1 - STRENGTH[i]),
+      // Floor at 8px so the center band (strength 1.0 → mag 0) still drifts
+      // instead of sitting dead-static while everything around it moves.
+      mag: Math.max(MAX_SHIFT * (1 - STRENGTH[i]), 8),
     });
   }
 
