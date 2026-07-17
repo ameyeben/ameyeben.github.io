@@ -167,6 +167,8 @@ section .container {
   .hero-cta {
     opacity: 1;
     transform: none;
+    filter: none;
+    pointer-events: auto;
     transition: none;
   }
 }
@@ -907,18 +909,22 @@ header nav ul a {
   border-bottom: 1px solid var(--hairline);
 }
 
-/* Per-item reveal: same fade+rise as .section--reveal .container, but driven
-   per-item by the inner scroll (js/projects-reveal.js). Partly-scrolled items
-   stay hidden, so no half-clipped card at the list edges. */
+/* Per-item reveal, driven per-item by the inner scroll (js/projects-reveal.js).
+   Partly-scrolled items show as a blurred "not loaded yet" ghost — content is
+   suggested (text-shaped blocks) but illegible, so it's obvious more exists
+   below the fold. Legible only once the item fully fits in the list viewport.
+   Ghosts aren't interactive: no clicking a blurred [ MORE ]. */
 #projects > .container > ul > li {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  opacity: 0.3;
+  filter: blur(6px);
+  transition: opacity 0.5s ease, filter 0.5s ease;
+  pointer-events: none;
 }
 
 #projects > .container > ul > li.in-view {
   opacity: 1;
-  transform: none;
+  filter: none;
+  pointer-events: auto;
 }
 
 /* ── "scroll for more" affordances (above/below the list) ─── */
@@ -944,6 +950,7 @@ header nav ul a {
   font-size: 1.15rem;
   letter-spacing: 0.01em;
   transition: color 0.18s ease;
+  cursor: pointer;             /* title click opens the detail dialog */
 }
 
 #projects > .container > ul > li:hover h3 {
@@ -1294,9 +1301,10 @@ footer p {
 
   #projects > .container > ul > li {
     grid-template-columns: 1fr;
-    /* natural flow, no inner scroll → no per-item hiding */
+    /* natural flow, no inner scroll → no per-item ghosting */
     opacity: 1;
-    transform: none;
+    filter: none;
+    pointer-events: auto;
   }
   .scroll-more { display: none; }
   .tech-tags {

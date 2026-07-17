@@ -9,15 +9,19 @@
   if (!dialog || typeof dialog.showModal !== 'function') return;
   var body = document.getElementById('proj-dialog-body');
 
-  document.querySelectorAll('.proj-more').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var detail = btn.closest('li').querySelector('.proj-detail');
-      if (!detail) return;
-      body.innerHTML = detail.innerHTML;
-      body.scrollTop = 0;
-      dialog.showModal();
+  function openDetail(li) {
+    var detail = li && li.querySelector('.proj-detail');
+    if (!detail) return;
+    body.innerHTML = detail.innerHTML;
+    body.scrollTop = 0;
+    dialog.showModal();
+  }
+
+  // [ MORE ] button and the item title both open the write-up.
+  document.querySelectorAll('.proj-more, #projects > .container > ul > li > h3')
+    .forEach(function (el) {
+      el.addEventListener('click', function () { openDetail(el.closest('li')); });
     });
-  });
 
   document.getElementById('proj-dialog-close').addEventListener('click', function () {
     dialog.close();
