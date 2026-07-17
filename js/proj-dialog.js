@@ -17,11 +17,26 @@
     dialog.showModal();
   }
 
-  // [ MORE ] button and the item title both open the write-up.
+  // [ FULL DESCRIPTION ] button and the item title both open the write-up.
   document.querySelectorAll('.proj-more, #projects > .container > ul > li > h3')
     .forEach(function (el) {
       el.addEventListener('click', function () { openDetail(el.closest('li')); });
     });
+
+  // Resume download: interpose the catch-all notice; its inner download link
+  // proceeds with the real download and closes the dialog.
+  var resumeLink = document.querySelector('#about .about-text > a[download]');
+  var resumeNote = document.getElementById('resume-note');
+  if (resumeLink && resumeNote) {
+    resumeLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      body.innerHTML = resumeNote.innerHTML;
+      body.scrollTop = 0;
+      dialog.showModal();
+      var dl = body.querySelector('a[download]');
+      if (dl) dl.addEventListener('click', function () { dialog.close(); });
+    });
+  }
 
   document.getElementById('proj-dialog-close').addEventListener('click', function () {
     dialog.close();

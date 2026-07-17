@@ -874,7 +874,8 @@ header nav ul a {
   color: color-mix(in srgb, var(--fg) 85%, transparent);
 }
 
-#about a[download] {
+#about a[download],
+#proj-dialog-body a[download] {
   display: inline-block;
   margin-top: 1.75rem;
   font-size: 0.85rem;
@@ -886,7 +887,8 @@ header nav ul a {
   transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-#about a[download]:hover {
+#about a[download]:hover,
+#proj-dialog-body a[download]:hover {
   background: var(--accent);
   transform: translateY(-1px);
   box-shadow: var(--shadow-lift);
