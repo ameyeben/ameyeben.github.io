@@ -11,9 +11,28 @@
   if (!section) return;
   var ul = section.querySelector('.container > ul');
   if (!ul) return;
-  var items = ul.querySelectorAll(':scope > li');
+  var items = Array.prototype.slice.call(ul.querySelectorAll(':scope > li'));
   var moreUp = section.querySelector('.scroll-more--up');
   var moreDown = section.querySelector('.scroll-more--down');
+
+  // Scrollbar replacement: a vertical rail of [ ] markers, one per item,
+  // filled ([█]) while that item is fully displayed (.in-view).
+  var rail = document.createElement('div');
+  rail.className = 'proj-rail font-vga';
+  rail.setAttribute('aria-hidden', 'true');
+  var marks = items.map(function () {
+    var s = document.createElement('span');
+    s.textContent = '[ ]';
+    rail.appendChild(s);
+    return s;
+  });
+  section.querySelector('.container').appendChild(rail);
+
+  function syncRail() {
+    items.forEach(function (li, i) {
+      marks[i].textContent = li.classList.contains('in-view') ? '[█]' : '[ ]';
+    });
+  }
 
   // Hysteresis: reveal at >=0.99, hide only below 0.8. The reveal's translateY
   // shifts the item's geometry, nudging its own intersection ratio — without a
@@ -27,6 +46,7 @@
       if (!shown && e.intersectionRatio >= 0.99) e.target.classList.add('in-view');
       else if (shown && e.intersectionRatio < 0.8) e.target.classList.remove('in-view');
     });
+    syncRail();
   }, { root: ul, threshold: [0, 0.5, 0.8, 0.99, 1] });
   items.forEach(function (li) { io.observe(li); });
 
