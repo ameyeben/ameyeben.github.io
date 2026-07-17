@@ -1157,6 +1157,12 @@ header nav ul a {
    state, colour doesn't need to. */
 .unit-state { color: var(--muted); }
 
+/* Resume freshness chip, sits beside the download CTA. */
+.resume-updated {
+  margin-left: 0.6rem;
+  vertical-align: middle;
+}
+
 .cred-list {
   display: flex;
   flex-direction: column;
