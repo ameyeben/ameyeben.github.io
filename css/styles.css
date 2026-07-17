@@ -755,11 +755,34 @@ header nav ul a {
 }
 
 .about-portrait {
+  position: relative;          /* anchors .portrait-hint */
   margin: 0;
   border: 1px solid var(--hairline);
   overflow: hidden;
   align-self: start;
   box-shadow: var(--shadow-rest);
+}
+
+/* "[ HOVER ]" chip over the portrait — hover-capable devices only (touch gets
+   the inline peek instead). Fades out once the user is actually hovering. */
+.portrait-hint {
+  display: none;
+  position: absolute;
+  bottom: 0.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 0.3em 0.6em;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+@media (hover: hover) {
+  .portrait-hint { display: block; }
+  .about-portrait:hover .portrait-hint { opacity: 0; }
 }
 
 .about-portrait img {
