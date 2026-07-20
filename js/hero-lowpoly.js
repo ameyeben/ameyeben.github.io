@@ -106,6 +106,16 @@
   }
 
   var layers = LAYERS.map(function (spec, i) { return makeLayer(spec, i); });
+
+  // Name colors come from the theme vars (black on off-white box in dark
+  // theme, white on black in light theme) and track theme flips for free.
+  // --hero-name-live (set by js/logo-scroll.js while the logo tilts) tints
+  // the name toward the shown logo's blue/red.
+  if (!HALFTONE) {
+    layers[0].pathEl.style.fill = 'var(--hero-name-echo)';
+    layers[1].pathEl.style.fill = 'var(--hero-name-live, var(--hero-name))';
+  }
+
   var frontLayer = layers[layers.length - 1]; // white — hosts cursor hit-testing
   // Interaction is handled on the hero section (hitEl); the svg canvases are
   // purely visual, so they ignore pointer events and never block clicks.

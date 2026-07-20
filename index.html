@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Benjamin Ameye — Computer Science student" />
   <title>Benjamin Ameye | Portfolio</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -19,6 +20,15 @@
 
   <!-- ── Background noise layer (parallax depth, cursor-follow) ─ -->
   <div id="noise-bg" aria-hidden="true"></div>
+
+  <!-- ── Morphing logo ─ -->
+  <!-- Centers inside the hero box with padding around it; scrolling past the
+       hero flies it into a giant right-justified background behind about→misc,
+       scroll sweeps its holo tilt blue→rest→red. All positioning + the
+       pointer interaction while docked live in js/logo-scroll.js. -->
+  <div id="logo-bg" class="holo-stage" data-holo-manual aria-hidden="true" data-caption="*try overing">
+    <div class="holo-sticker"></div>
+  </div>
 
   <!-- ── Intro overlay ─────────────────────────────── -->
   <!-- INTRO ANIMATION TEXT — edit the scramble quote ONLY in the data-text below.
@@ -50,7 +60,9 @@
   <header>
     <nav>
       <div class="container">
-        <a href="#hero" style="font-weight: 300; font-size: 10px; font-family: system-ui">VERSI 1.0.5 (REVISED)</a>
+        <a href="#hero" class="holo-stage holo-stage--nav" aria-label="Benjamin Ameye — home">
+          <span class="holo-sticker"></span>
+        </a>
         <ul>
           <li><a href="#about">About</a></li>
           <li><a href="#projects">Projects</a></li>
@@ -346,15 +358,32 @@ Ameye</h1>
           <li><a href="https://www.linkedin.com/in/benjamin-ameye-b15b06262/" target="_blank" rel="noopener">LinkedIn</a></li>
           <li><a href="mailto:benameye@gmail.com">benameye@gmail.com</a></li>
         </ul>
+
+        <!-- Empty anchor: the morphing #logo-bg settles onto this rect when
+             the contact section snaps in (js/logo-scroll.js). -->
+        <div id="logo-anchor-contact" aria-hidden="true"></div>
       </div>
     </section>
 
   </main>
 
   <!-- ── Footer ─────────────────────────────────────── -->
+  <!-- Carries its own copy of the nav links; the sticky header hides while
+       the footer is in view (js/logo-scroll.js). Logo right-justified. -->
   <footer class="section--reveal">
-    <div class="container">
-      <p>&copy; <span id="year"></span> Benjamin Ameye. All rights reserved.</p>
+    <div class="container footer-row">
+      <div class="holo-stage holo-stage--footer">
+        <div class="holo-sticker"></div>
+      </div>
+      <div class="footer-meta">
+        <ul class="footer-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#misc">Misc</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <p>&copy; <span id="year"></span> Benjamin Ameye. All rights reserved.</p>
+      </div>
     </div>
   </footer>
 
@@ -403,6 +432,8 @@ Ameye</h1>
   <script src="js/kw-highlight.js"></script>
   <script src="js/portrait-peek.js"></script>
   <script src="js/proj-dialog.js"></script>
+  <script src="js/holo-logo.js"></script>
+  <script src="js/logo-scroll.js"></script>
 
 </body>
 

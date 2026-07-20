@@ -24,11 +24,14 @@
   function showHero() {
     if (shown) return;
     shown = true;
+    heroSection.classList.remove('hero-ready');
+    window.dispatchEvent(new CustomEvent('heroPreparing'));
     // 1. Blue box wipes open from center (CSS clip-path on ::before).
     if (titleWrapper) titleWrapper.classList.add('revealed');
     // 2. Name settles from distortion once the box has begun opening.
     setTimeout(function () {
       if (window.heroLowPoly) window.heroLowPoly.revealIn();
+      if (titleWrapper) titleWrapper.classList.add('name-revealed');
     }, 300);
     // 3. Subtitle / focus / links reveal after the name has begun settling.
     function showNext(idx) {
@@ -43,6 +46,7 @@
     // 4. Blue box (0.7s wipe) + name (settles from ~0.3s) are revealed by now —
     //    signal so the noise background reveal can start after the hero, not with it.
     setTimeout(function () {
+      heroSection.classList.add('hero-ready');
       window.dispatchEvent(new CustomEvent('heroRevealed'));
       if (ctaEl) ctaEl.classList.add('revealed');
       showNext(0);
@@ -51,7 +55,11 @@
 
   function hideHero(onComplete) {
     shown = false;
-    if (titleWrapper) titleWrapper.classList.remove('revealed');
+    heroSection.classList.remove('hero-ready');
+    if (titleWrapper) {
+      titleWrapper.classList.remove('revealed');
+      titleWrapper.classList.remove('name-revealed');
+    }
     if (ctaEl) ctaEl.classList.remove('revealed');
     if (window.heroLowPoly) window.heroLowPoly.swapOut();
     if (window.heroFocusCycle) window.heroFocusCycle.stop();
@@ -83,8 +91,10 @@
       } else if (!entry.isIntersecting && heroVisible) {
         heroVisible = false;
         shown = false;
+        heroSection.classList.remove('hero-ready');
         if (titleWrapper) titleWrapper.classList.remove('revealed');
         if (ctaEl) ctaEl.classList.remove('revealed');
+        if (titleWrapper) titleWrapper.classList.remove('name-revealed');
         if (window.heroLowPoly) window.heroLowPoly.swapOut();
         if (window.heroFocusCycle) window.heroFocusCycle.stop();
         reveals.forEach(function (r) { r.reset(); });
