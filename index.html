@@ -4,20 +4,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Benjamin Ameye — Computer Science student" />
+  <meta name="description" content="CS student at Lawrence Tech building Rust CLIs and NLP tooling. Seeking software engineering internships." />
   <title>Benjamin Ameye | Portfolio</title>
 
   <!-- Social link preview (Open Graph + Twitter) -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Benjamin Ameye | Portfolio" />
-  <meta property="og:description" content="Benjamin Ameye — Computer Science student" />
+  <meta property="og:description" content="CS student at Lawrence Tech building Rust CLIs and NLP tooling. Seeking software engineering internships." />
   <meta property="og:url" content="https://ameyeben.github.io/" />
   <meta property="og:image" content="https://ameyeben.github.io/og-preview.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Benjamin Ameye | Portfolio" />
-  <meta name="twitter:description" content="Benjamin Ameye — Computer Science student" />
+  <meta name="twitter:description" content="CS student at Lawrence Tech building Rust CLIs and NLP tooling. Seeking software engineering internships." />
   <meta name="twitter:image" content="https://ameyeben.github.io/og-preview.png" />
   <link rel="icon" type="image/svg+xml" sizes="any" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +39,7 @@
        hero flies it into a giant right-justified background behind about→misc,
        scroll sweeps its holo tilt blue→rest→red. All positioning + the
        pointer interaction while docked live in js/logo-scroll.js. -->
-  <div id="logo-bg" class="holo-stage" data-holo-manual aria-hidden="true" data-caption="*try hovering">
+  <div id="logo-bg" class="holo-stage" data-holo-manual aria-hidden="true">
     <div class="holo-sticker"></div>
   </div>
 
@@ -101,7 +101,10 @@ Ameye</h1>
         <!-- Plain text only: hero-reveal.js rebuilds this from textContent, so
              inline markup like <mark> would be stripped. -->
         <p class="hero-subtitle">CS student at Lawrence Tech, seeking software internships.</p>
-        <p class="hero-subtitle hero-subtitle--focus">Current focus is </p>
+        <!-- Completes the sentence with no JS. hero-focus-cycle.js re-scrambles
+             this trailing word once the hero reveals; keep it a single token so
+             the no-JS fallback reads as a finished sentence. -->
+        <p class="hero-subtitle hero-subtitle--focus">Current focus is AI/ML</p>
         <div class="hero-cta">
           <a href="#projects" class="hero-cta__primary">View my work</a>
           <a href="#contact" class="hero-cta__secondary">Get in touch</a>
@@ -116,37 +119,32 @@ Ameye</h1>
           <h2><mark>About</mark></h2>
           <p class="bio">
             My name is Ben. I'm a <mark class="kw">computer science</mark> student at Lawrence Technological University, with my learning
-            path focused on <mark class="kw">AI/ML</mark>. I care more about performance than looks when it comes to the tech that I use.
+            path focused on <mark class="kw">AI/ML</mark>. GPA 3.64, Dean's List (2&times;).
             <br><br>
             In my free time I like to play competitive video games and read.
-            Reading on paper is cool and all, but reading on the Boox Go 6 (gen 2) is too convenient to compare.
+            Reading on paper is cool and all, but reading on an e-reader is too convenient to compare.
             <br><br>
             My interest in computer science started with trying to comprehend how a Game Boy Color worked,
             and then became tangible when I made a "website" using HTML in middle school.
           </p>
-          <a href="Benjamin_Ameye_Resume.pdf" download>Download Resume</a>
-          <!-- Manual: bump when Benjamin_Ameye_Resume.pdf is replaced. -->
-          <span class="unit-state resume-updated">UPDATED 2026-07-10</span>
+          <a href="Benjamin_Ameye_Resume_Google.pdf" download>Download Resume</a>
+          <!-- Manual: bump when Benjamin_Ameye_Resume_Google.pdf is replaced. -->
+          <span class="unit-state resume-updated">UPDATED 2026-07-23</span>
           <p class="resume-verify">
-            SHA-256: <code>171cddfb0c55b38e8eb3cd4cbeb4e3c272104462a075d0727b10a32fe8b61d29</code><br>
-            Verify: <code>shasum -a 256 Benjamin_Ameye_Resume.pdf</code>
+            SHA-256: <code>1778b508f1e8af8a8d3f19c9b804f525c4309a387b71a6d9ad36d5bfc9a6b476</code><br>
+            Verify: <code>shasum -a 256 Benjamin_Ameye_Resume_Google.pdf</code>
           </p>
           <!-- Shown in #proj-dialog before the resume download proceeds. -->
           <div id="resume-note" hidden>
             <h3>About this resume</h3>
             <p>Heads up &mdash; this is my default, catch-all resume. When I apply to a
               role, I tailor it to best fit the job description.</p>
-            <a href="Benjamin_Ameye_Resume.pdf" download>Download Resume</a>
+            <a href="Benjamin_Ameye_Resume_Google.pdf" download>Download Resume</a>
           </div>
         </div>
         <figure class="about-portrait">
           <img src="ben.png" alt="Benjamin Ameye" width="1122" height="1402" loading="lazy">
-          <span class="portrait-hint font-vga" aria-hidden="true">[ HOVER ]</span>
         </figure>
-      </div>
-      <div id="portrait-peek" aria-hidden="true">
-        <img src="ogBen.png" alt="">
-        <span class="peek-caption font-vga">original prompt image</span>
       </div>
     </section>
 
@@ -222,22 +220,18 @@ Ameye</h1>
           <li>
             <h3><span class="proj-badge">PROJECT</span> AI Resume Scoring Web Application &mdash; Capstone Project (CURRENTLY REVISITING)</h3>
             <ul class="proj-points">
+              <li>Deterministic weighted <mark class="kw">rubric scorer</mark> &mdash; category thresholds, bonuses and deductions, scaled by semantic job-fit score</li>
               <li><mark class="kw">Full-stack</mark> app scoring resumes against job descriptions with <mark class="kw">NLP</mark></li>
-              <li>Semantic similarity via <mark class="kw">Hugging Face Transformers</mark></li>
+              <li>spaCy for entity/phrase extraction; <mark class="kw">all-MiniLM-L6-v2</mark> embeddings for resume-to-job similarity</li>
               <li><mark class="kw">Flask REST API</mark> + <mark class="kw">React</mark>, shipped through <mark class="kw">CI/CD</mark></li>
-              <li><mark class="kw">Scrum</mark> leader in an <mark class="kw">Agile</mark> team</li>
-              <li>Now adding HackerRank-style grading logic</li>
             </ul>
             <ul class="tech-tags">
               <li>Python</li>
               <li>Flask</li>
               <li>React</li>
               <li>spaCy</li>
-              <li>Hugging Face Transformers</li>
+              <li>sentence-transformers</li>
               <li>CI/CD</li>
-              <li>Agile Workflow</li>
-              <li>Scrum Leader</li>
-
             </ul>
             <div class="proj-actions">
               <button class="proj-more" type="button">[ FULL DESCRIPTION ]</button>
@@ -245,16 +239,17 @@ Ameye</h1>
             <div class="proj-detail" hidden>
               <h3>AI Resume Scoring Web Application &mdash; Capstone Project</h3>
               <p><mark class="kw">Full-stack</mark> capstone that parses resumes and scores them against job
-                descriptions using <mark class="kw">NLP</mark> &mdash; tokenization, keyword extraction, and semantic
-                similarity via <mark class="kw">Hugging Face Transformers</mark>.</p>
+                descriptions using <mark class="kw">NLP</mark> &mdash; spaCy (<code>en_core_web_md</code>) for entity and
+                phrase extraction, and <mark class="kw">all-MiniLM-L6-v2</mark> sentence embeddings for
+                resume-to-job semantic similarity.</p>
               <p><mark class="kw">Flask REST API</mark> + <mark class="kw">React</mark> frontend, shipped through a
                 <mark class="kw">CI/CD pipeline</mark> for automated testing and continuous delivery.</p>
               <p>Developed in an <mark class="kw">Agile</mark> workflow: served as <mark class="kw">Scrum</mark> Master for Sprint 3,
                 adjusting sprint scope around a holiday break while maintaining team
                 accountability. Led the development phase as primary engineer, translating
                 UML class diagrams and database models into production code.</p>
-              <p>Currently revisiting the project to implement HackerRank's grading logic
-                for resumes.</p>
+              <p>Currently adding a deterministic weighted rubric scorer &mdash; category
+                thresholds, bonuses and deductions, scaled by the semantic job-fit score.</p>
             </div>
             <!-- TODO(Ben): repo is private — add a short demo video here instead.
                  Embed with <video controls src="airesume-demo.mp4"></video> or a
@@ -332,16 +327,8 @@ Ameye</h1>
             <h3>Activities &amp; Accomplishments <span class="unit-state">LOGGED</span></h3>
             <ul class="cred-list">
               <li>Founded and organized a summer software developer group to collaborate on projects and share technical knowledge</li>
-              <li>Participated in two collegiate hackathons</li>
+              <li>Attended talks and workshops at two collegiate hackathons</li>
               <li>Varsity Soccer &mdash; 2&times; All-District, All-Conference, District Champion</li>
-            </ul>
-          </div>
-          <div class="cred-col cred-col--queued">
-            <h3>Future Projects <span class="unit-state">QUEUED</span></h3>
-            <ul class="cred-list">
-              <li>Optimal study-retention app</li>
-              <li>AI editing Neovim diff plugin</li>
-              <li>AI dungeon master</li>
             </ul>
           </div>
           <div class="cred-col cred-col--running">
@@ -368,8 +355,11 @@ Ameye</h1>
 
         <ul class="contact-links">
           <li><a href="https://github.com/ameyeben" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://github.com/ameyeben/ameyeben.github.io" target="_blank" rel="noopener">Source of this site</a></li>
           <li><a href="https://www.linkedin.com/in/benjamin-ameye-b15b06262/" target="_blank" rel="noopener">LinkedIn</a></li>
-          <li><a href="mailto:benameye@gmail.com">benameye@gmail.com</a></li>
+          <!-- Address split across data-attrs so it isn't scrapable as one string;
+               JS below reassembles it. Degrades to a readable [at]/[dot] fallback. -->
+          <li><a class="js-email" data-u="benameye" data-d="gmail.com" href="#contact">benameye [at] gmail [dot] com</a></li>
         </ul>
 
         <!-- Empty anchor: the morphing #logo-bg settles onto this rect when
@@ -414,6 +404,14 @@ Ameye</h1>
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 
   <script>
+    document.querySelectorAll('.js-email').forEach(function (a) {
+      var e = a.dataset.u + '@' + a.dataset.d;
+      a.href = 'mailto:' + e;
+      a.textContent = e;
+    });
+  </script>
+
+  <script>
     (function () {
       var btn = document.getElementById('theme-toggle');
       var root = document.documentElement;
@@ -443,7 +441,6 @@ Ameye</h1>
   <script src="js/section-transitions.js"></script>
   <script src="js/projects-reveal.js"></script>
   <script src="js/kw-highlight.js"></script>
-  <script src="js/portrait-peek.js"></script>
   <script src="js/proj-dialog.js"></script>
   <script src="js/holo-logo.js"></script>
   <script src="js/logo-scroll.js"></script>

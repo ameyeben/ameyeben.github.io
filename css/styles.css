@@ -783,7 +783,7 @@ header nav ul a {
 }
 
 .about-portrait {
-  position: relative;          /* anchors .portrait-hint */
+  position: relative;
   margin: 0;
   border: 1px solid var(--hairline);
   overflow: hidden;
@@ -791,97 +791,10 @@ header nav ul a {
   box-shadow: var(--shadow-rest);
 }
 
-/* "[ HOVER ]" chip over the portrait — hover-capable devices only (touch gets
-   the inline peek instead). Fades out once the user is actually hovering. */
-.portrait-hint {
-  display: none;
-  position: absolute;
-  bottom: 0.6rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.55);
-  padding: 0.3em 0.6em;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-}
-
-@media (hover: hover) {
-  .portrait-hint { display: block; }
-  .about-portrait:hover .portrait-hint { opacity: 0; }
-}
-
 .about-portrait img {
   display: block;
   width: 100%;
   height: auto;
-}
-
-/* Hover peek: over the portrait, hide the cursor and let #portrait-peek (the
-   original ogBen photo) track the pointer in its place. Hover-capable only. */
-@media (hover: hover) {
-  .about-portrait {
-    cursor: none;
-  }
-}
-
-#portrait-peek {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: clamp(120px, 12vw, 175px);
-  pointer-events: none;
-  z-index: 50;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  will-change: transform, opacity;
-}
-
-#portrait-peek.on {
-  opacity: 1;
-}
-
-#portrait-peek img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border: 1px solid var(--hairline);
-  box-shadow: var(--shadow-lift);   /* floats over content → cast shadow anchors it */
-}
-/* ── Inline peek (touch devices): JS adds .peek--inline and moves #portrait-peek
-   right after .about-portrait, so it flows naturally instead of fixed-following
-   the cursor. Scroll-triggered by IntersectionObserver in portrait-peek.js. */
-#portrait-peek.peek--inline {
-  position: relative;
-  top: auto;
-  left: auto;
-  width: 100%;
-  max-width: 20rem;
-  margin-top: 0.75rem;
-  pointer-events: auto;
-  z-index: auto;
-}
-
-/* Inline (mobile) shows the full source image — the square cover-crop used for
-   the desktop cursor peek lops off the head/feet of the 2024×2274 portrait.
-   Pin the intrinsic ratio so the box can't collapse to zero height (the <img>
-   has no width/height attrs). */
-#portrait-peek.peek--inline img {
-  aspect-ratio: 2024 / 2274;
-  object-fit: cover;
-  height: auto;
-}
-
-.peek-caption {
-  display: block;
-  margin-top: 0.4rem;
-  font-size: 0.78rem;
-  letter-spacing: 0.02em;
-  text-align: center;
-  color: var(--muted);
 }
 
 /* Stack on narrow screens: text first, portrait below. */
@@ -1342,26 +1255,6 @@ header.header--hidden {
   width: 96px;
   aspect-ratio: 120 / 160;
   pointer-events: none;
-}
-
-/* Hover caption on the morphing logo — visible on hover, sits below */
-#logo-bg::after {
-  content: attr(data-caption);
-  position: absolute;
-  bottom: -28px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--muted);
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
-}
-
-#logo-bg:hover::after {
-  opacity: 1;
 }
 
 /* Footer: left-justified in the footer row. */

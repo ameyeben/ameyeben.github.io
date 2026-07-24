@@ -60,13 +60,24 @@
     });
   }
 
+  // The markup seeds the sentence with a static trailing word (no-JS fallback);
+  // strip it so the cycle owns everything after the prefix instead of appending
+  // a second word next to it.
+  var PREFIX = 'Current focus is ';
+
   function start(p) {
     if (!p) return;
     stop();               // clean restart: never bail on a stale run with an orphaned span
     pEl = p;
+    pEl.textContent = PREFIX;
     span = document.createElement('span');
     span.className = 'hero-focus';
     pEl.appendChild(span);
+    // Reduced motion: settle on the first phrase, skip the endless scramble loop.
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      span.textContent = PHRASES[0];
+      return;
+    }
     idx = 0;
     running = true;
     next();
